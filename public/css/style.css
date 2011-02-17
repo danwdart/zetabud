@@ -1,0 +1,35 @@
+* {
+    padding:0;
+    margin:0;
+}
+
+body {
+    background-color: #333333;
+}
+#contentwrapper {
+    margin: 0 auto;
+    width: 1000px;
+    background-color: #ffffff;
+    border-style:none outset outset outset;
+}
+
+header {
+    font-weight:100;
+    text-align:center;
+    font-size: 28pt;
+    border-bottom: solid 1px black;
+    height: 50px;
+}
+
+#appspace {
+    height: 600px;
+    overflow: auto;
+}
+
+#launcher {
+    text-align:center;
+    font-size: 14pt;
+    border-top: solid 1px black;
+    height: 50px;
+}
+    

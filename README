@@ -1,1 +1,5 @@
 Zetabud: Bibud in Zend - to integrate with Betabud and be a server!
+
+Requirements:
+PEAR
+Phing 1.3.3

@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Zetabud</title>
+    <title>Zetabud</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <script type="text/javascript" src="/js/jquery-1.5.min.js"></script>
+    <script type="text/javascript" arc="/js/jquery.color.js"></script>
+    <script type="text/javascript" src="/js/script.js"></script>
 </head>
 <body>
-<div id="contentwrapper">
-<div id="header">
-Header stuff
-</div>
-<div id="content">
-<?php echo $this->layout()->content; ?>
-Main stuff
-</div>
-<div id="footer">
-Footer
-</div>
-</div>
+    <div id="contentwrapper">
+        <header>
+            Zetabud
+        </header>
+        <div id="appspace">
+            <?php echo $this->layout()->content; ?>
+        </div>
+        <div id="launcher">
+            <!-- Dynamically generate these links -->
+            <a href="/app/foo">App</a>
+        </div>
+    </div>
 </body>
 </html>

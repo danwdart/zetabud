@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<config>
+    <propel>
+        <datasources default="zetabud">
+            <datasource id="zetabud">
+                <adapter>mysql</adapter>
+                <connection>
+                    <dsn>mysql:host=localhost;dbname=zetabud</dsn>
+                    <user>zetabud</user>
+                    <password>zetabud</password>
+                    <classname>PropelPDO</classname>
+                </connection>
+            </datasource>
+        </datasources>
+    </propel>
+</config>
