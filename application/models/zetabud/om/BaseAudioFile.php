@@ -2,25 +2,25 @@
 
 
 /**
- * Base class that represents a row from the 'user' table.
+ * Base class that represents a row from the 'audio_file' table.
  *
  * 
  *
  * @package    propel.generator.zetabud.om
  */
-abstract class BaseUser extends BaseObject  implements Persistent
+abstract class BaseAudioFile extends BaseObject  implements Persistent
 {
 
 	/**
 	 * Peer class name
 	 */
-	const PEER = 'UserPeer';
+	const PEER = 'AudioFilePeer';
 
 	/**
 	 * The Peer class.
 	 * Instance provides a convenient way of calling static methods on a class
 	 * that calling code may not be able to identify.
-	 * @var        UserPeer
+	 * @var        AudioFilePeer
 	 */
 	protected static $peer;
 
@@ -31,46 +31,46 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	protected $id;
 
 	/**
-	 * The value for the username field.
-	 * @var        string
+	 * The value for the user_id field.
+	 * @var        int
 	 */
-	protected $username;
+	protected $user_id;
 
 	/**
-	 * The value for the password field.
+	 * The value for the artist field.
 	 * @var        string
 	 */
-	protected $password;
+	protected $artist;
 
 	/**
-	 * The value for the fullname field.
+	 * The value for the album field.
 	 * @var        string
 	 */
-	protected $fullname;
+	protected $album;
 
 	/**
-	 * The value for the email field.
+	 * The value for the title field.
 	 * @var        string
 	 */
-	protected $email;
+	protected $title;
 
 	/**
-	 * The value for the created_date field.
+	 * The value for the track field.
 	 * @var        string
 	 */
-	protected $created_date;
+	protected $track;
 
 	/**
-	 * The value for the modified_date field.
+	 * The value for the comments field.
 	 * @var        string
 	 */
-	protected $modified_date;
+	protected $comments;
 
 	/**
-	 * The value for the last_active field.
+	 * The value for the path field.
 	 * @var        string
 	 */
-	protected $last_active;
+	protected $path;
 
 	/**
 	 * Flag to prevent endless save loop, if this object is referenced
@@ -97,164 +97,80 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Get the [username] column value.
+	 * Get the [user_id] column value.
+	 * 
+	 * @return     int
+	 */
+	public function getUserId()
+	{
+		return $this->user_id;
+	}
+
+	/**
+	 * Get the [artist] column value.
 	 * 
 	 * @return     string
 	 */
-	public function getUsername()
+	public function getArtist()
 	{
-		return $this->username;
+		return $this->artist;
 	}
 
 	/**
-	 * Get the [password] column value.
+	 * Get the [album] column value.
 	 * 
 	 * @return     string
 	 */
-	public function getPassword()
+	public function getAlbum()
 	{
-		return $this->password;
+		return $this->album;
 	}
 
 	/**
-	 * Get the [fullname] column value.
+	 * Get the [title] column value.
 	 * 
 	 * @return     string
 	 */
-	public function getFullname()
+	public function getTitle()
 	{
-		return $this->fullname;
+		return $this->title;
 	}
 
 	/**
-	 * Get the [email] column value.
+	 * Get the [track] column value.
 	 * 
 	 * @return     string
 	 */
-	public function getEmail()
+	public function getTrack()
 	{
-		return $this->email;
+		return $this->track;
 	}
 
 	/**
-	 * Get the [optionally formatted] temporal [created_date] column value.
+	 * Get the [comments] column value.
 	 * 
-	 *
-	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
-	 *							If format is NULL, then the raw DateTime object will be returned.
-	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
-	 * @throws     PropelException - if unable to parse/validate the date/time value.
+	 * @return     string
 	 */
-	public function getCreatedDate($format = 'Y-m-d H:i:s')
+	public function getComments()
 	{
-		if ($this->created_date === null) {
-			return null;
-		}
-
-
-		if ($this->created_date === '0000-00-00 00:00:00') {
-			// while technically this is not a default value of NULL,
-			// this seems to be closest in meaning.
-			return null;
-		} else {
-			try {
-				$dt = new DateTime($this->created_date);
-			} catch (Exception $x) {
-				throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->created_date, true), $x);
-			}
-		}
-
-		if ($format === null) {
-			// Because propel.useDateTimeClass is TRUE, we return a DateTime object.
-			return $dt;
-		} elseif (strpos($format, '%') !== false) {
-			return strftime($format, $dt->format('U'));
-		} else {
-			return $dt->format($format);
-		}
+		return $this->comments;
 	}
 
 	/**
-	 * Get the [optionally formatted] temporal [modified_date] column value.
+	 * Get the [path] column value.
 	 * 
-	 *
-	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
-	 *							If format is NULL, then the raw DateTime object will be returned.
-	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
-	 * @throws     PropelException - if unable to parse/validate the date/time value.
+	 * @return     string
 	 */
-	public function getModifiedDate($format = 'Y-m-d H:i:s')
+	public function getPath()
 	{
-		if ($this->modified_date === null) {
-			return null;
-		}
-
-
-		if ($this->modified_date === '0000-00-00 00:00:00') {
-			// while technically this is not a default value of NULL,
-			// this seems to be closest in meaning.
-			return null;
-		} else {
-			try {
-				$dt = new DateTime($this->modified_date);
-			} catch (Exception $x) {
-				throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->modified_date, true), $x);
-			}
-		}
-
-		if ($format === null) {
-			// Because propel.useDateTimeClass is TRUE, we return a DateTime object.
-			return $dt;
-		} elseif (strpos($format, '%') !== false) {
-			return strftime($format, $dt->format('U'));
-		} else {
-			return $dt->format($format);
-		}
-	}
-
-	/**
-	 * Get the [optionally formatted] temporal [last_active] column value.
-	 * 
-	 *
-	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
-	 *							If format is NULL, then the raw DateTime object will be returned.
-	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
-	 * @throws     PropelException - if unable to parse/validate the date/time value.
-	 */
-	public function getLastActive($format = 'Y-m-d H:i:s')
-	{
-		if ($this->last_active === null) {
-			return null;
-		}
-
-
-		if ($this->last_active === '0000-00-00 00:00:00') {
-			// while technically this is not a default value of NULL,
-			// this seems to be closest in meaning.
-			return null;
-		} else {
-			try {
-				$dt = new DateTime($this->last_active);
-			} catch (Exception $x) {
-				throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->last_active, true), $x);
-			}
-		}
-
-		if ($format === null) {
-			// Because propel.useDateTimeClass is TRUE, we return a DateTime object.
-			return $dt;
-		} elseif (strpos($format, '%') !== false) {
-			return strftime($format, $dt->format('U'));
-		} else {
-			return $dt->format($format);
-		}
+		return $this->path;
 	}
 
 	/**
 	 * Set the value of [id] column.
 	 * 
 	 * @param      int $v new value
-	 * @return     User The current object (for fluent API support)
+	 * @return     AudioFile The current object (for fluent API support)
 	 */
 	public function setId($v)
 	{
@@ -264,238 +180,151 @@ abstract class BaseUser extends BaseObject  implements Persistent
 
 		if ($this->id !== $v) {
 			$this->id = $v;
-			$this->modifiedColumns[] = UserPeer::ID;
+			$this->modifiedColumns[] = AudioFilePeer::ID;
 		}
 
 		return $this;
 	} // setId()
 
 	/**
-	 * Set the value of [username] column.
+	 * Set the value of [user_id] column.
+	 * 
+	 * @param      int $v new value
+	 * @return     AudioFile The current object (for fluent API support)
+	 */
+	public function setUserId($v)
+	{
+		if ($v !== null) {
+			$v = (int) $v;
+		}
+
+		if ($this->user_id !== $v) {
+			$this->user_id = $v;
+			$this->modifiedColumns[] = AudioFilePeer::USER_ID;
+		}
+
+		return $this;
+	} // setUserId()
+
+	/**
+	 * Set the value of [artist] column.
 	 * 
 	 * @param      string $v new value
-	 * @return     User The current object (for fluent API support)
+	 * @return     AudioFile The current object (for fluent API support)
 	 */
-	public function setUsername($v)
+	public function setArtist($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
 		}
 
-		if ($this->username !== $v) {
-			$this->username = $v;
-			$this->modifiedColumns[] = UserPeer::USERNAME;
+		if ($this->artist !== $v) {
+			$this->artist = $v;
+			$this->modifiedColumns[] = AudioFilePeer::ARTIST;
 		}
 
 		return $this;
-	} // setUsername()
+	} // setArtist()
 
 	/**
-	 * Set the value of [password] column.
+	 * Set the value of [album] column.
 	 * 
 	 * @param      string $v new value
-	 * @return     User The current object (for fluent API support)
+	 * @return     AudioFile The current object (for fluent API support)
 	 */
-	public function setPassword($v)
+	public function setAlbum($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
 		}
 
-		if ($this->password !== $v) {
-			$this->password = $v;
-			$this->modifiedColumns[] = UserPeer::PASSWORD;
+		if ($this->album !== $v) {
+			$this->album = $v;
+			$this->modifiedColumns[] = AudioFilePeer::ALBUM;
 		}
 
 		return $this;
-	} // setPassword()
+	} // setAlbum()
 
 	/**
-	 * Set the value of [fullname] column.
+	 * Set the value of [title] column.
 	 * 
 	 * @param      string $v new value
-	 * @return     User The current object (for fluent API support)
+	 * @return     AudioFile The current object (for fluent API support)
 	 */
-	public function setFullname($v)
+	public function setTitle($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
 		}
 
-		if ($this->fullname !== $v) {
-			$this->fullname = $v;
-			$this->modifiedColumns[] = UserPeer::FULLNAME;
+		if ($this->title !== $v) {
+			$this->title = $v;
+			$this->modifiedColumns[] = AudioFilePeer::TITLE;
 		}
 
 		return $this;
-	} // setFullname()
+	} // setTitle()
 
 	/**
-	 * Set the value of [email] column.
+	 * Set the value of [track] column.
 	 * 
 	 * @param      string $v new value
-	 * @return     User The current object (for fluent API support)
+	 * @return     AudioFile The current object (for fluent API support)
 	 */
-	public function setEmail($v)
+	public function setTrack($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
 		}
 
-		if ($this->email !== $v) {
-			$this->email = $v;
-			$this->modifiedColumns[] = UserPeer::EMAIL;
+		if ($this->track !== $v) {
+			$this->track = $v;
+			$this->modifiedColumns[] = AudioFilePeer::TRACK;
 		}
 
 		return $this;
-	} // setEmail()
+	} // setTrack()
 
 	/**
-	 * Sets the value of [created_date] column to a normalized version of the date/time value specified.
+	 * Set the value of [comments] column.
 	 * 
-	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
-	 *						be treated as NULL for temporal objects.
-	 * @return     User The current object (for fluent API support)
+	 * @param      string $v new value
+	 * @return     AudioFile The current object (for fluent API support)
 	 */
-	public function setCreatedDate($v)
+	public function setComments($v)
 	{
-		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
-		// -- which is unexpected, to say the least.
-		if ($v === null || $v === '') {
-			$dt = null;
-		} elseif ($v instanceof DateTime) {
-			$dt = $v;
-		} else {
-			// some string/numeric value passed; we normalize that so that we can
-			// validate it.
-			try {
-				if (is_numeric($v)) { // if it's a unix timestamp
-					$dt = new DateTime('@'.$v, new DateTimeZone('UTC'));
-					// We have to explicitly specify and then change the time zone because of a
-					// DateTime bug: http://bugs.php.net/bug.php?id=43003
-					$dt->setTimeZone(new DateTimeZone(date_default_timezone_get()));
-				} else {
-					$dt = new DateTime($v);
-				}
-			} catch (Exception $x) {
-				throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
-			}
+		if ($v !== null) {
+			$v = (string) $v;
 		}
 
-		if ( $this->created_date !== null || $dt !== null ) {
-			// (nested ifs are a little easier to read in this case)
-
-			$currNorm = ($this->created_date !== null && $tmpDt = new DateTime($this->created_date)) ? $tmpDt->format('Y-m-d H:i:s') : null;
-			$newNorm = ($dt !== null) ? $dt->format('Y-m-d H:i:s') : null;
-
-			if ( ($currNorm !== $newNorm) // normalized values don't match 
-					)
-			{
-				$this->created_date = ($dt ? $dt->format('Y-m-d H:i:s') : null);
-				$this->modifiedColumns[] = UserPeer::CREATED_DATE;
-			}
-		} // if either are not null
+		if ($this->comments !== $v) {
+			$this->comments = $v;
+			$this->modifiedColumns[] = AudioFilePeer::COMMENTS;
+		}
 
 		return $this;
-	} // setCreatedDate()
+	} // setComments()
 
 	/**
-	 * Sets the value of [modified_date] column to a normalized version of the date/time value specified.
+	 * Set the value of [path] column.
 	 * 
-	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
-	 *						be treated as NULL for temporal objects.
-	 * @return     User The current object (for fluent API support)
+	 * @param      string $v new value
+	 * @return     AudioFile The current object (for fluent API support)
 	 */
-	public function setModifiedDate($v)
+	public function setPath($v)
 	{
-		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
-		// -- which is unexpected, to say the least.
-		if ($v === null || $v === '') {
-			$dt = null;
-		} elseif ($v instanceof DateTime) {
-			$dt = $v;
-		} else {
-			// some string/numeric value passed; we normalize that so that we can
-			// validate it.
-			try {
-				if (is_numeric($v)) { // if it's a unix timestamp
-					$dt = new DateTime('@'.$v, new DateTimeZone('UTC'));
-					// We have to explicitly specify and then change the time zone because of a
-					// DateTime bug: http://bugs.php.net/bug.php?id=43003
-					$dt->setTimeZone(new DateTimeZone(date_default_timezone_get()));
-				} else {
-					$dt = new DateTime($v);
-				}
-			} catch (Exception $x) {
-				throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
-			}
+		if ($v !== null) {
+			$v = (string) $v;
 		}
 
-		if ( $this->modified_date !== null || $dt !== null ) {
-			// (nested ifs are a little easier to read in this case)
-
-			$currNorm = ($this->modified_date !== null && $tmpDt = new DateTime($this->modified_date)) ? $tmpDt->format('Y-m-d H:i:s') : null;
-			$newNorm = ($dt !== null) ? $dt->format('Y-m-d H:i:s') : null;
-
-			if ( ($currNorm !== $newNorm) // normalized values don't match 
-					)
-			{
-				$this->modified_date = ($dt ? $dt->format('Y-m-d H:i:s') : null);
-				$this->modifiedColumns[] = UserPeer::MODIFIED_DATE;
-			}
-		} // if either are not null
-
-		return $this;
-	} // setModifiedDate()
-
-	/**
-	 * Sets the value of [last_active] column to a normalized version of the date/time value specified.
-	 * 
-	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
-	 *						be treated as NULL for temporal objects.
-	 * @return     User The current object (for fluent API support)
-	 */
-	public function setLastActive($v)
-	{
-		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
-		// -- which is unexpected, to say the least.
-		if ($v === null || $v === '') {
-			$dt = null;
-		} elseif ($v instanceof DateTime) {
-			$dt = $v;
-		} else {
-			// some string/numeric value passed; we normalize that so that we can
-			// validate it.
-			try {
-				if (is_numeric($v)) { // if it's a unix timestamp
-					$dt = new DateTime('@'.$v, new DateTimeZone('UTC'));
-					// We have to explicitly specify and then change the time zone because of a
-					// DateTime bug: http://bugs.php.net/bug.php?id=43003
-					$dt->setTimeZone(new DateTimeZone(date_default_timezone_get()));
-				} else {
-					$dt = new DateTime($v);
-				}
-			} catch (Exception $x) {
-				throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
-			}
+		if ($this->path !== $v) {
+			$this->path = $v;
+			$this->modifiedColumns[] = AudioFilePeer::PATH;
 		}
 
-		if ( $this->last_active !== null || $dt !== null ) {
-			// (nested ifs are a little easier to read in this case)
-
-			$currNorm = ($this->last_active !== null && $tmpDt = new DateTime($this->last_active)) ? $tmpDt->format('Y-m-d H:i:s') : null;
-			$newNorm = ($dt !== null) ? $dt->format('Y-m-d H:i:s') : null;
-
-			if ( ($currNorm !== $newNorm) // normalized values don't match 
-					)
-			{
-				$this->last_active = ($dt ? $dt->format('Y-m-d H:i:s') : null);
-				$this->modifiedColumns[] = UserPeer::LAST_ACTIVE;
-			}
-		} // if either are not null
-
 		return $this;
-	} // setLastActive()
+	} // setPath()
 
 	/**
 	 * Indicates whether the columns in this object are only set to default values.
@@ -530,13 +359,13 @@ abstract class BaseUser extends BaseObject  implements Persistent
 		try {
 
 			$this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-			$this->username = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-			$this->password = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-			$this->fullname = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-			$this->email = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-			$this->created_date = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
-			$this->modified_date = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
-			$this->last_active = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+			$this->user_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
+			$this->artist = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+			$this->album = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+			$this->title = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+			$this->track = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+			$this->comments = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+			$this->path = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -545,10 +374,10 @@ abstract class BaseUser extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 8; // 8 = UserPeer::NUM_COLUMNS - UserPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 8; // 8 = AudioFilePeer::NUM_COLUMNS - AudioFilePeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
-			throw new PropelException("Error populating User object", $e);
+			throw new PropelException("Error populating AudioFile object", $e);
 		}
 	}
 
@@ -591,13 +420,13 @@ abstract class BaseUser extends BaseObject  implements Persistent
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(UserPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(AudioFilePeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
 		// We don't need to alter the object instance pool; we're just modifying this instance
 		// already in the pool.
 
-		$stmt = UserPeer::doSelectStmt($this->buildPkeyCriteria(), $con);
+		$stmt = AudioFilePeer::doSelectStmt($this->buildPkeyCriteria(), $con);
 		$row = $stmt->fetch(PDO::FETCH_NUM);
 		$stmt->closeCursor();
 		if (!$row) {
@@ -626,14 +455,14 @@ abstract class BaseUser extends BaseObject  implements Persistent
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(UserPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(AudioFilePeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 
 		$con->beginTransaction();
 		try {
 			$ret = $this->preDelete($con);
 			if ($ret) {
-				UserQuery::create()
+				AudioFileQuery::create()
 					->filterByPrimaryKey($this->getPrimaryKey())
 					->delete($con);
 				$this->postDelete($con);
@@ -668,7 +497,7 @@ abstract class BaseUser extends BaseObject  implements Persistent
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(UserPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(AudioFilePeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 
 		$con->beginTransaction();
@@ -688,7 +517,7 @@ abstract class BaseUser extends BaseObject  implements Persistent
 					$this->postUpdate($con);
 				}
 				$this->postSave($con);
-				UserPeer::addInstanceToPool($this);
+				AudioFilePeer::addInstanceToPool($this);
 			} else {
 				$affectedRows = 0;
 			}
@@ -718,15 +547,15 @@ abstract class BaseUser extends BaseObject  implements Persistent
 			$this->alreadyInSave = true;
 
 			if ($this->isNew() ) {
-				$this->modifiedColumns[] = UserPeer::ID;
+				$this->modifiedColumns[] = AudioFilePeer::ID;
 			}
 
 			// If this object has been modified, then save it to the database.
 			if ($this->isModified()) {
 				if ($this->isNew()) {
 					$criteria = $this->buildCriteria();
-					if ($criteria->keyContainsValue(UserPeer::ID) ) {
-						throw new PropelException('Cannot insert a value for auto-increment primary key ('.UserPeer::ID.')');
+					if ($criteria->keyContainsValue(AudioFilePeer::ID) ) {
+						throw new PropelException('Cannot insert a value for auto-increment primary key ('.AudioFilePeer::ID.')');
 					}
 
 					$pk = BasePeer::doInsert($criteria, $con);
@@ -734,7 +563,7 @@ abstract class BaseUser extends BaseObject  implements Persistent
 					$this->setId($pk);  //[IMV] update autoincrement primary key
 					$this->setNew(false);
 				} else {
-					$affectedRows = UserPeer::doUpdate($this, $con);
+					$affectedRows = AudioFilePeer::doUpdate($this, $con);
 				}
 
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
@@ -806,7 +635,7 @@ abstract class BaseUser extends BaseObject  implements Persistent
 			$failureMap = array();
 
 
-			if (($retval = UserPeer::doValidate($this, $columns)) !== true) {
+			if (($retval = AudioFilePeer::doValidate($this, $columns)) !== true) {
 				$failureMap = array_merge($failureMap, $retval);
 			}
 
@@ -829,7 +658,7 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	 */
 	public function getByName($name, $type = BasePeer::TYPE_PHPNAME)
 	{
-		$pos = UserPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+		$pos = AudioFilePeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 		$field = $this->getByPosition($pos);
 		return $field;
 	}
@@ -848,25 +677,25 @@ abstract class BaseUser extends BaseObject  implements Persistent
 				return $this->getId();
 				break;
 			case 1:
-				return $this->getUsername();
+				return $this->getUserId();
 				break;
 			case 2:
-				return $this->getPassword();
+				return $this->getArtist();
 				break;
 			case 3:
-				return $this->getFullname();
+				return $this->getAlbum();
 				break;
 			case 4:
-				return $this->getEmail();
+				return $this->getTitle();
 				break;
 			case 5:
-				return $this->getCreatedDate();
+				return $this->getTrack();
 				break;
 			case 6:
-				return $this->getModifiedDate();
+				return $this->getComments();
 				break;
 			case 7:
-				return $this->getLastActive();
+				return $this->getPath();
 				break;
 			default:
 				return null;
@@ -889,16 +718,16 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	 */
 	public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true)
 	{
-		$keys = UserPeer::getFieldNames($keyType);
+		$keys = AudioFilePeer::getFieldNames($keyType);
 		$result = array(
 			$keys[0] => $this->getId(),
-			$keys[1] => $this->getUsername(),
-			$keys[2] => $this->getPassword(),
-			$keys[3] => $this->getFullname(),
-			$keys[4] => $this->getEmail(),
-			$keys[5] => $this->getCreatedDate(),
-			$keys[6] => $this->getModifiedDate(),
-			$keys[7] => $this->getLastActive(),
+			$keys[1] => $this->getUserId(),
+			$keys[2] => $this->getArtist(),
+			$keys[3] => $this->getAlbum(),
+			$keys[4] => $this->getTitle(),
+			$keys[5] => $this->getTrack(),
+			$keys[6] => $this->getComments(),
+			$keys[7] => $this->getPath(),
 		);
 		return $result;
 	}
@@ -915,7 +744,7 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	 */
 	public function setByName($name, $value, $type = BasePeer::TYPE_PHPNAME)
 	{
-		$pos = UserPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+		$pos = AudioFilePeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 		return $this->setByPosition($pos, $value);
 	}
 
@@ -934,25 +763,25 @@ abstract class BaseUser extends BaseObject  implements Persistent
 				$this->setId($value);
 				break;
 			case 1:
-				$this->setUsername($value);
+				$this->setUserId($value);
 				break;
 			case 2:
-				$this->setPassword($value);
+				$this->setArtist($value);
 				break;
 			case 3:
-				$this->setFullname($value);
+				$this->setAlbum($value);
 				break;
 			case 4:
-				$this->setEmail($value);
+				$this->setTitle($value);
 				break;
 			case 5:
-				$this->setCreatedDate($value);
+				$this->setTrack($value);
 				break;
 			case 6:
-				$this->setModifiedDate($value);
+				$this->setComments($value);
 				break;
 			case 7:
-				$this->setLastActive($value);
+				$this->setPath($value);
 				break;
 		} // switch()
 	}
@@ -976,16 +805,16 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	 */
 	public function fromArray($arr, $keyType = BasePeer::TYPE_PHPNAME)
 	{
-		$keys = UserPeer::getFieldNames($keyType);
+		$keys = AudioFilePeer::getFieldNames($keyType);
 
 		if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-		if (array_key_exists($keys[1], $arr)) $this->setUsername($arr[$keys[1]]);
-		if (array_key_exists($keys[2], $arr)) $this->setPassword($arr[$keys[2]]);
-		if (array_key_exists($keys[3], $arr)) $this->setFullname($arr[$keys[3]]);
-		if (array_key_exists($keys[4], $arr)) $this->setEmail($arr[$keys[4]]);
-		if (array_key_exists($keys[5], $arr)) $this->setCreatedDate($arr[$keys[5]]);
-		if (array_key_exists($keys[6], $arr)) $this->setModifiedDate($arr[$keys[6]]);
-		if (array_key_exists($keys[7], $arr)) $this->setLastActive($arr[$keys[7]]);
+		if (array_key_exists($keys[1], $arr)) $this->setUserId($arr[$keys[1]]);
+		if (array_key_exists($keys[2], $arr)) $this->setArtist($arr[$keys[2]]);
+		if (array_key_exists($keys[3], $arr)) $this->setAlbum($arr[$keys[3]]);
+		if (array_key_exists($keys[4], $arr)) $this->setTitle($arr[$keys[4]]);
+		if (array_key_exists($keys[5], $arr)) $this->setTrack($arr[$keys[5]]);
+		if (array_key_exists($keys[6], $arr)) $this->setComments($arr[$keys[6]]);
+		if (array_key_exists($keys[7], $arr)) $this->setPath($arr[$keys[7]]);
 	}
 
 	/**
@@ -995,16 +824,16 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	 */
 	public function buildCriteria()
 	{
-		$criteria = new Criteria(UserPeer::DATABASE_NAME);
+		$criteria = new Criteria(AudioFilePeer::DATABASE_NAME);
 
-		if ($this->isColumnModified(UserPeer::ID)) $criteria->add(UserPeer::ID, $this->id);
-		if ($this->isColumnModified(UserPeer::USERNAME)) $criteria->add(UserPeer::USERNAME, $this->username);
-		if ($this->isColumnModified(UserPeer::PASSWORD)) $criteria->add(UserPeer::PASSWORD, $this->password);
-		if ($this->isColumnModified(UserPeer::FULLNAME)) $criteria->add(UserPeer::FULLNAME, $this->fullname);
-		if ($this->isColumnModified(UserPeer::EMAIL)) $criteria->add(UserPeer::EMAIL, $this->email);
-		if ($this->isColumnModified(UserPeer::CREATED_DATE)) $criteria->add(UserPeer::CREATED_DATE, $this->created_date);
-		if ($this->isColumnModified(UserPeer::MODIFIED_DATE)) $criteria->add(UserPeer::MODIFIED_DATE, $this->modified_date);
-		if ($this->isColumnModified(UserPeer::LAST_ACTIVE)) $criteria->add(UserPeer::LAST_ACTIVE, $this->last_active);
+		if ($this->isColumnModified(AudioFilePeer::ID)) $criteria->add(AudioFilePeer::ID, $this->id);
+		if ($this->isColumnModified(AudioFilePeer::USER_ID)) $criteria->add(AudioFilePeer::USER_ID, $this->user_id);
+		if ($this->isColumnModified(AudioFilePeer::ARTIST)) $criteria->add(AudioFilePeer::ARTIST, $this->artist);
+		if ($this->isColumnModified(AudioFilePeer::ALBUM)) $criteria->add(AudioFilePeer::ALBUM, $this->album);
+		if ($this->isColumnModified(AudioFilePeer::TITLE)) $criteria->add(AudioFilePeer::TITLE, $this->title);
+		if ($this->isColumnModified(AudioFilePeer::TRACK)) $criteria->add(AudioFilePeer::TRACK, $this->track);
+		if ($this->isColumnModified(AudioFilePeer::COMMENTS)) $criteria->add(AudioFilePeer::COMMENTS, $this->comments);
+		if ($this->isColumnModified(AudioFilePeer::PATH)) $criteria->add(AudioFilePeer::PATH, $this->path);
 
 		return $criteria;
 	}
@@ -1019,8 +848,8 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	 */
 	public function buildPkeyCriteria()
 	{
-		$criteria = new Criteria(UserPeer::DATABASE_NAME);
-		$criteria->add(UserPeer::ID, $this->id);
+		$criteria = new Criteria(AudioFilePeer::DATABASE_NAME);
+		$criteria->add(AudioFilePeer::ID, $this->id);
 
 		return $criteria;
 	}
@@ -1060,19 +889,19 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	 * If desired, this method can also make copies of all associated (fkey referrers)
 	 * objects.
 	 *
-	 * @param      object $copyObj An object of User (or compatible) type.
+	 * @param      object $copyObj An object of AudioFile (or compatible) type.
 	 * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
 	 * @throws     PropelException
 	 */
 	public function copyInto($copyObj, $deepCopy = false)
 	{
-		$copyObj->setUsername($this->username);
-		$copyObj->setPassword($this->password);
-		$copyObj->setFullname($this->fullname);
-		$copyObj->setEmail($this->email);
-		$copyObj->setCreatedDate($this->created_date);
-		$copyObj->setModifiedDate($this->modified_date);
-		$copyObj->setLastActive($this->last_active);
+		$copyObj->setUserId($this->user_id);
+		$copyObj->setArtist($this->artist);
+		$copyObj->setAlbum($this->album);
+		$copyObj->setTitle($this->title);
+		$copyObj->setTrack($this->track);
+		$copyObj->setComments($this->comments);
+		$copyObj->setPath($this->path);
 
 		$copyObj->setNew(true);
 		$copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1087,7 +916,7 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	 * objects.
 	 *
 	 * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-	 * @return     User Clone of current object.
+	 * @return     AudioFile Clone of current object.
 	 * @throws     PropelException
 	 */
 	public function copy($deepCopy = false)
@@ -1106,12 +935,12 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	 * same instance for all member of this class. The method could therefore
 	 * be static, but this would prevent one from overriding the behavior.
 	 *
-	 * @return     UserPeer
+	 * @return     AudioFilePeer
 	 */
 	public function getPeer()
 	{
 		if (self::$peer === null) {
-			self::$peer = new UserPeer();
+			self::$peer = new AudioFilePeer();
 		}
 		return self::$peer;
 	}
@@ -1122,13 +951,13 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	public function clear()
 	{
 		$this->id = null;
-		$this->username = null;
-		$this->password = null;
-		$this->fullname = null;
-		$this->email = null;
-		$this->created_date = null;
-		$this->modified_date = null;
-		$this->last_active = null;
+		$this->user_id = null;
+		$this->artist = null;
+		$this->album = null;
+		$this->title = null;
+		$this->track = null;
+		$this->comments = null;
+		$this->path = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();
@@ -1172,4 +1001,4 @@ abstract class BaseUser extends BaseObject  implements Persistent
 		return parent::__call($name, $params);
 	}
 
-} // BaseUser
+} // BaseAudioFile

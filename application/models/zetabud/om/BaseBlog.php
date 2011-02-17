@@ -2,25 +2,25 @@
 
 
 /**
- * Base class that represents a row from the 'user' table.
+ * Base class that represents a row from the 'blog' table.
  *
  * 
  *
  * @package    propel.generator.zetabud.om
  */
-abstract class BaseUser extends BaseObject  implements Persistent
+abstract class BaseBlog extends BaseObject  implements Persistent
 {
 
 	/**
 	 * Peer class name
 	 */
-	const PEER = 'UserPeer';
+	const PEER = 'BlogPeer';
 
 	/**
 	 * The Peer class.
 	 * Instance provides a convenient way of calling static methods on a class
 	 * that calling code may not be able to identify.
-	 * @var        UserPeer
+	 * @var        BlogPeer
 	 */
 	protected static $peer;
 
@@ -31,28 +31,22 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	protected $id;
 
 	/**
-	 * The value for the username field.
-	 * @var        string
+	 * The value for the user_id field.
+	 * @var        int
 	 */
-	protected $username;
+	protected $user_id;
 
 	/**
-	 * The value for the password field.
+	 * The value for the title field.
 	 * @var        string
 	 */
-	protected $password;
+	protected $title;
 
 	/**
-	 * The value for the fullname field.
+	 * The value for the text field.
 	 * @var        string
 	 */
-	protected $fullname;
-
-	/**
-	 * The value for the email field.
-	 * @var        string
-	 */
-	protected $email;
+	protected $text;
 
 	/**
 	 * The value for the created_date field.
@@ -67,10 +61,10 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	protected $modified_date;
 
 	/**
-	 * The value for the last_active field.
+	 * The value for the published_date field.
 	 * @var        string
 	 */
-	protected $last_active;
+	protected $published_date;
 
 	/**
 	 * Flag to prevent endless save loop, if this object is referenced
@@ -97,43 +91,33 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Get the [username] column value.
+	 * Get the [user_id] column value.
 	 * 
-	 * @return     string
+	 * @return     int
 	 */
-	public function getUsername()
+	public function getUserId()
 	{
-		return $this->username;
+		return $this->user_id;
 	}
 
 	/**
-	 * Get the [password] column value.
+	 * Get the [title] column value.
 	 * 
 	 * @return     string
 	 */
-	public function getPassword()
+	public function getTitle()
 	{
-		return $this->password;
+		return $this->title;
 	}
 
 	/**
-	 * Get the [fullname] column value.
+	 * Get the [text] column value.
 	 * 
 	 * @return     string
 	 */
-	public function getFullname()
+	public function getText()
 	{
-		return $this->fullname;
-	}
-
-	/**
-	 * Get the [email] column value.
-	 * 
-	 * @return     string
-	 */
-	public function getEmail()
-	{
-		return $this->email;
+		return $this->text;
 	}
 
 	/**
@@ -213,7 +197,7 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Get the [optionally formatted] temporal [last_active] column value.
+	 * Get the [optionally formatted] temporal [published_date] column value.
 	 * 
 	 *
 	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
@@ -221,22 +205,22 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
 	 * @throws     PropelException - if unable to parse/validate the date/time value.
 	 */
-	public function getLastActive($format = 'Y-m-d H:i:s')
+	public function getPublishedDate($format = 'Y-m-d H:i:s')
 	{
-		if ($this->last_active === null) {
+		if ($this->published_date === null) {
 			return null;
 		}
 
 
-		if ($this->last_active === '0000-00-00 00:00:00') {
+		if ($this->published_date === '0000-00-00 00:00:00') {
 			// while technically this is not a default value of NULL,
 			// this seems to be closest in meaning.
 			return null;
 		} else {
 			try {
-				$dt = new DateTime($this->last_active);
+				$dt = new DateTime($this->published_date);
 			} catch (Exception $x) {
-				throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->last_active, true), $x);
+				throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->published_date, true), $x);
 			}
 		}
 
@@ -254,7 +238,7 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	 * Set the value of [id] column.
 	 * 
 	 * @param      int $v new value
-	 * @return     User The current object (for fluent API support)
+	 * @return     Blog The current object (for fluent API support)
 	 */
 	public function setId($v)
 	{
@@ -264,98 +248,78 @@ abstract class BaseUser extends BaseObject  implements Persistent
 
 		if ($this->id !== $v) {
 			$this->id = $v;
-			$this->modifiedColumns[] = UserPeer::ID;
+			$this->modifiedColumns[] = BlogPeer::ID;
 		}
 
 		return $this;
 	} // setId()
 
 	/**
-	 * Set the value of [username] column.
+	 * Set the value of [user_id] column.
 	 * 
-	 * @param      string $v new value
-	 * @return     User The current object (for fluent API support)
+	 * @param      int $v new value
+	 * @return     Blog The current object (for fluent API support)
 	 */
-	public function setUsername($v)
+	public function setUserId($v)
 	{
 		if ($v !== null) {
-			$v = (string) $v;
+			$v = (int) $v;
 		}
 
-		if ($this->username !== $v) {
-			$this->username = $v;
-			$this->modifiedColumns[] = UserPeer::USERNAME;
+		if ($this->user_id !== $v) {
+			$this->user_id = $v;
+			$this->modifiedColumns[] = BlogPeer::USER_ID;
 		}
 
 		return $this;
-	} // setUsername()
+	} // setUserId()
 
 	/**
-	 * Set the value of [password] column.
+	 * Set the value of [title] column.
 	 * 
 	 * @param      string $v new value
-	 * @return     User The current object (for fluent API support)
+	 * @return     Blog The current object (for fluent API support)
 	 */
-	public function setPassword($v)
+	public function setTitle($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
 		}
 
-		if ($this->password !== $v) {
-			$this->password = $v;
-			$this->modifiedColumns[] = UserPeer::PASSWORD;
+		if ($this->title !== $v) {
+			$this->title = $v;
+			$this->modifiedColumns[] = BlogPeer::TITLE;
 		}
 
 		return $this;
-	} // setPassword()
+	} // setTitle()
 
 	/**
-	 * Set the value of [fullname] column.
+	 * Set the value of [text] column.
 	 * 
 	 * @param      string $v new value
-	 * @return     User The current object (for fluent API support)
+	 * @return     Blog The current object (for fluent API support)
 	 */
-	public function setFullname($v)
+	public function setText($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
 		}
 
-		if ($this->fullname !== $v) {
-			$this->fullname = $v;
-			$this->modifiedColumns[] = UserPeer::FULLNAME;
+		if ($this->text !== $v) {
+			$this->text = $v;
+			$this->modifiedColumns[] = BlogPeer::TEXT;
 		}
 
 		return $this;
-	} // setFullname()
-
-	/**
-	 * Set the value of [email] column.
-	 * 
-	 * @param      string $v new value
-	 * @return     User The current object (for fluent API support)
-	 */
-	public function setEmail($v)
-	{
-		if ($v !== null) {
-			$v = (string) $v;
-		}
-
-		if ($this->email !== $v) {
-			$this->email = $v;
-			$this->modifiedColumns[] = UserPeer::EMAIL;
-		}
-
-		return $this;
-	} // setEmail()
+	} // setText()
 
 	/**
 	 * Sets the value of [created_date] column to a normalized version of the date/time value specified.
 	 * 
 	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
 	 *						be treated as NULL for temporal objects.
-	 * @return     User The current object (for fluent API support)
+	 * @return     Blog The current object (for fluent API support)
 	 */
 	public function setCreatedDate($v)
 	{
@@ -392,7 +356,7 @@ abstract class BaseUser extends BaseObject  implements Persistent
 					)
 			{
 				$this->created_date = ($dt ? $dt->format('Y-m-d H:i:s') : null);
-				$this->modifiedColumns[] = UserPeer::CREATED_DATE;
+				$this->modifiedColumns[] = BlogPeer::CREATED_DATE;
 			}
 		} // if either are not null
 
@@ -404,7 +368,7 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	 * 
 	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
 	 *						be treated as NULL for temporal objects.
-	 * @return     User The current object (for fluent API support)
+	 * @return     Blog The current object (for fluent API support)
 	 */
 	public function setModifiedDate($v)
 	{
@@ -441,7 +405,7 @@ abstract class BaseUser extends BaseObject  implements Persistent
 					)
 			{
 				$this->modified_date = ($dt ? $dt->format('Y-m-d H:i:s') : null);
-				$this->modifiedColumns[] = UserPeer::MODIFIED_DATE;
+				$this->modifiedColumns[] = BlogPeer::MODIFIED_DATE;
 			}
 		} // if either are not null
 
@@ -449,13 +413,13 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	} // setModifiedDate()
 
 	/**
-	 * Sets the value of [last_active] column to a normalized version of the date/time value specified.
+	 * Sets the value of [published_date] column to a normalized version of the date/time value specified.
 	 * 
 	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
 	 *						be treated as NULL for temporal objects.
-	 * @return     User The current object (for fluent API support)
+	 * @return     Blog The current object (for fluent API support)
 	 */
-	public function setLastActive($v)
+	public function setPublishedDate($v)
 	{
 		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
 		// -- which is unexpected, to say the least.
@@ -480,22 +444,22 @@ abstract class BaseUser extends BaseObject  implements Persistent
 			}
 		}
 
-		if ( $this->last_active !== null || $dt !== null ) {
+		if ( $this->published_date !== null || $dt !== null ) {
 			// (nested ifs are a little easier to read in this case)
 
-			$currNorm = ($this->last_active !== null && $tmpDt = new DateTime($this->last_active)) ? $tmpDt->format('Y-m-d H:i:s') : null;
+			$currNorm = ($this->published_date !== null && $tmpDt = new DateTime($this->published_date)) ? $tmpDt->format('Y-m-d H:i:s') : null;
 			$newNorm = ($dt !== null) ? $dt->format('Y-m-d H:i:s') : null;
 
 			if ( ($currNorm !== $newNorm) // normalized values don't match 
 					)
 			{
-				$this->last_active = ($dt ? $dt->format('Y-m-d H:i:s') : null);
-				$this->modifiedColumns[] = UserPeer::LAST_ACTIVE;
+				$this->published_date = ($dt ? $dt->format('Y-m-d H:i:s') : null);
+				$this->modifiedColumns[] = BlogPeer::PUBLISHED_DATE;
 			}
 		} // if either are not null
 
 		return $this;
-	} // setLastActive()
+	} // setPublishedDate()
 
 	/**
 	 * Indicates whether the columns in this object are only set to default values.
@@ -530,13 +494,12 @@ abstract class BaseUser extends BaseObject  implements Persistent
 		try {
 
 			$this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-			$this->username = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-			$this->password = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-			$this->fullname = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-			$this->email = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-			$this->created_date = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
-			$this->modified_date = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
-			$this->last_active = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+			$this->user_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
+			$this->title = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+			$this->text = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+			$this->created_date = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+			$this->modified_date = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+			$this->published_date = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -545,10 +508,10 @@ abstract class BaseUser extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 8; // 8 = UserPeer::NUM_COLUMNS - UserPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 7; // 7 = BlogPeer::NUM_COLUMNS - BlogPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
-			throw new PropelException("Error populating User object", $e);
+			throw new PropelException("Error populating Blog object", $e);
 		}
 	}
 
@@ -591,13 +554,13 @@ abstract class BaseUser extends BaseObject  implements Persistent
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(UserPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(BlogPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
 		// We don't need to alter the object instance pool; we're just modifying this instance
 		// already in the pool.
 
-		$stmt = UserPeer::doSelectStmt($this->buildPkeyCriteria(), $con);
+		$stmt = BlogPeer::doSelectStmt($this->buildPkeyCriteria(), $con);
 		$row = $stmt->fetch(PDO::FETCH_NUM);
 		$stmt->closeCursor();
 		if (!$row) {
@@ -626,14 +589,14 @@ abstract class BaseUser extends BaseObject  implements Persistent
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(UserPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(BlogPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 
 		$con->beginTransaction();
 		try {
 			$ret = $this->preDelete($con);
 			if ($ret) {
-				UserQuery::create()
+				BlogQuery::create()
 					->filterByPrimaryKey($this->getPrimaryKey())
 					->delete($con);
 				$this->postDelete($con);
@@ -668,7 +631,7 @@ abstract class BaseUser extends BaseObject  implements Persistent
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(UserPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(BlogPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 
 		$con->beginTransaction();
@@ -688,7 +651,7 @@ abstract class BaseUser extends BaseObject  implements Persistent
 					$this->postUpdate($con);
 				}
 				$this->postSave($con);
-				UserPeer::addInstanceToPool($this);
+				BlogPeer::addInstanceToPool($this);
 			} else {
 				$affectedRows = 0;
 			}
@@ -718,15 +681,15 @@ abstract class BaseUser extends BaseObject  implements Persistent
 			$this->alreadyInSave = true;
 
 			if ($this->isNew() ) {
-				$this->modifiedColumns[] = UserPeer::ID;
+				$this->modifiedColumns[] = BlogPeer::ID;
 			}
 
 			// If this object has been modified, then save it to the database.
 			if ($this->isModified()) {
 				if ($this->isNew()) {
 					$criteria = $this->buildCriteria();
-					if ($criteria->keyContainsValue(UserPeer::ID) ) {
-						throw new PropelException('Cannot insert a value for auto-increment primary key ('.UserPeer::ID.')');
+					if ($criteria->keyContainsValue(BlogPeer::ID) ) {
+						throw new PropelException('Cannot insert a value for auto-increment primary key ('.BlogPeer::ID.')');
 					}
 
 					$pk = BasePeer::doInsert($criteria, $con);
@@ -734,7 +697,7 @@ abstract class BaseUser extends BaseObject  implements Persistent
 					$this->setId($pk);  //[IMV] update autoincrement primary key
 					$this->setNew(false);
 				} else {
-					$affectedRows = UserPeer::doUpdate($this, $con);
+					$affectedRows = BlogPeer::doUpdate($this, $con);
 				}
 
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
@@ -806,7 +769,7 @@ abstract class BaseUser extends BaseObject  implements Persistent
 			$failureMap = array();
 
 
-			if (($retval = UserPeer::doValidate($this, $columns)) !== true) {
+			if (($retval = BlogPeer::doValidate($this, $columns)) !== true) {
 				$failureMap = array_merge($failureMap, $retval);
 			}
 
@@ -829,7 +792,7 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	 */
 	public function getByName($name, $type = BasePeer::TYPE_PHPNAME)
 	{
-		$pos = UserPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+		$pos = BlogPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 		$field = $this->getByPosition($pos);
 		return $field;
 	}
@@ -848,25 +811,22 @@ abstract class BaseUser extends BaseObject  implements Persistent
 				return $this->getId();
 				break;
 			case 1:
-				return $this->getUsername();
+				return $this->getUserId();
 				break;
 			case 2:
-				return $this->getPassword();
+				return $this->getTitle();
 				break;
 			case 3:
-				return $this->getFullname();
+				return $this->getText();
 				break;
 			case 4:
-				return $this->getEmail();
-				break;
-			case 5:
 				return $this->getCreatedDate();
 				break;
-			case 6:
+			case 5:
 				return $this->getModifiedDate();
 				break;
-			case 7:
-				return $this->getLastActive();
+			case 6:
+				return $this->getPublishedDate();
 				break;
 			default:
 				return null;
@@ -889,16 +849,15 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	 */
 	public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true)
 	{
-		$keys = UserPeer::getFieldNames($keyType);
+		$keys = BlogPeer::getFieldNames($keyType);
 		$result = array(
 			$keys[0] => $this->getId(),
-			$keys[1] => $this->getUsername(),
-			$keys[2] => $this->getPassword(),
-			$keys[3] => $this->getFullname(),
-			$keys[4] => $this->getEmail(),
-			$keys[5] => $this->getCreatedDate(),
-			$keys[6] => $this->getModifiedDate(),
-			$keys[7] => $this->getLastActive(),
+			$keys[1] => $this->getUserId(),
+			$keys[2] => $this->getTitle(),
+			$keys[3] => $this->getText(),
+			$keys[4] => $this->getCreatedDate(),
+			$keys[5] => $this->getModifiedDate(),
+			$keys[6] => $this->getPublishedDate(),
 		);
 		return $result;
 	}
@@ -915,7 +874,7 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	 */
 	public function setByName($name, $value, $type = BasePeer::TYPE_PHPNAME)
 	{
-		$pos = UserPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+		$pos = BlogPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 		return $this->setByPosition($pos, $value);
 	}
 
@@ -934,25 +893,22 @@ abstract class BaseUser extends BaseObject  implements Persistent
 				$this->setId($value);
 				break;
 			case 1:
-				$this->setUsername($value);
+				$this->setUserId($value);
 				break;
 			case 2:
-				$this->setPassword($value);
+				$this->setTitle($value);
 				break;
 			case 3:
-				$this->setFullname($value);
+				$this->setText($value);
 				break;
 			case 4:
-				$this->setEmail($value);
-				break;
-			case 5:
 				$this->setCreatedDate($value);
 				break;
-			case 6:
+			case 5:
 				$this->setModifiedDate($value);
 				break;
-			case 7:
-				$this->setLastActive($value);
+			case 6:
+				$this->setPublishedDate($value);
 				break;
 		} // switch()
 	}
@@ -976,16 +932,15 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	 */
 	public function fromArray($arr, $keyType = BasePeer::TYPE_PHPNAME)
 	{
-		$keys = UserPeer::getFieldNames($keyType);
+		$keys = BlogPeer::getFieldNames($keyType);
 
 		if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-		if (array_key_exists($keys[1], $arr)) $this->setUsername($arr[$keys[1]]);
-		if (array_key_exists($keys[2], $arr)) $this->setPassword($arr[$keys[2]]);
-		if (array_key_exists($keys[3], $arr)) $this->setFullname($arr[$keys[3]]);
-		if (array_key_exists($keys[4], $arr)) $this->setEmail($arr[$keys[4]]);
-		if (array_key_exists($keys[5], $arr)) $this->setCreatedDate($arr[$keys[5]]);
-		if (array_key_exists($keys[6], $arr)) $this->setModifiedDate($arr[$keys[6]]);
-		if (array_key_exists($keys[7], $arr)) $this->setLastActive($arr[$keys[7]]);
+		if (array_key_exists($keys[1], $arr)) $this->setUserId($arr[$keys[1]]);
+		if (array_key_exists($keys[2], $arr)) $this->setTitle($arr[$keys[2]]);
+		if (array_key_exists($keys[3], $arr)) $this->setText($arr[$keys[3]]);
+		if (array_key_exists($keys[4], $arr)) $this->setCreatedDate($arr[$keys[4]]);
+		if (array_key_exists($keys[5], $arr)) $this->setModifiedDate($arr[$keys[5]]);
+		if (array_key_exists($keys[6], $arr)) $this->setPublishedDate($arr[$keys[6]]);
 	}
 
 	/**
@@ -995,16 +950,15 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	 */
 	public function buildCriteria()
 	{
-		$criteria = new Criteria(UserPeer::DATABASE_NAME);
+		$criteria = new Criteria(BlogPeer::DATABASE_NAME);
 
-		if ($this->isColumnModified(UserPeer::ID)) $criteria->add(UserPeer::ID, $this->id);
-		if ($this->isColumnModified(UserPeer::USERNAME)) $criteria->add(UserPeer::USERNAME, $this->username);
-		if ($this->isColumnModified(UserPeer::PASSWORD)) $criteria->add(UserPeer::PASSWORD, $this->password);
-		if ($this->isColumnModified(UserPeer::FULLNAME)) $criteria->add(UserPeer::FULLNAME, $this->fullname);
-		if ($this->isColumnModified(UserPeer::EMAIL)) $criteria->add(UserPeer::EMAIL, $this->email);
-		if ($this->isColumnModified(UserPeer::CREATED_DATE)) $criteria->add(UserPeer::CREATED_DATE, $this->created_date);
-		if ($this->isColumnModified(UserPeer::MODIFIED_DATE)) $criteria->add(UserPeer::MODIFIED_DATE, $this->modified_date);
-		if ($this->isColumnModified(UserPeer::LAST_ACTIVE)) $criteria->add(UserPeer::LAST_ACTIVE, $this->last_active);
+		if ($this->isColumnModified(BlogPeer::ID)) $criteria->add(BlogPeer::ID, $this->id);
+		if ($this->isColumnModified(BlogPeer::USER_ID)) $criteria->add(BlogPeer::USER_ID, $this->user_id);
+		if ($this->isColumnModified(BlogPeer::TITLE)) $criteria->add(BlogPeer::TITLE, $this->title);
+		if ($this->isColumnModified(BlogPeer::TEXT)) $criteria->add(BlogPeer::TEXT, $this->text);
+		if ($this->isColumnModified(BlogPeer::CREATED_DATE)) $criteria->add(BlogPeer::CREATED_DATE, $this->created_date);
+		if ($this->isColumnModified(BlogPeer::MODIFIED_DATE)) $criteria->add(BlogPeer::MODIFIED_DATE, $this->modified_date);
+		if ($this->isColumnModified(BlogPeer::PUBLISHED_DATE)) $criteria->add(BlogPeer::PUBLISHED_DATE, $this->published_date);
 
 		return $criteria;
 	}
@@ -1019,8 +973,8 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	 */
 	public function buildPkeyCriteria()
 	{
-		$criteria = new Criteria(UserPeer::DATABASE_NAME);
-		$criteria->add(UserPeer::ID, $this->id);
+		$criteria = new Criteria(BlogPeer::DATABASE_NAME);
+		$criteria->add(BlogPeer::ID, $this->id);
 
 		return $criteria;
 	}
@@ -1060,19 +1014,18 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	 * If desired, this method can also make copies of all associated (fkey referrers)
 	 * objects.
 	 *
-	 * @param      object $copyObj An object of User (or compatible) type.
+	 * @param      object $copyObj An object of Blog (or compatible) type.
 	 * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
 	 * @throws     PropelException
 	 */
 	public function copyInto($copyObj, $deepCopy = false)
 	{
-		$copyObj->setUsername($this->username);
-		$copyObj->setPassword($this->password);
-		$copyObj->setFullname($this->fullname);
-		$copyObj->setEmail($this->email);
+		$copyObj->setUserId($this->user_id);
+		$copyObj->setTitle($this->title);
+		$copyObj->setText($this->text);
 		$copyObj->setCreatedDate($this->created_date);
 		$copyObj->setModifiedDate($this->modified_date);
-		$copyObj->setLastActive($this->last_active);
+		$copyObj->setPublishedDate($this->published_date);
 
 		$copyObj->setNew(true);
 		$copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1087,7 +1040,7 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	 * objects.
 	 *
 	 * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-	 * @return     User Clone of current object.
+	 * @return     Blog Clone of current object.
 	 * @throws     PropelException
 	 */
 	public function copy($deepCopy = false)
@@ -1106,12 +1059,12 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	 * same instance for all member of this class. The method could therefore
 	 * be static, but this would prevent one from overriding the behavior.
 	 *
-	 * @return     UserPeer
+	 * @return     BlogPeer
 	 */
 	public function getPeer()
 	{
 		if (self::$peer === null) {
-			self::$peer = new UserPeer();
+			self::$peer = new BlogPeer();
 		}
 		return self::$peer;
 	}
@@ -1122,13 +1075,12 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	public function clear()
 	{
 		$this->id = null;
-		$this->username = null;
-		$this->password = null;
-		$this->fullname = null;
-		$this->email = null;
+		$this->user_id = null;
+		$this->title = null;
+		$this->text = null;
 		$this->created_date = null;
 		$this->modified_date = null;
-		$this->last_active = null;
+		$this->published_date = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();
@@ -1172,4 +1124,4 @@ abstract class BaseUser extends BaseObject  implements Persistent
 		return parent::__call($name, $params);
 	}
 
-} // BaseUser
+} // BaseBlog

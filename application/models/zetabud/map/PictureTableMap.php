@@ -3,7 +3,7 @@
 
 
 /**
- * This class defines the structure of the 'user' table.
+ * This class defines the structure of the 'picture' table.
  *
  *
  *
@@ -14,12 +14,12 @@
  *
  * @package    propel.generator.zetabud.map
  */
-class UserTableMap extends TableMap {
+class PictureTableMap extends TableMap {
 
 	/**
 	 * The (dot-path) name of this class
 	 */
-	const CLASS_NAME = 'zetabud.map.UserTableMap';
+	const CLASS_NAME = 'zetabud.map.PictureTableMap';
 
 	/**
 	 * Initialize the table attributes, columns and validators
@@ -31,20 +31,20 @@ class UserTableMap extends TableMap {
 	public function initialize()
 	{
 	  // attributes
-		$this->setName('user');
-		$this->setPhpName('User');
-		$this->setClassname('User');
+		$this->setName('picture');
+		$this->setPhpName('Picture');
+		$this->setClassname('Picture');
 		$this->setPackage('zetabud');
 		$this->setUseIdGenerator(true);
 		// columns
 		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-		$this->addColumn('USERNAME', 'Username', 'VARCHAR', true, 255, null);
-		$this->addColumn('PASSWORD', 'Password', 'VARCHAR', true, 255, null);
-		$this->addColumn('FULLNAME', 'Fullname', 'VARCHAR', true, 255, null);
-		$this->addColumn('EMAIL', 'Email', 'VARCHAR', false, 255, null);
+		$this->addColumn('USER_ID', 'UserId', 'INTEGER', true, null, null);
+		$this->addColumn('TITLE', 'Title', 'VARCHAR', false, 255, null);
+		$this->addColumn('CAPTION', 'Caption', 'LONGVARCHAR', false, 255, null);
+		$this->addColumn('ORIENTATION', 'Orientation', 'VARCHAR', false, 10, null);
+		$this->addColumn('RATING', 'Rating', 'DECIMAL', false, null, null);
 		$this->addColumn('CREATED_DATE', 'CreatedDate', 'TIMESTAMP', true, null, null);
 		$this->addColumn('MODIFIED_DATE', 'ModifiedDate', 'TIMESTAMP', true, null, null);
-		$this->addColumn('LAST_ACTIVE', 'LastActive', 'TIMESTAMP', true, null, null);
 		// validators
 	} // initialize()
 
@@ -55,4 +55,4 @@ class UserTableMap extends TableMap {
 	{
 	} // buildRelations()
 
-} // UserTableMap
+} // PictureTableMap

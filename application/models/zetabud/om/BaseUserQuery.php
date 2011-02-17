@@ -8,9 +8,21 @@
  *
  * @method     UserQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     UserQuery orderByUsername($order = Criteria::ASC) Order by the username column
+ * @method     UserQuery orderByPassword($order = Criteria::ASC) Order by the password column
+ * @method     UserQuery orderByFullname($order = Criteria::ASC) Order by the fullname column
+ * @method     UserQuery orderByEmail($order = Criteria::ASC) Order by the email column
+ * @method     UserQuery orderByCreatedDate($order = Criteria::ASC) Order by the created_date column
+ * @method     UserQuery orderByModifiedDate($order = Criteria::ASC) Order by the modified_date column
+ * @method     UserQuery orderByLastActive($order = Criteria::ASC) Order by the last_active column
  *
  * @method     UserQuery groupById() Group by the id column
  * @method     UserQuery groupByUsername() Group by the username column
+ * @method     UserQuery groupByPassword() Group by the password column
+ * @method     UserQuery groupByFullname() Group by the fullname column
+ * @method     UserQuery groupByEmail() Group by the email column
+ * @method     UserQuery groupByCreatedDate() Group by the created_date column
+ * @method     UserQuery groupByModifiedDate() Group by the modified_date column
+ * @method     UserQuery groupByLastActive() Group by the last_active column
  *
  * @method     UserQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     UserQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -21,9 +33,21 @@
  *
  * @method     User findOneById(int $id) Return the first User filtered by the id column
  * @method     User findOneByUsername(string $username) Return the first User filtered by the username column
+ * @method     User findOneByPassword(string $password) Return the first User filtered by the password column
+ * @method     User findOneByFullname(string $fullname) Return the first User filtered by the fullname column
+ * @method     User findOneByEmail(string $email) Return the first User filtered by the email column
+ * @method     User findOneByCreatedDate(string $created_date) Return the first User filtered by the created_date column
+ * @method     User findOneByModifiedDate(string $modified_date) Return the first User filtered by the modified_date column
+ * @method     User findOneByLastActive(string $last_active) Return the first User filtered by the last_active column
  *
  * @method     array findById(int $id) Return User objects filtered by the id column
  * @method     array findByUsername(string $username) Return User objects filtered by the username column
+ * @method     array findByPassword(string $password) Return User objects filtered by the password column
+ * @method     array findByFullname(string $fullname) Return User objects filtered by the fullname column
+ * @method     array findByEmail(string $email) Return User objects filtered by the email column
+ * @method     array findByCreatedDate(string $created_date) Return User objects filtered by the created_date column
+ * @method     array findByModifiedDate(string $modified_date) Return User objects filtered by the modified_date column
+ * @method     array findByLastActive(string $last_active) Return User objects filtered by the last_active column
  *
  * @package    propel.generator.zetabud.om
  */
@@ -170,6 +194,165 @@ abstract class BaseUserQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(UserPeer::USERNAME, $username, $comparison);
+	}
+
+	/**
+	 * Filter the query on the password column
+	 * 
+	 * @param     string $password The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function filterByPassword($password = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($password)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $password)) {
+				$password = str_replace('*', '%', $password);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(UserPeer::PASSWORD, $password, $comparison);
+	}
+
+	/**
+	 * Filter the query on the fullname column
+	 * 
+	 * @param     string $fullname The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function filterByFullname($fullname = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($fullname)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $fullname)) {
+				$fullname = str_replace('*', '%', $fullname);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(UserPeer::FULLNAME, $fullname, $comparison);
+	}
+
+	/**
+	 * Filter the query on the email column
+	 * 
+	 * @param     string $email The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function filterByEmail($email = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($email)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $email)) {
+				$email = str_replace('*', '%', $email);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(UserPeer::EMAIL, $email, $comparison);
+	}
+
+	/**
+	 * Filter the query on the created_date column
+	 * 
+	 * @param     string|array $createdDate The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function filterByCreatedDate($createdDate = null, $comparison = null)
+	{
+		if (is_array($createdDate)) {
+			$useMinMax = false;
+			if (isset($createdDate['min'])) {
+				$this->addUsingAlias(UserPeer::CREATED_DATE, $createdDate['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($createdDate['max'])) {
+				$this->addUsingAlias(UserPeer::CREATED_DATE, $createdDate['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(UserPeer::CREATED_DATE, $createdDate, $comparison);
+	}
+
+	/**
+	 * Filter the query on the modified_date column
+	 * 
+	 * @param     string|array $modifiedDate The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function filterByModifiedDate($modifiedDate = null, $comparison = null)
+	{
+		if (is_array($modifiedDate)) {
+			$useMinMax = false;
+			if (isset($modifiedDate['min'])) {
+				$this->addUsingAlias(UserPeer::MODIFIED_DATE, $modifiedDate['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($modifiedDate['max'])) {
+				$this->addUsingAlias(UserPeer::MODIFIED_DATE, $modifiedDate['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(UserPeer::MODIFIED_DATE, $modifiedDate, $comparison);
+	}
+
+	/**
+	 * Filter the query on the last_active column
+	 * 
+	 * @param     string|array $lastActive The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function filterByLastActive($lastActive = null, $comparison = null)
+	{
+		if (is_array($lastActive)) {
+			$useMinMax = false;
+			if (isset($lastActive['min'])) {
+				$this->addUsingAlias(UserPeer::LAST_ACTIVE, $lastActive['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($lastActive['max'])) {
+				$this->addUsingAlias(UserPeer::LAST_ACTIVE, $lastActive['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(UserPeer::LAST_ACTIVE, $lastActive, $comparison);
 	}
 
 	/**

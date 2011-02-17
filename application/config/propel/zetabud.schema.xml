@@ -1,8 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <database name="zetabud">
+
+    <table name="audio_file">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="user_id" type="integer" required="true"/>
+        <column name="artist" type="varchar" size="255"/>
+        <column name="album" type="varchar" size="255"/>
+        <column name="title" type="varchar" size="255"/>
+        <column name="track" type="varchar" size="255"/>
+        <column name="comments" type="varchar" size="255"/>
+        <column name="path" type="varchar" size="255"/>
+    </table>
+
+    <table name="blog">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="user_id" type="integer" required="true"/>
+        <column name="title" type="varchar" size="255" required="true"/>
+        <column name="text" type="longvarchar" required="true"/>
+        <column name="created_date" type="timestamp" required="true"/>
+        <column name="modified_date" type="timestamp" required="true"/>
+        <column name="published_date" type="timestamp" required="true"/>
+    </table>
+
+    <table name="chat_line">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="user_id" type="integer" required="true"/>
+        <column name="text" type="varchar" size="255" required="true"/>
+        <column name="date" type="timestamp" required="true"/>
+    </table>
+
+    <table name="email">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="user_from_id" type="integer" required="true"/>
+        <column name="user_to_id" type="integer" required="true"/>
+        <column name="subject" type="varchar" size="255"/>
+        <column name="text" type="longvarchar" required="true"/>
+    </table>
+
+    <table name="friend" isCrossRef="true">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="user1_id" type="integer" required="true"/>
+        <column name="user2_id" type="integer" required="true"/>
+        <column name="friend_group_id" type="integer" required="true"/>
+        <column name="requested_date" type="timestamp" required="true"/>
+        <column name="confirmed_date" type="timestamp" required="true"/>
+    </table>
+
+    <table name="note">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="user_id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="text" type="longvarchar" required="true"/>
+        <column name="created_date" type="timestamp" required="true"/>
+        <column name="modified_date" type="timestamp" required="true"/>
+    </table>
+
+    <table name="picture">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="user_id" type="integer" required="true"/>
+        <column name="title" type="varchar" size="255"/>
+        <column name="caption" type="longvarchar" size="255"/>
+        <column name="orientation" type="varchar" size="10"/>
+        <column name="rating" type="decimal"/>
+        <column name="created_date" type="timestamp" required="true"/>
+        <column name="modified_date" type="timestamp" required="true"/>
+    </table>
+
     <table name="user">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="username" type="varchar" size="255" required="true"/>
+        <column name="password" type="varchar" size="255" required="true"/>
+        <column name="fullname" type="varchar" size="255" required="true"/>
+        <column name="email" type="varchar" size="255"/>
+        <column name="created_date" type="timestamp" required="true"/>
+        <column name="modified_date" type="timestamp" required="true"/>
+        <column name="last_active" type="timestamp" required="true"/>
     </table>
+    
+    <table name="video_file">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="user_id" type="integer" required="true"/>
+        <column name="artist" type="varchar" size="255"/>
+        <column name="album" type="varchar" size="255"/>
+        <column name="title" type="varchar" size="255"/>
+        <column name="track" type="varchar" size="255"/>
+        <column name="comments" type="varchar" size="255"/>
+        <column name="path" type="varchar" size="255"/>
+    </table>
+
 </database>
