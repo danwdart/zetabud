@@ -3,7 +3,7 @@
 
 
 /**
- * This class defines the structure of the 'user' table.
+ * This class defines the structure of the 'note' table.
  *
  *
  *
@@ -14,12 +14,12 @@
  *
  * @package    propel.generator.zetabud.map
  */
-class UserTableMap extends TableMap {
+class NoteTableMap extends TableMap {
 
 	/**
 	 * The (dot-path) name of this class
 	 */
-	const CLASS_NAME = 'zetabud.map.UserTableMap';
+	const CLASS_NAME = 'zetabud.map.NoteTableMap';
 
 	/**
 	 * Initialize the table attributes, columns and validators
@@ -31,20 +31,17 @@ class UserTableMap extends TableMap {
 	public function initialize()
 	{
 	  // attributes
-		$this->setName('user');
-		$this->setPhpName('User');
-		$this->setClassname('User');
+		$this->setName('note');
+		$this->setPhpName('Note');
+		$this->setClassname('Note');
 		$this->setPackage('zetabud');
 		$this->setUseIdGenerator(true);
 		// columns
 		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-		$this->addColumn('USERNAME', 'Username', 'VARCHAR', true, 255, null);
-		$this->addColumn('PASSWORD', 'Password', 'VARCHAR', true, 255, null);
-		$this->addColumn('FULLNAME', 'Fullname', 'VARCHAR', true, 255, null);
-		$this->addColumn('EMAIL', 'Email', 'VARCHAR', false, 255, null);
+		$this->addPrimaryKey('USER_ID', 'UserId', 'INTEGER', true, null, null);
+		$this->addColumn('TEXT', 'Text', 'LONGVARCHAR', true, null, null);
 		$this->addColumn('CREATED_DATE', 'CreatedDate', 'TIMESTAMP', true, null, null);
 		$this->addColumn('MODIFIED_DATE', 'ModifiedDate', 'TIMESTAMP', true, null, null);
-		$this->addColumn('LAST_ACTIVE', 'LastActive', 'TIMESTAMP', true, null, null);
 		// validators
 	} // initialize()
 
@@ -55,4 +52,4 @@ class UserTableMap extends TableMap {
 	{
 	} // buildRelations()
 
-} // UserTableMap
+} // NoteTableMap
