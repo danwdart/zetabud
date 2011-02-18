@@ -561,14 +561,9 @@ abstract class BaseNote extends BaseObject  implements Persistent
 						throw new PropelException('Cannot insert a value for auto-increment primary key ('.NotePeer::ID.')');
 					}
 
-					if ($criteria->keyContainsValue(NotePeer::USER_ID) ) {
-						throw new PropelException('Cannot insert a value for auto-increment primary key ('.NotePeer::USER_ID.')');
-					}
-
 					$pk = BasePeer::doInsert($criteria, $con);
 					$affectedRows = 1;
 					$this->setId($pk);  //[IMV] update autoincrement primary key
-					$this->setUserId($pk);  //[IMV] update autoincrement primary key
 					$this->setNew(false);
 				} else {
 					$affectedRows = NotePeer::doUpdate($this, $con);
@@ -831,35 +826,28 @@ abstract class BaseNote extends BaseObject  implements Persistent
 	{
 		$criteria = new Criteria(NotePeer::DATABASE_NAME);
 		$criteria->add(NotePeer::ID, $this->id);
-		$criteria->add(NotePeer::USER_ID, $this->user_id);
 
 		return $criteria;
 	}
 
 	/**
-	 * Returns the composite primary key for this object.
-	 * The array elements will be in same order as specified in XML.
-	 * @return     array
+	 * Returns the primary key for this object (row).
+	 * @return     int
 	 */
 	public function getPrimaryKey()
 	{
-		$pks = array();
-		$pks[0] = $this->getId();
-		$pks[1] = $this->getUserId();
-
-		return $pks;
+		return $this->getId();
 	}
 
 	/**
-	 * Set the [composite] primary key.
+	 * Generic method to set the primary key (id column).
 	 *
-	 * @param      array $keys The elements of the composite key (order must match the order in XML file).
+	 * @param      int $key Primary key.
 	 * @return     void
 	 */
-	public function setPrimaryKey($keys)
+	public function setPrimaryKey($key)
 	{
-		$this->setId($keys[0]);
-		$this->setUserId($keys[1]);
+		$this->setId($key);
 	}
 
 	/**
@@ -868,7 +856,7 @@ abstract class BaseNote extends BaseObject  implements Persistent
 	 */
 	public function isPrimaryKeyNull()
 	{
-		return (null === $this->getId()) && (null === $this->getUserId());
+		return null === $this->getId();
 	}
 
 	/**
@@ -883,13 +871,13 @@ abstract class BaseNote extends BaseObject  implements Persistent
 	 */
 	public function copyInto($copyObj, $deepCopy = false)
 	{
+		$copyObj->setUserId($this->user_id);
 		$copyObj->setText($this->text);
 		$copyObj->setCreatedDate($this->created_date);
 		$copyObj->setModifiedDate($this->modified_date);
 
 		$copyObj->setNew(true);
 		$copyObj->setId(NULL); // this is a auto-increment column, so set to default value
-		$copyObj->setUserId(NULL); // this is a auto-increment column, so set to default value
 	}
 
 	/**

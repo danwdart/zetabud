@@ -103,11 +103,11 @@ DROP TABLE IF EXISTS `note`;
 CREATE TABLE `note`
 (
 	`id` INTEGER  NOT NULL AUTO_INCREMENT,
-	`user_id` INTEGER  NOT NULL AUTO_INCREMENT,
+	`user_id` INTEGER  NOT NULL,
 	`text` TEXT  NOT NULL,
 	`created_date` DATETIME  NOT NULL,
 	`modified_date` DATETIME  NOT NULL,
-	PRIMARY KEY (`id`,`user_id`)
+	PRIMARY KEY (`id`)
 ) ENGINE=MyISAM;
 
 #-----------------------------------------------------------------------------

@@ -1,9 +1,11 @@
 <?php
-class LoginController extends ZB_Controller_Action
+class LoginController extends ZB_Controller_Action_App
 {
     public function indexAction()
     {
         $form = new ZB_Form();
+        $form->setMethod('post');
+        $form->setAction('');
 
         $username = new ZB_Form_Element_Text('username');
         $username->setLabel('Username:');
@@ -23,7 +25,63 @@ class LoginController extends ZB_Controller_Action
 
         if($this->getRequest()->isPost())
         {
+            $message = $this->_processRequest();
+            $this->view->assign('message', $message);
+        }
+    }
+
+    private function _processRequest()
+    {
+        $username = $this->getRequest()->getPost('username');
+        $password = $this->getRequest()->getPost('password');
+
+        if(!is_null($this->getRequest()->getPost('Login')))
+        {
+            if(User::doLogin($username, $password))
+            {
+                return "Authorised";
+            }
+            else
+            {
+                return "Unauthorised";
+            }
+        }
+
+        elseif(!is_null($this->getRequest()->getPost('Register')))
+        {
+
+            if(!User::isValidUsername($username))
+            {
+                return "Not a Valid Username";
+            }
+
+            if(!User::isValidPassword($password))
+            {
+                return "Not A Valid Password";
+            }
+
+            if(User::exists($username))
+            {
+                return "Username taken";
+            }
+
+            try
+            {
+                $user = new User();
+                $user->setUsername($username);
+                $user->setPassword(User::encryptPassword($password));
+                $user->save();
+
+                return "Created Account";
+            }
+            catch(Exception $e)
+            {
+                return "Could not create account.";
+            }
+        }
+        else
+        {
+            return 'Invalid action.';
         }
     }
 }
-

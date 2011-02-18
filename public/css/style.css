@@ -38,3 +38,11 @@ input[type=button], input[type=submit]
     padding: 2px;
     margin: 4px;
 }
+
+.messages {
+    text-align:center;
+    border: 2px outset #999999;
+    margin: 0 auto;
+    padding: 5px 20px;
+    width: 200px;
+}
