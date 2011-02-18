@@ -2,7 +2,9 @@
 <h1>Login:</h1>
 <?php echo $this->form; ?>
 </div>
+<?php if($this->message) : ?>
     <div class="messages"><?php echo $this->message; ?></div>
+<?php endif; ?>
 <script>
 $(document).ready(function() {
     $('#username').focus();

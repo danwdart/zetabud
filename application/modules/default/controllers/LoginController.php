@@ -26,7 +26,17 @@ class LoginController extends ZB_Controller_Action_App
         if($this->getRequest()->isPost())
         {
             $message = $this->_processRequest();
-            $this->view->assign('message', $message);
+
+            if($this->getRequest()->isXMLHTTPRequest())
+            {
+                $renderer = $this->getHelper('ViewRenderer');
+                $renderer->setNoRender(true);
+                echo $message;
+            }
+            else
+            {
+                $this->view->assign('message', $message);
+            }
         }
     }
 
