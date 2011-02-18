@@ -1,0 +1,2 @@
+#!/bin/sh
+mysql -u zetabud zetabud -p < var/db/sql/zetabud.schema.sql

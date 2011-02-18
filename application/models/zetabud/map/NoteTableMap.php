@@ -38,7 +38,7 @@ class NoteTableMap extends TableMap {
 		$this->setUseIdGenerator(true);
 		// columns
 		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-		$this->addPrimaryKey('USER_ID', 'UserId', 'INTEGER', true, null, null);
+		$this->addColumn('USER_ID', 'UserId', 'INTEGER', true, null, null);
 		$this->addColumn('TEXT', 'Text', 'LONGVARCHAR', true, null, null);
 		$this->addColumn('CREATED_DATE', 'CreatedDate', 'TIMESTAMP', true, null, null);
 		$this->addColumn('MODIFIED_DATE', 'ModifiedDate', 'TIMESTAMP', true, null, null);

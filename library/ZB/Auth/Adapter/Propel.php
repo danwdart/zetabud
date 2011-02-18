@@ -13,7 +13,7 @@ class ZB_Auth_Adapter_Propel implements Zend_Auth_Adapter_Interface
     public function authenticate()
     {
         $identity = UserQuery::create()
-            ->filterByEmail($this->_email)
+            ->filterByEmail($this->_username)
             ->findOne();
 
         if(is_null($identity))

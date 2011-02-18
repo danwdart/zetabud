@@ -289,7 +289,7 @@ abstract class BaseNotePeer {
 	{
 		if (Propel::isInstancePoolingEnabled()) {
 			if ($key === null) {
-				$key = serialize(array((string) $obj->getId(), (string) $obj->getUserId()));
+				$key = (string) $obj->getId();
 			} // if key === null
 			self::$instances[$key] = $obj;
 		}
@@ -309,10 +309,10 @@ abstract class BaseNotePeer {
 	{
 		if (Propel::isInstancePoolingEnabled() && $value !== null) {
 			if (is_object($value) && $value instanceof Note) {
-				$key = serialize(array((string) $value->getId(), (string) $value->getUserId()));
-			} elseif (is_array($value) && count($value) === 2) {
+				$key = (string) $value->getId();
+			} elseif (is_scalar($value)) {
 				// assume we've been passed a primary key
-				$key = serialize(array((string) $value[0], (string) $value[1]));
+				$key = (string) $value;
 			} else {
 				$e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or Note object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
 				throw $e;
@@ -373,10 +373,10 @@ abstract class BaseNotePeer {
 	public static function getPrimaryKeyHashFromRow($row, $startcol = 0)
 	{
 		// If the PK cannot be derived from the row, return NULL.
-		if ($row[$startcol] === null && $row[$startcol + 1] === null) {
+		if ($row[$startcol] === null) {
 			return null;
 		}
-		return serialize(array((string) $row[$startcol], (string) $row[$startcol + 1]));
+		return (string) $row[$startcol];
 	}
 
 	/**
@@ -390,7 +390,7 @@ abstract class BaseNotePeer {
 	 */
 	public static function getPrimaryKeyFromRow($row, $startcol = 0)
 	{
-		return array((int) $row[$startcol], (int) $row[$startcol + 1]);
+		return (int) $row[$startcol];
 	}
 	
 	/**
@@ -514,10 +514,6 @@ abstract class BaseNotePeer {
 			throw new PropelException('Cannot insert a value for auto-increment primary key ('.NotePeer::ID.')');
 		}
 
-		if ($criteria->containsKey(NotePeer::USER_ID) && $criteria->keyContainsValue(NotePeer::USER_ID) ) {
-			throw new PropelException('Cannot insert a value for auto-increment primary key ('.NotePeer::USER_ID.')');
-		}
-
 
 		// Set the correct dbName
 		$criteria->setDbName(self::DATABASE_NAME);
@@ -560,14 +556,6 @@ abstract class BaseNotePeer {
 			$value = $criteria->remove(NotePeer::ID);
 			if ($value) {
 				$selectCriteria->add(NotePeer::ID, $value, $comparison);
-			} else {
-				$selectCriteria->setPrimaryTableName(NotePeer::TABLE_NAME);
-			}
-
-			$comparison = $criteria->getComparison(NotePeer::USER_ID);
-			$value = $criteria->remove(NotePeer::USER_ID);
-			if ($value) {
-				$selectCriteria->add(NotePeer::USER_ID, $value, $comparison);
 			} else {
 				$selectCriteria->setPrimaryTableName(NotePeer::TABLE_NAME);
 			}
@@ -643,18 +631,10 @@ abstract class BaseNotePeer {
 			$criteria = $values->buildPkeyCriteria();
 		} else { // it's a primary key, or an array of pks
 			$criteria = new Criteria(self::DATABASE_NAME);
-			// primary key is composite; we therefore, expect
-			// the primary key passed to be an array of pkey values
-			if (count($values) == count($values, COUNT_RECURSIVE)) {
-				// array is not multi-dimensional
-				$values = array($values);
-			}
-			foreach ($values as $value) {
-				$criterion = $criteria->getNewCriterion(NotePeer::ID, $value[0]);
-				$criterion->addAnd($criteria->getNewCriterion(NotePeer::USER_ID, $value[1]));
-				$criteria->addOr($criterion);
-				// we can invalidate the cache for this single PK
-				NotePeer::removeInstanceFromPool($value);
+			$criteria->add(NotePeer::ID, (array) $values, Criteria::IN);
+			// invalidate the cache for this object(s)
+			foreach ((array) $values as $singleval) {
+				NotePeer::removeInstanceFromPool($singleval);
 			}
 		}
 
@@ -716,28 +696,56 @@ abstract class BaseNotePeer {
 	}
 
 	/**
-	 * Retrieve object using using composite pkey values.
-	 * @param      int $id
-	 * @param      int $user_id
-	 * @param      PropelPDO $con
+	 * Retrieve a single object by pkey.
+	 *
+	 * @param      int $pk the primary key.
+	 * @param      PropelPDO $con the connection to use
 	 * @return     Note
 	 */
-	public static function retrieveByPK($id, $user_id, PropelPDO $con = null) {
-		$_instancePoolKey = serialize(array((string) $id, (string) $user_id));
- 		if (null !== ($obj = NotePeer::getInstanceFromPool($_instancePoolKey))) {
- 			return $obj;
+	public static function retrieveByPK($pk, PropelPDO $con = null)
+	{
+
+		if (null !== ($obj = NotePeer::getInstanceFromPool((string) $pk))) {
+			return $obj;
 		}
 
 		if ($con === null) {
 			$con = Propel::getConnection(NotePeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
+
 		$criteria = new Criteria(NotePeer::DATABASE_NAME);
-		$criteria->add(NotePeer::ID, $id);
-		$criteria->add(NotePeer::USER_ID, $user_id);
+		$criteria->add(NotePeer::ID, $pk);
+
 		$v = NotePeer::doSelect($criteria, $con);
 
-		return !empty($v) ? $v[0] : null;
+		return !empty($v) > 0 ? $v[0] : null;
 	}
+
+	/**
+	 * Retrieve multiple objects by pkey.
+	 *
+	 * @param      array $pks List of primary keys
+	 * @param      PropelPDO $con the connection to use
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
+	 */
+	public static function retrieveByPKs($pks, PropelPDO $con = null)
+	{
+		if ($con === null) {
+			$con = Propel::getConnection(NotePeer::DATABASE_NAME, Propel::CONNECTION_READ);
+		}
+
+		$objs = null;
+		if (empty($pks)) {
+			$objs = array();
+		} else {
+			$criteria = new Criteria(NotePeer::DATABASE_NAME);
+			$criteria->add(NotePeer::ID, $pks, Criteria::IN);
+			$objs = NotePeer::doSelect($criteria, $con);
+		}
+		return $objs;
+	}
+
 } // BaseNotePeer
 
 // This is the static code needed to register the TableMap for this table with the main Propel class.

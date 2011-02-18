@@ -79,17 +79,18 @@ abstract class BaseNoteQuery extends ModelCriteria
 
 	/**
 	 * Find object by primary key
+	 * Use instance pooling to avoid a database query if the object exists
 	 * <code>
-	 * $obj = $c->findPk(array(12, 34), $con);
+	 * $obj  = $c->findPk(12, $con);
 	 * </code>
-	 * @param     array[$id, $user_id] $key Primary key to use for the query
+	 * @param     mixed $key Primary key to use for the query
 	 * @param     PropelPDO $con an optional connection object
 	 *
 	 * @return    Note|array|mixed the result, formatted by the current formatter
 	 */
 	public function findPk($key, $con = null)
 	{
-		if ((null !== ($obj = NotePeer::getInstanceFromPool(serialize(array((string) $key[0], (string) $key[1]))))) && $this->getFormatter()->isObjectFormatter()) {
+		if ((null !== ($obj = NotePeer::getInstanceFromPool((string) $key))) && $this->getFormatter()->isObjectFormatter()) {
 			// the object is alredy in the instance pool
 			return $obj;
 		} else {
@@ -105,7 +106,7 @@ abstract class BaseNoteQuery extends ModelCriteria
 	/**
 	 * Find objects by primary key
 	 * <code>
-	 * $objs = $c->findPks(array(array(12, 56), array(832, 123), array(123, 456)), $con);
+	 * $objs = $c->findPks(array(12, 56, 832), $con);
 	 * </code>
 	 * @param     array $keys Primary keys to use for the query
 	 * @param     PropelPDO $con an optional connection object
@@ -129,10 +130,7 @@ abstract class BaseNoteQuery extends ModelCriteria
 	 */
 	public function filterByPrimaryKey($key)
 	{
-		$this->addUsingAlias(NotePeer::ID, $key[0], Criteria::EQUAL);
-		$this->addUsingAlias(NotePeer::USER_ID, $key[1], Criteria::EQUAL);
-		
-		return $this;
+		return $this->addUsingAlias(NotePeer::ID, $key, Criteria::EQUAL);
 	}
 
 	/**
@@ -144,17 +142,7 @@ abstract class BaseNoteQuery extends ModelCriteria
 	 */
 	public function filterByPrimaryKeys($keys)
 	{
-		if (empty($keys)) {
-			return $this->add(null, '1<>1', Criteria::CUSTOM);
-		}
-		foreach ($keys as $key) {
-			$cton0 = $this->getNewCriterion(NotePeer::ID, $key[0], Criteria::EQUAL);
-			$cton1 = $this->getNewCriterion(NotePeer::USER_ID, $key[1], Criteria::EQUAL);
-			$cton0->addAnd($cton1);
-			$this->addOr($cton0);
-		}
-		
-		return $this;
+		return $this->addUsingAlias(NotePeer::ID, $keys, Criteria::IN);
 	}
 
 	/**
@@ -185,8 +173,22 @@ abstract class BaseNoteQuery extends ModelCriteria
 	 */
 	public function filterByUserId($userId = null, $comparison = null)
 	{
-		if (is_array($userId) && null === $comparison) {
-			$comparison = Criteria::IN;
+		if (is_array($userId)) {
+			$useMinMax = false;
+			if (isset($userId['min'])) {
+				$this->addUsingAlias(NotePeer::USER_ID, $userId['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($userId['max'])) {
+				$this->addUsingAlias(NotePeer::USER_ID, $userId['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
 		}
 		return $this->addUsingAlias(NotePeer::USER_ID, $userId, $comparison);
 	}
@@ -285,9 +287,7 @@ abstract class BaseNoteQuery extends ModelCriteria
 	public function prune($note = null)
 	{
 		if ($note) {
-			$this->addCond('pruneCond0', $this->getAliasedColName(NotePeer::ID), $note->getId(), Criteria::NOT_EQUAL);
-			$this->addCond('pruneCond1', $this->getAliasedColName(NotePeer::USER_ID), $note->getUserId(), Criteria::NOT_EQUAL);
-			$this->combine(array('pruneCond0', 'pruneCond1'), Criteria::LOGICAL_OR);
+			$this->addUsingAlias(NotePeer::ID, $note->getId(), Criteria::NOT_EQUAL);
 	  }
 	  
 		return $this;
