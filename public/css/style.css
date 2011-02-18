@@ -32,4 +32,9 @@ header {
     border-top: solid 1px black;
     height: 50px;
 }
-    
+
+input[type=button], input[type=submit]
+{
+    padding: 2px;
+    margin: 4px;
+}
