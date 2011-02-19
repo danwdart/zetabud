@@ -4,6 +4,7 @@ load: function(url) {
         url: url,
         success: function(data) {
             $('#appspace').html(data);
+            window.history.pushState("string", "title", url);
         }
     });
 }
@@ -23,10 +24,26 @@ $(document).ready(function() {
         $.ajax({
             url: form.attr('action'),
             type: form.attr('method'),
+            dataType: 'json',
             data: serial_data,
             success: function(data) {
                 form.children('.messages').remove();
-                form.append('<div class="messages">' + data + '</div>');
+                form.append('<div class="messages"></div>');
+                var messages = form.children('.messages');
+                for(i in data)
+                {
+                    message = data[i];
+                    if(message.text)
+                    {
+                        messages.append('<li class="' + message.class + '">' + message.text + '</li>');
+                    }
+                    if(message.redirect)
+                    {
+                        func = 'Page.load(' + message.redirect + ');';
+                        console.log(func);
+                        setTimeout('Page.load("' + message.redirect + '");', 500);
+                    }
+                }
             }
         }); 
         return false; 
