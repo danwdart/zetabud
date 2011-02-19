@@ -32,11 +32,18 @@ class LoginController extends ZB_Controller_Action_App
             {
                 if(User::doLogin($username, $password))
                 {
-                    $this->_messages = "Authorised";
+                    $this->addMessage(array(
+                        'text' => 'Authorised',
+                        'class' => 'info',
+                        'redirect' => '/'
+                    ));
                 }
                 else
                 {
-                    $this->_messages = "Unauthorised";
+                    $this->addMessage(array(
+                        'text' => 'Unauthorised',
+                        'class' => 'warn'
+                    ));
                 }
             }
 
@@ -45,17 +52,27 @@ class LoginController extends ZB_Controller_Action_App
 
                 if(!User::isValidUsername($username))
                 {
-                    $this->_messages = "Not a Valid Username";
+                    $this->addMessage(array(
+                        'text' => 'Not a Valid Username',
+                        'class' => 'warn'
+                    ));
+
                 }
 
                 if(!User::isValidPassword($password))
                 {
-                    $this->_messages = "Not A Valid Password";
+                    $this->addMessage(array(
+                        'text' => 'Not A Valid Password',
+                        'class' => 'warn'
+                    ));
                 }
 
                 if(User::exists($username))
                 {
-                    $this->_messages = "Username taken";
+                    $this->addMessage(array(
+                        'text' => 'Username taken',
+                        'class' => 'warn'
+                    ));
                 }
 
                 try
@@ -65,18 +82,27 @@ class LoginController extends ZB_Controller_Action_App
                     $user->setPassword(User::encryptPassword($password));
                     $user->save();
 
-                    $this->_messages = "Created Account";
+                    $this->addMessage(array(
+                        'text' => 'Created Account',
+                        'class' => 'warn'
+                    ));
                 }
                 catch(Exception $e)
                 {
-                    $this->_messages = "Could not create account.";
+                    $this->addMessage(array(
+                        'text' => 'Could not create account.',
+                        'class' => 'error'
+                    ));
                 }
             }
             else
             {
-                $this->_messages = 'Invalid action.';
+                $this->addMessage(array(
+                    'text' => 'Invalid action',
+                    'class' => 'error'
+                ));
             }
         }
-        $this->view->assign('messages', $this->_messages);
+        $this->view->assign('messages', $this->drawMessages());
     }
 }

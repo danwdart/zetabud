@@ -7,11 +7,12 @@ if($this->message == 'Authorised') : ?>
 <script>
     Page.load('/');
 </script>
-<?php endif; endif;>
+<?php endif; endif; ?>
     
 <script>
 $(document).ready(function() {
     $('#username').focus();
 });
 </script>
-    <div class="messages"><?php echo $this->message; ?></div>
+
+<?php echo $this->messages; ?>
