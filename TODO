@@ -1,0 +1,6 @@
+Implement JSON callback for POST XHRs
+Return message, class, JS callback and redirects - plus Zend redirects
+Make login a popdown
+Add logout - instantly refreshes the header (perhaps a status element)
+Rewrite URL on AJAX
+Start on apps!

@@ -1,12 +1,18 @@
+var Page = {
+load: function(url) {
+    $.ajax({
+        url: url,
+        success: function(data) {
+            $('#appspace').html(data);
+        }
+    });
+}
+};
+
 $(document).ready(function() {
     $('a').click(function(event) {
         event.preventDefault();
-        $.ajax({
-            url: $(this).attr('href'),
-            success: function(data) {
-                $('#appspace').html(data);
-            }
-        });
+        Page.load($(this).attr('href'));
         return false;
     });
 
