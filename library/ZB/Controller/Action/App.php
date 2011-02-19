@@ -1,12 +1,21 @@
 <?php
 class ZB_Controller_Action_App extends ZB_Controller_Action
 {
-    public function preDispatch()
+    protected $_messages;
+
+    public function postDispatch()
     {
-        parent::preDispatch();
+        parent::postDispatch();
         if($this->getRequest()->isXMLHTTPRequest())
         {
-            $this->view->layout()->disableLayout();
+            $this->view->layout()->setLayout('app'); // This includes AJAX stuff again
+            if(!empty($this->_messages))
+            {
+                $this->view->layout()->disableLayout();
+                $renderer = $this->getHelper('ViewRenderer');
+                $renderer->setNoRender(true);
+                echo $this->_messages;
+            }
         }
     }
 }
