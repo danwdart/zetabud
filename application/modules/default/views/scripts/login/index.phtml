@@ -2,11 +2,16 @@
 <h1>Login:</h1>
 <?php echo $this->form; ?>
 </div>
-<?php if($this->message) : ?>
-    <div class="messages"><?php echo $this->message; ?></div>
-<?php endif; ?>
+<?php if($this->message) :
+if($this->message == 'Authorised') : ?>
+<script>
+    Page.load('/');
+</script>
+<?php endif; endif;>
+    
 <script>
 $(document).ready(function() {
     $('#username').focus();
 });
 </script>
+    <div class="messages"><?php echo $this->message; ?></div>
