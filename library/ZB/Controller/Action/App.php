@@ -3,6 +3,11 @@ class ZB_Controller_Action_App extends ZB_Controller_Action
 {
     protected $_messages;
 
+    protected function isAjax()
+    {
+        return ($this->getRequest()->isXMLHTTPRequest());
+    }
+
     protected function addMessage(Array $message)
     {
         $this->_messages[] = $message;
@@ -14,6 +19,11 @@ class ZB_Controller_Action_App extends ZB_Controller_Action
         {
             $this->addMessage($message);
         }
+    }
+
+    protected function setMessage($message)
+    {
+        $this->_messages = array($message);
     }
 
     protected function getMessages()
@@ -59,18 +69,30 @@ class ZB_Controller_Action_App extends ZB_Controller_Action
         }
     }
 
+    protected function _redirect($url)
+    {
+        if($this->isAjax())
+        {
+            $this->setMessage(array('redirect' => $url));
+        }
+        else
+        {
+            parent::_redirect($url);
+        }
+    }
+
     public function postDispatch()
     {
         parent::postDispatch();
 
-        if($this->getRequest()->isXMLHTTPRequest())
+        if($this->isAjax())
         {
             $this->view->layout()->setLayout('app'); // This includes AJAX stuff again
         }
 
         if($this->hasMessages())
         {
-            if($this->getRequest()->isXMLHTTPRequest())
+            if($this->isAjax())
             {
                 $this->view->layout()->disableLayout();
                 $renderer = $this->getHelper('ViewRenderer');
