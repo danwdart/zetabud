@@ -5,6 +5,15 @@ load: function(url) {
         success: function(data) {
             $('#appspace').html(data);
             window.history.pushState("string", "title", url);
+            Page.refreshLayout();
+        },
+    });
+},
+refreshLayout: function() {
+    $.ajax({
+        url: '/ajax/header',
+        success: function(data) {
+            $('header').html(data);
         }
     });
 }

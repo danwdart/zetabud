@@ -19,11 +19,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         require_once('Propel.php');
         Propel::init(APPLICATION_PATH . '/config/propel/zetabud-conf.php');
     }
-/*
+
     protected function _initRoutes()
     {
         $router = Zend_Controller_Front::getInstance()->getRouter();
-
+/*
         $route = new Zend_Controller_Router_Route_Regex('.*-p(\d+).htm',
             array(
                 'controller' => 'product',
@@ -32,7 +32,16 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             array(1 => 'id')
         );
         $router->addRoute('product', $route);
-    }
-*/
+ */
+        $route = new Zend_Controller_Router_Route_Static(
+            'logout',
+            array(
+                'controller' => 'login',
+                'action' => 'logout'
+            )
+        );
+
+        $router->addRoute('logout', $route);
+    } 
 }
 
