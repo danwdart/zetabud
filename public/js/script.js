@@ -41,7 +41,14 @@ $(document).ready(function() {
                     {
                         func = 'Page.load(' + message.redirect + ');';
                         console.log(func);
-                        setTimeout('Page.load("' + message.redirect + '");', 500);
+                        if(message.text)
+                        {
+                            setTimeout('Page.load("' + message.redirect + '");', 500);
+                        }
+                        else
+                        {
+                            Page.load(message.redirect);
+                        }
                     }
                 }
             }
