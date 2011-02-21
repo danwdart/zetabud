@@ -53,6 +53,11 @@ class ZB_Controller_Action_App extends ZB_Controller_Action
         return $ret;
     }
 
+    protected function clearMessages()
+    {
+        $this->_messages = null;
+    }
+
     protected function messageRedirect()
     {
         if(!$this->hasMessages())
@@ -68,7 +73,7 @@ class ZB_Controller_Action_App extends ZB_Controller_Action
             }
         }
     }
-
+/*
     protected function _redirect($url)
     {
         if($this->isAjax())
@@ -78,6 +83,20 @@ class ZB_Controller_Action_App extends ZB_Controller_Action
         else
         {
             parent::_redirect($url);
+        }
+    }
+ */
+    protected function login()
+    {
+        // TODO: Make this drop down and not quit the page!
+        $this->_redirect('/login');
+    }
+
+    protected function requireLogin()
+    {
+        if(!User::hasIdentity())
+        {
+            $this->login();
         }
     }
 

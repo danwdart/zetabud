@@ -35,7 +35,9 @@ class LoginController extends ZB_Controller_Action_App
                     $this->addMessage(array(
                         'text' => 'Authorised',
                         'class' => 'info',
-                        'redirect' => '/'
+                        'redirect' => '/',
+                        'callback' => 'Page.refreshHeader();'
+
                     ));
                 }
                 else
@@ -105,4 +107,15 @@ class LoginController extends ZB_Controller_Action_App
         }
         $this->view->assign('messages', $this->drawMessages());
     }
+
+    public function logoutAction()
+    {
+        $this->view->layout()->disableLayout();
+        $renderer = $this->getHelper('ViewRenderer');
+        $renderer->setNoRender(true);
+
+        User::doLogout();
+        $this->_redirect('/');
+    }
+
 }

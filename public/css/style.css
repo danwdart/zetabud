@@ -14,11 +14,27 @@ body {
 }
 
 header {
+    border-bottom: solid 1px black;
+    height: 65px;
+}
+header h1 {
     font-weight:100;
     text-align:center;
     font-size: 28pt;
-    border-bottom: solid 1px black;
-    height: 50px;
+}
+
+header .left {
+    text-align: left;
+    float:left;
+    width: 45%;
+    padding-left: 10px;
+}
+
+header .right {
+    text-align: right;
+    float:right;
+    width: 45%;
+    padding-right:10px;
 }
 
 #appspace {
