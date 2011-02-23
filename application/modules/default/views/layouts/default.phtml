@@ -10,16 +10,14 @@
 <body>
     <div id="contentwrapper">
         <header>
-<?php echo $this->render('_header.phtml'); ?>
+            <?php echo $this->render('_header.phtml'); ?>
         </header>
         <div id="appspace">
             <?php echo $this->layout()->content; ?>
         </div>
-        <div id="launcher">
-            <!-- Dynamically generate these links -->
-            <a href="/app/foo">App</a>
-            <a href="/login">Login</a>
-        </div>
+        <nav id="launcher">
+            <?php echo $this->render('_launcher.phtml'); ?>
+        </nav>
     </div>
 </body>
 </html>

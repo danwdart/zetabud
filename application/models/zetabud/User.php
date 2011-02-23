@@ -102,4 +102,8 @@ class User extends BaseUser
         return false;
     }
 
+    public static function isLoggedIn()
+    {
+        return self::hasIdentity();
+    }
 } // User
