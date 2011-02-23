@@ -1,0 +1,13 @@
+<div id="blogs">
+<?php if(count($this->blogs) > 0) :
+foreach($this->blogs as $blog)
+{
+    echo var_dump($blog);
+}
+else:
+?>
+No blogs to display. <a class="popup_modal" href="/app/blog/write">Create one &raquo;</a> <!-- Modeless this!! -->
+<?php
+endif;
+?>
+</div>
