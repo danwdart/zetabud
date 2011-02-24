@@ -38,7 +38,7 @@ class PictureTableMap extends TableMap {
 		$this->setUseIdGenerator(true);
 		// columns
 		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-		$this->addColumn('USER_ID', 'UserId', 'INTEGER', true, null, null);
+		$this->addForeignKey('USER_ID', 'UserId', 'INTEGER', 'user', 'ID', true, null, null);
 		$this->addColumn('TITLE', 'Title', 'VARCHAR', false, 255, null);
 		$this->addColumn('CAPTION', 'Caption', 'LONGVARCHAR', false, 255, null);
 		$this->addColumn('ORIENTATION', 'Orientation', 'VARCHAR', false, 10, null);
@@ -53,6 +53,7 @@ class PictureTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
+    $this->addRelation('User', 'User', RelationMap::MANY_TO_ONE, array('user_id' => 'id', ), null, null);
 	} // buildRelations()
 
 } // PictureTableMap

@@ -53,6 +53,18 @@ class UserTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
+    $this->addRelation('AudioFile', 'AudioFile', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), null, null);
+    $this->addRelation('Blog', 'Blog', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), null, null);
+    $this->addRelation('ChatLine', 'ChatLine', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), null, null);
+    $this->addRelation('EmailRelatedByUserFromId', 'Email', RelationMap::ONE_TO_MANY, array('id' => 'user_from_id', ), null, null);
+    $this->addRelation('EmailRelatedByUserToId', 'Email', RelationMap::ONE_TO_MANY, array('id' => 'user_to_id', ), null, null);
+    $this->addRelation('FriendRelatedByUser1Id', 'Friend', RelationMap::ONE_TO_MANY, array('id' => 'user1_id', ), null, null);
+    $this->addRelation('FriendRelatedByUser2Id', 'Friend', RelationMap::ONE_TO_MANY, array('id' => 'user2_id', ), null, null);
+    $this->addRelation('Note', 'Note', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), null, null);
+    $this->addRelation('Picture', 'Picture', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), null, null);
+    $this->addRelation('VideoFile', 'VideoFile', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), null, null);
+    $this->addRelation('UserRelatedByUser2Id', 'User', RelationMap::MANY_TO_MANY, array(), null, null);
+    $this->addRelation('UserRelatedByUser1Id', 'User', RelationMap::MANY_TO_MANY, array(), null, null);
 	} // buildRelations()
 
 } // UserTableMap

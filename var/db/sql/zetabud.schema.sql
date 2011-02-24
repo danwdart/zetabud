@@ -20,7 +20,11 @@ CREATE TABLE `audio_file`
 	`track` VARCHAR(255),
 	`comments` VARCHAR(255),
 	`path` VARCHAR(255),
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`id`),
+	INDEX `audio_file_FI_1` (`user_id`),
+	CONSTRAINT `audio_file_FK_1`
+		FOREIGN KEY (`user_id`)
+		REFERENCES `user` (`id`)
 ) ENGINE=MyISAM;
 
 #-----------------------------------------------------------------------------
@@ -39,7 +43,11 @@ CREATE TABLE `blog`
 	`created_date` DATETIME  NOT NULL,
 	`modified_date` DATETIME  NOT NULL,
 	`published_date` DATETIME  NOT NULL,
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`id`),
+	INDEX `blog_FI_1` (`user_id`),
+	CONSTRAINT `blog_FK_1`
+		FOREIGN KEY (`user_id`)
+		REFERENCES `user` (`id`)
 ) ENGINE=MyISAM;
 
 #-----------------------------------------------------------------------------
@@ -55,7 +63,11 @@ CREATE TABLE `chat_line`
 	`user_id` INTEGER  NOT NULL,
 	`text` VARCHAR(255)  NOT NULL,
 	`date` DATETIME  NOT NULL,
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`id`),
+	INDEX `chat_line_FI_1` (`user_id`),
+	CONSTRAINT `chat_line_FK_1`
+		FOREIGN KEY (`user_id`)
+		REFERENCES `user` (`id`)
 ) ENGINE=MyISAM;
 
 #-----------------------------------------------------------------------------
@@ -72,7 +84,15 @@ CREATE TABLE `email`
 	`user_to_id` INTEGER  NOT NULL,
 	`subject` VARCHAR(255),
 	`text` TEXT  NOT NULL,
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`id`),
+	INDEX `email_FI_1` (`user_from_id`),
+	CONSTRAINT `email_FK_1`
+		FOREIGN KEY (`user_from_id`)
+		REFERENCES `user` (`id`),
+	INDEX `email_FI_2` (`user_to_id`),
+	CONSTRAINT `email_FK_2`
+		FOREIGN KEY (`user_to_id`)
+		REFERENCES `user` (`id`)
 ) ENGINE=MyISAM;
 
 #-----------------------------------------------------------------------------
@@ -90,7 +110,15 @@ CREATE TABLE `friend`
 	`friend_group_id` INTEGER  NOT NULL,
 	`requested_date` DATETIME  NOT NULL,
 	`confirmed_date` DATETIME  NOT NULL,
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`id`),
+	INDEX `friend_FI_1` (`user1_id`),
+	CONSTRAINT `friend_FK_1`
+		FOREIGN KEY (`user1_id`)
+		REFERENCES `user` (`id`),
+	INDEX `friend_FI_2` (`user2_id`),
+	CONSTRAINT `friend_FK_2`
+		FOREIGN KEY (`user2_id`)
+		REFERENCES `user` (`id`)
 ) ENGINE=MyISAM;
 
 #-----------------------------------------------------------------------------
@@ -107,7 +135,11 @@ CREATE TABLE `note`
 	`text` TEXT  NOT NULL,
 	`created_date` DATETIME  NOT NULL,
 	`modified_date` DATETIME  NOT NULL,
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`id`),
+	INDEX `note_FI_1` (`user_id`),
+	CONSTRAINT `note_FK_1`
+		FOREIGN KEY (`user_id`)
+		REFERENCES `user` (`id`)
 ) ENGINE=MyISAM;
 
 #-----------------------------------------------------------------------------
@@ -127,7 +159,11 @@ CREATE TABLE `picture`
 	`rating` DECIMAL,
 	`created_date` DATETIME  NOT NULL,
 	`modified_date` DATETIME  NOT NULL,
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`id`),
+	INDEX `picture_FI_1` (`user_id`),
+	CONSTRAINT `picture_FK_1`
+		FOREIGN KEY (`user_id`)
+		REFERENCES `user` (`id`)
 ) ENGINE=MyISAM;
 
 #-----------------------------------------------------------------------------
@@ -167,7 +203,11 @@ CREATE TABLE `video_file`
 	`track` VARCHAR(255),
 	`comments` VARCHAR(255),
 	`path` VARCHAR(255),
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`id`),
+	INDEX `video_file_FI_1` (`user_id`),
+	CONSTRAINT `video_file_FK_1`
+		FOREIGN KEY (`user_id`)
+		REFERENCES `user` (`id`)
 ) ENGINE=MyISAM;
 
 # This restores the fkey checks, after having unset them earlier

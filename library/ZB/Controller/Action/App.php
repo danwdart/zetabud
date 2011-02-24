@@ -67,13 +67,13 @@ class ZB_Controller_Action_App extends ZB_Controller_Action
 
         foreach($this->getMessages() as $message)
         {
-            if(!is_null($message['redirect']))
+            if(isset($message['redirect']))
             {
                 $this->_redirect($message['redirect']);
             }
         }
     }
-/*
+
     protected function _redirect($url)
     {
         if($this->isAjax())
@@ -85,11 +85,11 @@ class ZB_Controller_Action_App extends ZB_Controller_Action
             parent::_redirect($url);
         }
     }
- */
+
     protected function login()
     {
         // TODO: Make this drop down and not quit the page!
-        $this->_redirect('/login');
+        $this->_redirect('/login?redirect=' . $_SERVER['PHP_SELF']);
     }
 
     protected function requireLogin()

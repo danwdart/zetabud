@@ -38,8 +38,8 @@ class FriendTableMap extends TableMap {
 		$this->setUseIdGenerator(true);
 		// columns
 		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-		$this->addColumn('USER1_ID', 'User1Id', 'INTEGER', true, null, null);
-		$this->addColumn('USER2_ID', 'User2Id', 'INTEGER', true, null, null);
+		$this->addForeignKey('USER1_ID', 'User1Id', 'INTEGER', 'user', 'ID', true, null, null);
+		$this->addForeignKey('USER2_ID', 'User2Id', 'INTEGER', 'user', 'ID', true, null, null);
 		$this->addColumn('FRIEND_GROUP_ID', 'FriendGroupId', 'INTEGER', true, null, null);
 		$this->addColumn('REQUESTED_DATE', 'RequestedDate', 'TIMESTAMP', true, null, null);
 		$this->addColumn('CONFIRMED_DATE', 'ConfirmedDate', 'TIMESTAMP', true, null, null);
@@ -51,6 +51,8 @@ class FriendTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
+    $this->addRelation('UserRelatedByUser1Id', 'User', RelationMap::MANY_TO_ONE, array('user1_id' => 'id', ), null, null);
+    $this->addRelation('UserRelatedByUser2Id', 'User', RelationMap::MANY_TO_ONE, array('user2_id' => 'id', ), null, null);
 	} // buildRelations()
 
 } // FriendTableMap

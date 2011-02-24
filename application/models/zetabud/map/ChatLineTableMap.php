@@ -38,7 +38,7 @@ class ChatLineTableMap extends TableMap {
 		$this->setUseIdGenerator(true);
 		// columns
 		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-		$this->addColumn('USER_ID', 'UserId', 'INTEGER', true, null, null);
+		$this->addForeignKey('USER_ID', 'UserId', 'INTEGER', 'user', 'ID', true, null, null);
 		$this->addColumn('TEXT', 'Text', 'VARCHAR', true, 255, null);
 		$this->addColumn('DATE', 'Date', 'TIMESTAMP', true, null, null);
 		// validators
@@ -49,6 +49,7 @@ class ChatLineTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
+    $this->addRelation('User', 'User', RelationMap::MANY_TO_ONE, array('user_id' => 'id', ), null, null);
 	} // buildRelations()
 
 } // ChatLineTableMap

@@ -61,6 +61,16 @@ abstract class BaseFriend extends BaseObject  implements Persistent
 	protected $confirmed_date;
 
 	/**
+	 * @var        User
+	 */
+	protected $aUserRelatedByUser1Id;
+
+	/**
+	 * @var        User
+	 */
+	protected $aUserRelatedByUser2Id;
+
+	/**
 	 * Flag to prevent endless save loop, if this object is referenced
 	 * by another object which falls in this transaction.
 	 * @var        boolean
@@ -227,6 +237,10 @@ abstract class BaseFriend extends BaseObject  implements Persistent
 			$this->modifiedColumns[] = FriendPeer::USER1_ID;
 		}
 
+		if ($this->aUserRelatedByUser1Id !== null && $this->aUserRelatedByUser1Id->getId() !== $v) {
+			$this->aUserRelatedByUser1Id = null;
+		}
+
 		return $this;
 	} // setUser1Id()
 
@@ -245,6 +259,10 @@ abstract class BaseFriend extends BaseObject  implements Persistent
 		if ($this->user2_id !== $v) {
 			$this->user2_id = $v;
 			$this->modifiedColumns[] = FriendPeer::USER2_ID;
+		}
+
+		if ($this->aUserRelatedByUser2Id !== null && $this->aUserRelatedByUser2Id->getId() !== $v) {
+			$this->aUserRelatedByUser2Id = null;
 		}
 
 		return $this;
@@ -437,6 +455,12 @@ abstract class BaseFriend extends BaseObject  implements Persistent
 	public function ensureConsistency()
 	{
 
+		if ($this->aUserRelatedByUser1Id !== null && $this->user1_id !== $this->aUserRelatedByUser1Id->getId()) {
+			$this->aUserRelatedByUser1Id = null;
+		}
+		if ($this->aUserRelatedByUser2Id !== null && $this->user2_id !== $this->aUserRelatedByUser2Id->getId()) {
+			$this->aUserRelatedByUser2Id = null;
+		}
 	} // ensureConsistency
 
 	/**
@@ -476,6 +500,8 @@ abstract class BaseFriend extends BaseObject  implements Persistent
 
 		if ($deep) {  // also de-associate any related objects?
 
+			$this->aUserRelatedByUser1Id = null;
+			$this->aUserRelatedByUser2Id = null;
 		} // if (deep)
 	}
 
@@ -586,6 +612,25 @@ abstract class BaseFriend extends BaseObject  implements Persistent
 		if (!$this->alreadyInSave) {
 			$this->alreadyInSave = true;
 
+			// We call the save method on the following object(s) if they
+			// were passed to this object by their coresponding set
+			// method.  This object relates to these object(s) by a
+			// foreign key reference.
+
+			if ($this->aUserRelatedByUser1Id !== null) {
+				if ($this->aUserRelatedByUser1Id->isModified() || $this->aUserRelatedByUser1Id->isNew()) {
+					$affectedRows += $this->aUserRelatedByUser1Id->save($con);
+				}
+				$this->setUserRelatedByUser1Id($this->aUserRelatedByUser1Id);
+			}
+
+			if ($this->aUserRelatedByUser2Id !== null) {
+				if ($this->aUserRelatedByUser2Id->isModified() || $this->aUserRelatedByUser2Id->isNew()) {
+					$affectedRows += $this->aUserRelatedByUser2Id->save($con);
+				}
+				$this->setUserRelatedByUser2Id($this->aUserRelatedByUser2Id);
+			}
+
 			if ($this->isNew() ) {
 				$this->modifiedColumns[] = FriendPeer::ID;
 			}
@@ -599,11 +644,11 @@ abstract class BaseFriend extends BaseObject  implements Persistent
 					}
 
 					$pk = BasePeer::doInsert($criteria, $con);
-					$affectedRows = 1;
+					$affectedRows += 1;
 					$this->setId($pk);  //[IMV] update autoincrement primary key
 					$this->setNew(false);
 				} else {
-					$affectedRows = FriendPeer::doUpdate($this, $con);
+					$affectedRows += FriendPeer::doUpdate($this, $con);
 				}
 
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
@@ -673,6 +718,24 @@ abstract class BaseFriend extends BaseObject  implements Persistent
 			$retval = null;
 
 			$failureMap = array();
+
+
+			// We call the validate method on the following object(s) if they
+			// were passed to this object by their coresponding set
+			// method.  This object relates to these object(s) by a
+			// foreign key reference.
+
+			if ($this->aUserRelatedByUser1Id !== null) {
+				if (!$this->aUserRelatedByUser1Id->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aUserRelatedByUser1Id->getValidationFailures());
+				}
+			}
+
+			if ($this->aUserRelatedByUser2Id !== null) {
+				if (!$this->aUserRelatedByUser2Id->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aUserRelatedByUser2Id->getValidationFailures());
+				}
+			}
 
 
 			if (($retval = FriendPeer::doValidate($this, $columns)) !== true) {
@@ -747,10 +810,11 @@ abstract class BaseFriend extends BaseObject  implements Persistent
 	 *                    BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM.
 	 *                    Defaults to BasePeer::TYPE_PHPNAME.
 	 * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
+	 * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
 	 *
 	 * @return    array an associative array containing the field names (as keys) and field values
 	 */
-	public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true)
+	public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $includeForeignObjects = false)
 	{
 		$keys = FriendPeer::getFieldNames($keyType);
 		$result = array(
@@ -761,6 +825,14 @@ abstract class BaseFriend extends BaseObject  implements Persistent
 			$keys[4] => $this->getRequestedDate(),
 			$keys[5] => $this->getConfirmedDate(),
 		);
+		if ($includeForeignObjects) {
+			if (null !== $this->aUserRelatedByUser1Id) {
+				$result['UserRelatedByUser1Id'] = $this->aUserRelatedByUser1Id->toArray($keyType, $includeLazyLoadColumns, true);
+			}
+			if (null !== $this->aUserRelatedByUser2Id) {
+				$result['UserRelatedByUser2Id'] = $this->aUserRelatedByUser2Id->toArray($keyType, $includeLazyLoadColumns, true);
+			}
+		}
 		return $result;
 	}
 
@@ -966,6 +1038,104 @@ abstract class BaseFriend extends BaseObject  implements Persistent
 	}
 
 	/**
+	 * Declares an association between this object and a User object.
+	 *
+	 * @param      User $v
+	 * @return     Friend The current object (for fluent API support)
+	 * @throws     PropelException
+	 */
+	public function setUserRelatedByUser1Id(User $v = null)
+	{
+		if ($v === null) {
+			$this->setUser1Id(NULL);
+		} else {
+			$this->setUser1Id($v->getId());
+		}
+
+		$this->aUserRelatedByUser1Id = $v;
+
+		// Add binding for other direction of this n:n relationship.
+		// If this object has already been added to the User object, it will not be re-added.
+		if ($v !== null) {
+			$v->addFriendRelatedByUser1Id($this);
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * Get the associated User object
+	 *
+	 * @param      PropelPDO Optional Connection object.
+	 * @return     User The associated User object.
+	 * @throws     PropelException
+	 */
+	public function getUserRelatedByUser1Id(PropelPDO $con = null)
+	{
+		if ($this->aUserRelatedByUser1Id === null && ($this->user1_id !== null)) {
+			$this->aUserRelatedByUser1Id = UserQuery::create()->findPk($this->user1_id, $con);
+			/* The following can be used additionally to
+				 guarantee the related object contains a reference
+				 to this object.  This level of coupling may, however, be
+				 undesirable since it could result in an only partially populated collection
+				 in the referenced object.
+				 $this->aUserRelatedByUser1Id->addFriendsRelatedByUser1Id($this);
+			 */
+		}
+		return $this->aUserRelatedByUser1Id;
+	}
+
+	/**
+	 * Declares an association between this object and a User object.
+	 *
+	 * @param      User $v
+	 * @return     Friend The current object (for fluent API support)
+	 * @throws     PropelException
+	 */
+	public function setUserRelatedByUser2Id(User $v = null)
+	{
+		if ($v === null) {
+			$this->setUser2Id(NULL);
+		} else {
+			$this->setUser2Id($v->getId());
+		}
+
+		$this->aUserRelatedByUser2Id = $v;
+
+		// Add binding for other direction of this n:n relationship.
+		// If this object has already been added to the User object, it will not be re-added.
+		if ($v !== null) {
+			$v->addFriendRelatedByUser2Id($this);
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * Get the associated User object
+	 *
+	 * @param      PropelPDO Optional Connection object.
+	 * @return     User The associated User object.
+	 * @throws     PropelException
+	 */
+	public function getUserRelatedByUser2Id(PropelPDO $con = null)
+	{
+		if ($this->aUserRelatedByUser2Id === null && ($this->user2_id !== null)) {
+			$this->aUserRelatedByUser2Id = UserQuery::create()->findPk($this->user2_id, $con);
+			/* The following can be used additionally to
+				 guarantee the related object contains a reference
+				 to this object.  This level of coupling may, however, be
+				 undesirable since it could result in an only partially populated collection
+				 in the referenced object.
+				 $this->aUserRelatedByUser2Id->addFriendsRelatedByUser2Id($this);
+			 */
+		}
+		return $this->aUserRelatedByUser2Id;
+	}
+
+	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */
 	public function clear()
@@ -998,6 +1168,8 @@ abstract class BaseFriend extends BaseObject  implements Persistent
 		if ($deep) {
 		} // if ($deep)
 
+		$this->aUserRelatedByUser1Id = null;
+		$this->aUserRelatedByUser2Id = null;
 	}
 
 	/**

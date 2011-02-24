@@ -38,8 +38,8 @@ class EmailTableMap extends TableMap {
 		$this->setUseIdGenerator(true);
 		// columns
 		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-		$this->addColumn('USER_FROM_ID', 'UserFromId', 'INTEGER', true, null, null);
-		$this->addColumn('USER_TO_ID', 'UserToId', 'INTEGER', true, null, null);
+		$this->addForeignKey('USER_FROM_ID', 'UserFromId', 'INTEGER', 'user', 'ID', true, null, null);
+		$this->addForeignKey('USER_TO_ID', 'UserToId', 'INTEGER', 'user', 'ID', true, null, null);
 		$this->addColumn('SUBJECT', 'Subject', 'VARCHAR', false, 255, null);
 		$this->addColumn('TEXT', 'Text', 'LONGVARCHAR', true, null, null);
 		// validators
@@ -50,6 +50,8 @@ class EmailTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
+    $this->addRelation('UserFrom', 'User', RelationMap::MANY_TO_ONE, array('user_from_id' => 'id', ), null, null);
+    $this->addRelation('UserTo', 'User', RelationMap::MANY_TO_ONE, array('user_to_id' => 'id', ), null, null);
 	} // buildRelations()
 
 } // EmailTableMap

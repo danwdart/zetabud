@@ -22,6 +22,10 @@
  * @method     NoteQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     NoteQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
+ * @method     NoteQuery leftJoinUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the User relation
+ * @method     NoteQuery rightJoinUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the User relation
+ * @method     NoteQuery innerJoinUser($relationAlias = null) Adds a INNER JOIN clause to the query using the User relation
+ *
  * @method     Note findOne(PropelPDO $con = null) Return the first Note matching the query
  * @method     Note findOneOrCreate(PropelPDO $con = null) Return the first Note matching the query, or a new Note object populated from the query conditions when no match is found
  *
@@ -275,6 +279,70 @@ abstract class BaseNoteQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(NotePeer::MODIFIED_DATE, $modifiedDate, $comparison);
+	}
+
+	/**
+	 * Filter the query by a related User object
+	 *
+	 * @param     User $user  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    NoteQuery The current query, for fluid interface
+	 */
+	public function filterByUser($user, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(NotePeer::USER_ID, $user->getId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the User relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    NoteQuery The current query, for fluid interface
+	 */
+	public function joinUser($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('User');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'User');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the User relation User object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    UserQuery A secondary query class using the current class as primary query
+	 */
+	public function useUserQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinUser($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'User', 'UserQuery');
 	}
 
 	/**

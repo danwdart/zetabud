@@ -28,6 +28,46 @@
  * @method     UserQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     UserQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
+ * @method     UserQuery leftJoinAudioFile($relationAlias = null) Adds a LEFT JOIN clause to the query using the AudioFile relation
+ * @method     UserQuery rightJoinAudioFile($relationAlias = null) Adds a RIGHT JOIN clause to the query using the AudioFile relation
+ * @method     UserQuery innerJoinAudioFile($relationAlias = null) Adds a INNER JOIN clause to the query using the AudioFile relation
+ *
+ * @method     UserQuery leftJoinBlog($relationAlias = null) Adds a LEFT JOIN clause to the query using the Blog relation
+ * @method     UserQuery rightJoinBlog($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Blog relation
+ * @method     UserQuery innerJoinBlog($relationAlias = null) Adds a INNER JOIN clause to the query using the Blog relation
+ *
+ * @method     UserQuery leftJoinChatLine($relationAlias = null) Adds a LEFT JOIN clause to the query using the ChatLine relation
+ * @method     UserQuery rightJoinChatLine($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ChatLine relation
+ * @method     UserQuery innerJoinChatLine($relationAlias = null) Adds a INNER JOIN clause to the query using the ChatLine relation
+ *
+ * @method     UserQuery leftJoinEmailRelatedByUserFromId($relationAlias = null) Adds a LEFT JOIN clause to the query using the EmailRelatedByUserFromId relation
+ * @method     UserQuery rightJoinEmailRelatedByUserFromId($relationAlias = null) Adds a RIGHT JOIN clause to the query using the EmailRelatedByUserFromId relation
+ * @method     UserQuery innerJoinEmailRelatedByUserFromId($relationAlias = null) Adds a INNER JOIN clause to the query using the EmailRelatedByUserFromId relation
+ *
+ * @method     UserQuery leftJoinEmailRelatedByUserToId($relationAlias = null) Adds a LEFT JOIN clause to the query using the EmailRelatedByUserToId relation
+ * @method     UserQuery rightJoinEmailRelatedByUserToId($relationAlias = null) Adds a RIGHT JOIN clause to the query using the EmailRelatedByUserToId relation
+ * @method     UserQuery innerJoinEmailRelatedByUserToId($relationAlias = null) Adds a INNER JOIN clause to the query using the EmailRelatedByUserToId relation
+ *
+ * @method     UserQuery leftJoinFriendRelatedByUser1Id($relationAlias = null) Adds a LEFT JOIN clause to the query using the FriendRelatedByUser1Id relation
+ * @method     UserQuery rightJoinFriendRelatedByUser1Id($relationAlias = null) Adds a RIGHT JOIN clause to the query using the FriendRelatedByUser1Id relation
+ * @method     UserQuery innerJoinFriendRelatedByUser1Id($relationAlias = null) Adds a INNER JOIN clause to the query using the FriendRelatedByUser1Id relation
+ *
+ * @method     UserQuery leftJoinFriendRelatedByUser2Id($relationAlias = null) Adds a LEFT JOIN clause to the query using the FriendRelatedByUser2Id relation
+ * @method     UserQuery rightJoinFriendRelatedByUser2Id($relationAlias = null) Adds a RIGHT JOIN clause to the query using the FriendRelatedByUser2Id relation
+ * @method     UserQuery innerJoinFriendRelatedByUser2Id($relationAlias = null) Adds a INNER JOIN clause to the query using the FriendRelatedByUser2Id relation
+ *
+ * @method     UserQuery leftJoinNote($relationAlias = null) Adds a LEFT JOIN clause to the query using the Note relation
+ * @method     UserQuery rightJoinNote($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Note relation
+ * @method     UserQuery innerJoinNote($relationAlias = null) Adds a INNER JOIN clause to the query using the Note relation
+ *
+ * @method     UserQuery leftJoinPicture($relationAlias = null) Adds a LEFT JOIN clause to the query using the Picture relation
+ * @method     UserQuery rightJoinPicture($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Picture relation
+ * @method     UserQuery innerJoinPicture($relationAlias = null) Adds a INNER JOIN clause to the query using the Picture relation
+ *
+ * @method     UserQuery leftJoinVideoFile($relationAlias = null) Adds a LEFT JOIN clause to the query using the VideoFile relation
+ * @method     UserQuery rightJoinVideoFile($relationAlias = null) Adds a RIGHT JOIN clause to the query using the VideoFile relation
+ * @method     UserQuery innerJoinVideoFile($relationAlias = null) Adds a INNER JOIN clause to the query using the VideoFile relation
+ *
  * @method     User findOne(PropelPDO $con = null) Return the first User matching the query
  * @method     User findOneOrCreate(PropelPDO $con = null) Return the first User matching the query, or a new User object populated from the query conditions when no match is found
  *
@@ -355,6 +395,680 @@ abstract class BaseUserQuery extends ModelCriteria
 		return $this->addUsingAlias(UserPeer::LAST_ACTIVE, $lastActive, $comparison);
 	}
 
+	/**
+	 * Filter the query by a related AudioFile object
+	 *
+	 * @param     AudioFile $audioFile  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function filterByAudioFile($audioFile, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(UserPeer::ID, $audioFile->getUserId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the AudioFile relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function joinAudioFile($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('AudioFile');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'AudioFile');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the AudioFile relation AudioFile object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    AudioFileQuery A secondary query class using the current class as primary query
+	 */
+	public function useAudioFileQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinAudioFile($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'AudioFile', 'AudioFileQuery');
+	}
+
+	/**
+	 * Filter the query by a related Blog object
+	 *
+	 * @param     Blog $blog  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function filterByBlog($blog, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(UserPeer::ID, $blog->getUserId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the Blog relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function joinBlog($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('Blog');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'Blog');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the Blog relation Blog object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    BlogQuery A secondary query class using the current class as primary query
+	 */
+	public function useBlogQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinBlog($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'Blog', 'BlogQuery');
+	}
+
+	/**
+	 * Filter the query by a related ChatLine object
+	 *
+	 * @param     ChatLine $chatLine  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function filterByChatLine($chatLine, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(UserPeer::ID, $chatLine->getUserId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the ChatLine relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function joinChatLine($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('ChatLine');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'ChatLine');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the ChatLine relation ChatLine object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    ChatLineQuery A secondary query class using the current class as primary query
+	 */
+	public function useChatLineQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinChatLine($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'ChatLine', 'ChatLineQuery');
+	}
+
+	/**
+	 * Filter the query by a related Email object
+	 *
+	 * @param     Email $email  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function filterByEmailRelatedByUserFromId($email, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(UserPeer::ID, $email->getUserFromId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the EmailRelatedByUserFromId relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function joinEmailRelatedByUserFromId($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('EmailRelatedByUserFromId');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'EmailRelatedByUserFromId');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the EmailRelatedByUserFromId relation Email object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    EmailQuery A secondary query class using the current class as primary query
+	 */
+	public function useEmailRelatedByUserFromIdQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinEmailRelatedByUserFromId($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'EmailRelatedByUserFromId', 'EmailQuery');
+	}
+
+	/**
+	 * Filter the query by a related Email object
+	 *
+	 * @param     Email $email  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function filterByEmailRelatedByUserToId($email, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(UserPeer::ID, $email->getUserToId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the EmailRelatedByUserToId relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function joinEmailRelatedByUserToId($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('EmailRelatedByUserToId');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'EmailRelatedByUserToId');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the EmailRelatedByUserToId relation Email object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    EmailQuery A secondary query class using the current class as primary query
+	 */
+	public function useEmailRelatedByUserToIdQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinEmailRelatedByUserToId($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'EmailRelatedByUserToId', 'EmailQuery');
+	}
+
+	/**
+	 * Filter the query by a related Friend object
+	 *
+	 * @param     Friend $friend  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function filterByFriendRelatedByUser1Id($friend, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(UserPeer::ID, $friend->getUser1Id(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the FriendRelatedByUser1Id relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function joinFriendRelatedByUser1Id($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('FriendRelatedByUser1Id');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'FriendRelatedByUser1Id');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the FriendRelatedByUser1Id relation Friend object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    FriendQuery A secondary query class using the current class as primary query
+	 */
+	public function useFriendRelatedByUser1IdQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinFriendRelatedByUser1Id($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'FriendRelatedByUser1Id', 'FriendQuery');
+	}
+
+	/**
+	 * Filter the query by a related Friend object
+	 *
+	 * @param     Friend $friend  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function filterByFriendRelatedByUser2Id($friend, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(UserPeer::ID, $friend->getUser2Id(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the FriendRelatedByUser2Id relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function joinFriendRelatedByUser2Id($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('FriendRelatedByUser2Id');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'FriendRelatedByUser2Id');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the FriendRelatedByUser2Id relation Friend object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    FriendQuery A secondary query class using the current class as primary query
+	 */
+	public function useFriendRelatedByUser2IdQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinFriendRelatedByUser2Id($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'FriendRelatedByUser2Id', 'FriendQuery');
+	}
+
+	/**
+	 * Filter the query by a related Note object
+	 *
+	 * @param     Note $note  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function filterByNote($note, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(UserPeer::ID, $note->getUserId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the Note relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function joinNote($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('Note');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'Note');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the Note relation Note object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    NoteQuery A secondary query class using the current class as primary query
+	 */
+	public function useNoteQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinNote($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'Note', 'NoteQuery');
+	}
+
+	/**
+	 * Filter the query by a related Picture object
+	 *
+	 * @param     Picture $picture  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function filterByPicture($picture, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(UserPeer::ID, $picture->getUserId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the Picture relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function joinPicture($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('Picture');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'Picture');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the Picture relation Picture object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    PictureQuery A secondary query class using the current class as primary query
+	 */
+	public function usePictureQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinPicture($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'Picture', 'PictureQuery');
+	}
+
+	/**
+	 * Filter the query by a related VideoFile object
+	 *
+	 * @param     VideoFile $videoFile  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function filterByVideoFile($videoFile, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(UserPeer::ID, $videoFile->getUserId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the VideoFile relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function joinVideoFile($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('VideoFile');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'VideoFile');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the VideoFile relation VideoFile object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    VideoFileQuery A secondary query class using the current class as primary query
+	 */
+	public function useVideoFileQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinVideoFile($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'VideoFile', 'VideoFileQuery');
+	}
+
+	/**
+	 * Filter the query by a related User object
+	 * using the friend table as cross reference
+	 *
+	 * @param     User $user the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function filterByUserRelatedByUser2Id($user, $comparison = Criteria::EQUAL)
+	{
+		return $this
+			->useFriendRelatedByUser1IdQuery()
+				->filterByUserRelatedByUser2Id($user, $comparison)
+			->endUse();
+	}
+	
+	/**
+	 * Filter the query by a related User object
+	 * using the friend table as cross reference
+	 *
+	 * @param     User $user the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function filterByUserRelatedByUser1Id($user, $comparison = Criteria::EQUAL)
+	{
+		return $this
+			->useFriendRelatedByUser2IdQuery()
+				->filterByUserRelatedByUser1Id($user, $comparison)
+			->endUse();
+	}
+	
 	/**
 	 * Exclude object from result
 	 *

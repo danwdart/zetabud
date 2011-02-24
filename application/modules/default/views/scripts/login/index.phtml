@@ -1,17 +1,19 @@
 <div style="text-align:Center; margin: 0 auto;">
 <?php echo $this->form; ?>
 </div>
-<?php if($this->message) :
-if($this->message == 'Authorised') : ?>
-<script>
-    Page.load('/');
-</script>
-<?php endif; endif; ?>
-    
+
+<style>
+.messages {
+    border: 2px outset #999999; 
+    font-weight: bold;
+    margin: 0 auto;
+    padding: 5px 20px;
+    width: 200px;
+}
+</style>
+
 <script>
 $(document).ready(function() {
     $('#username').focus();
 });
 </script>
-
-<?php echo $this->messages; ?>

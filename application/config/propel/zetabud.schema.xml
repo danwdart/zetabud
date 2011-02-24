@@ -11,6 +11,9 @@
         <column name="track" type="varchar" size="255"/>
         <column name="comments" type="varchar" size="255"/>
         <column name="path" type="varchar" size="255"/>
+        <foreign-key foreignTable="user">
+            <reference local="user_id" foreign="id"/>
+        </foreign-key>
     </table>
 
     <table name="blog">
@@ -21,6 +24,9 @@
         <column name="created_date" type="timestamp" required="true"/>
         <column name="modified_date" type="timestamp" required="true"/>
         <column name="published_date" type="timestamp" required="true"/>
+        <foreign-key foreignTable="user">
+            <reference local="user_id" foreign="id"/>
+        </foreign-key>
     </table>
 
     <table name="chat_line">
@@ -28,6 +34,9 @@
         <column name="user_id" type="integer" required="true"/>
         <column name="text" type="varchar" size="255" required="true"/>
         <column name="date" type="timestamp" required="true"/>
+        <foreign-key foreignTable="user">
+            <reference local="user_id" foreign="id"/>
+        </foreign-key>
     </table>
 
     <table name="email">
@@ -36,6 +45,12 @@
         <column name="user_to_id" type="integer" required="true"/>
         <column name="subject" type="varchar" size="255"/>
         <column name="text" type="longvarchar" required="true"/>
+        <foreign-key foreignTable="user" phpName="UserFrom">
+            <reference local="user_from_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="user" phpName="UserTo">
+            <reference local="user_to_id" foreign="id"/>
+        </foreign-key>
     </table>
 
     <table name="friend" isCrossRef="true">
@@ -45,6 +60,12 @@
         <column name="friend_group_id" type="integer" required="true"/>
         <column name="requested_date" type="timestamp" required="true"/>
         <column name="confirmed_date" type="timestamp" required="true"/>
+        <foreign-key foreignTable="user">
+            <reference local="user1_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="user">
+            <reference local="user2_id" foreign="id"/>
+        </foreign-key>
     </table>
 
     <table name="note">
@@ -53,6 +74,9 @@
         <column name="text" type="longvarchar" required="true"/>
         <column name="created_date" type="timestamp" required="true"/>
         <column name="modified_date" type="timestamp" required="true"/>
+        <foreign-key foreignTable="user">
+            <reference local="user_id" foreign="id"/>
+        </foreign-key>
     </table>
 
     <table name="picture">
@@ -64,6 +88,9 @@
         <column name="rating" type="decimal"/>
         <column name="created_date" type="timestamp" required="true"/>
         <column name="modified_date" type="timestamp" required="true"/>
+        <foreign-key foreignTable="user">
+            <reference local="user_id" foreign="id"/>
+        </foreign-key>
     </table>
 
     <table name="user">
@@ -86,6 +113,9 @@
         <column name="track" type="varchar" size="255"/>
         <column name="comments" type="varchar" size="255"/>
         <column name="path" type="varchar" size="255"/>
+        <foreign-key foreignTable="user">
+            <reference local="user_id" foreign="id"/>
+        </foreign-key>
     </table>
 
 </database>

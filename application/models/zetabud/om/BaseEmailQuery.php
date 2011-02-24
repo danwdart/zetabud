@@ -22,6 +22,14 @@
  * @method     EmailQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     EmailQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
+ * @method     EmailQuery leftJoinUserFrom($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserFrom relation
+ * @method     EmailQuery rightJoinUserFrom($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserFrom relation
+ * @method     EmailQuery innerJoinUserFrom($relationAlias = null) Adds a INNER JOIN clause to the query using the UserFrom relation
+ *
+ * @method     EmailQuery leftJoinUserTo($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserTo relation
+ * @method     EmailQuery rightJoinUserTo($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserTo relation
+ * @method     EmailQuery innerJoinUserTo($relationAlias = null) Adds a INNER JOIN clause to the query using the UserTo relation
+ *
  * @method     Email findOne(PropelPDO $con = null) Return the first Email matching the query
  * @method     Email findOneOrCreate(PropelPDO $con = null) Return the first Email matching the query, or a new Email object populated from the query conditions when no match is found
  *
@@ -266,6 +274,134 @@ abstract class BaseEmailQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(EmailPeer::TEXT, $text, $comparison);
+	}
+
+	/**
+	 * Filter the query by a related User object
+	 *
+	 * @param     User $user  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    EmailQuery The current query, for fluid interface
+	 */
+	public function filterByUserFrom($user, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(EmailPeer::USER_FROM_ID, $user->getId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the UserFrom relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    EmailQuery The current query, for fluid interface
+	 */
+	public function joinUserFrom($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('UserFrom');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'UserFrom');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the UserFrom relation User object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    UserQuery A secondary query class using the current class as primary query
+	 */
+	public function useUserFromQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinUserFrom($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'UserFrom', 'UserQuery');
+	}
+
+	/**
+	 * Filter the query by a related User object
+	 *
+	 * @param     User $user  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    EmailQuery The current query, for fluid interface
+	 */
+	public function filterByUserTo($user, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(EmailPeer::USER_TO_ID, $user->getId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the UserTo relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    EmailQuery The current query, for fluid interface
+	 */
+	public function joinUserTo($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('UserTo');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'UserTo');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the UserTo relation User object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    UserQuery A secondary query class using the current class as primary query
+	 */
+	public function useUserToQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinUserTo($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'UserTo', 'UserQuery');
 	}
 
 	/**
