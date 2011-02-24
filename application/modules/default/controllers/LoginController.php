@@ -3,9 +3,16 @@ class LoginController extends ZB_Controller_Action_App
 {
     public function indexAction()
     {
+        $redirect = $this->getRequest()->getQuery('redirect');
+        $redirect_query = '';
+        if(!empty($redirect))
+        {
+            $redirect_query = '?redirect=' . $redirect;
+        }
+
         $form = new ZB_Form();
         $form->setMethod('post');
-        $form->setAction('/login');
+        $form->setAction('/login' . $redirect_query);
 
         $username = new ZB_Form_Element_Text('username');
         $username->setLabel('Username:');
@@ -32,13 +39,26 @@ class LoginController extends ZB_Controller_Action_App
             {
                 if(User::doLogin($username, $password))
                 {
-                    $this->addMessage(array(
-                        'text' => 'Authorised',
-                        'class' => 'info',
-                        'redirect' => '/',
-                        'callback' => 'Page.refreshHeader();'
+                    if(!empty($redirect_query))
+                    {
+                        $this->addMessage(array(
+                            'text' => 'Authorised',
+                            'class' => 'info',
+                            'redirect' => $redirect,
+                            'callback' => 'Page.refreshHeader();'
 
-                    ));
+                        ));
+                    }
+                    else
+                    {
+                        $this->addMessage(array(
+                            'text' => 'Authorised',
+                            'class' => 'info',
+                            'redirect' => '/',
+                            'callback' => 'Page.refreshHeader();'
+
+                        ));
+                    }
                 }
                 else
                 {
@@ -77,24 +97,27 @@ class LoginController extends ZB_Controller_Action_App
                     ));
                 }
 
-                try
+                if(!$this->hasMessages())
                 {
-                    $user = new User();
-                    $user->setUsername($username);
-                    $user->setPassword(User::encryptPassword($password));
-                    $user->save();
+                    try
+                    {
+                        $user = new User();
+                        $user->setUsername($username);
+                        $user->setPassword(User::encryptPassword($password));
+                        $user->save();
 
-                    $this->addMessage(array(
-                        'text' => 'Created Account',
-                        'class' => 'warn'
-                    ));
-                }
-                catch(Exception $e)
-                {
-                    $this->addMessage(array(
-                        'text' => 'Could not create account.',
-                        'class' => 'error'
-                    ));
+                        $this->addMessage(array(
+                            'text' => 'Created Account',
+                            'class' => 'warn'
+                        ));
+                    }
+                    catch(Exception $e)
+                    {
+                        $this->addMessage(array(
+                            'text' => 'Could not create account.',
+                            'class' => 'error'
+                        ));
+                    }
                 }
             }
             else

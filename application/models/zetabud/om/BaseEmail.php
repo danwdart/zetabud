@@ -55,6 +55,16 @@ abstract class BaseEmail extends BaseObject  implements Persistent
 	protected $text;
 
 	/**
+	 * @var        User
+	 */
+	protected $aUserFrom;
+
+	/**
+	 * @var        User
+	 */
+	protected $aUserTo;
+
+	/**
 	 * Flag to prevent endless save loop, if this object is referenced
 	 * by another object which falls in this transaction.
 	 * @var        boolean
@@ -155,6 +165,10 @@ abstract class BaseEmail extends BaseObject  implements Persistent
 			$this->modifiedColumns[] = EmailPeer::USER_FROM_ID;
 		}
 
+		if ($this->aUserFrom !== null && $this->aUserFrom->getId() !== $v) {
+			$this->aUserFrom = null;
+		}
+
 		return $this;
 	} // setUserFromId()
 
@@ -173,6 +187,10 @@ abstract class BaseEmail extends BaseObject  implements Persistent
 		if ($this->user_to_id !== $v) {
 			$this->user_to_id = $v;
 			$this->modifiedColumns[] = EmailPeer::USER_TO_ID;
+		}
+
+		if ($this->aUserTo !== null && $this->aUserTo->getId() !== $v) {
+			$this->aUserTo = null;
 		}
 
 		return $this;
@@ -286,6 +304,12 @@ abstract class BaseEmail extends BaseObject  implements Persistent
 	public function ensureConsistency()
 	{
 
+		if ($this->aUserFrom !== null && $this->user_from_id !== $this->aUserFrom->getId()) {
+			$this->aUserFrom = null;
+		}
+		if ($this->aUserTo !== null && $this->user_to_id !== $this->aUserTo->getId()) {
+			$this->aUserTo = null;
+		}
 	} // ensureConsistency
 
 	/**
@@ -325,6 +349,8 @@ abstract class BaseEmail extends BaseObject  implements Persistent
 
 		if ($deep) {  // also de-associate any related objects?
 
+			$this->aUserFrom = null;
+			$this->aUserTo = null;
 		} // if (deep)
 	}
 
@@ -435,6 +461,25 @@ abstract class BaseEmail extends BaseObject  implements Persistent
 		if (!$this->alreadyInSave) {
 			$this->alreadyInSave = true;
 
+			// We call the save method on the following object(s) if they
+			// were passed to this object by their coresponding set
+			// method.  This object relates to these object(s) by a
+			// foreign key reference.
+
+			if ($this->aUserFrom !== null) {
+				if ($this->aUserFrom->isModified() || $this->aUserFrom->isNew()) {
+					$affectedRows += $this->aUserFrom->save($con);
+				}
+				$this->setUserFrom($this->aUserFrom);
+			}
+
+			if ($this->aUserTo !== null) {
+				if ($this->aUserTo->isModified() || $this->aUserTo->isNew()) {
+					$affectedRows += $this->aUserTo->save($con);
+				}
+				$this->setUserTo($this->aUserTo);
+			}
+
 			if ($this->isNew() ) {
 				$this->modifiedColumns[] = EmailPeer::ID;
 			}
@@ -448,11 +493,11 @@ abstract class BaseEmail extends BaseObject  implements Persistent
 					}
 
 					$pk = BasePeer::doInsert($criteria, $con);
-					$affectedRows = 1;
+					$affectedRows += 1;
 					$this->setId($pk);  //[IMV] update autoincrement primary key
 					$this->setNew(false);
 				} else {
-					$affectedRows = EmailPeer::doUpdate($this, $con);
+					$affectedRows += EmailPeer::doUpdate($this, $con);
 				}
 
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
@@ -524,6 +569,24 @@ abstract class BaseEmail extends BaseObject  implements Persistent
 			$failureMap = array();
 
 
+			// We call the validate method on the following object(s) if they
+			// were passed to this object by their coresponding set
+			// method.  This object relates to these object(s) by a
+			// foreign key reference.
+
+			if ($this->aUserFrom !== null) {
+				if (!$this->aUserFrom->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aUserFrom->getValidationFailures());
+				}
+			}
+
+			if ($this->aUserTo !== null) {
+				if (!$this->aUserTo->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aUserTo->getValidationFailures());
+				}
+			}
+
+
 			if (($retval = EmailPeer::doValidate($this, $columns)) !== true) {
 				$failureMap = array_merge($failureMap, $retval);
 			}
@@ -593,10 +656,11 @@ abstract class BaseEmail extends BaseObject  implements Persistent
 	 *                    BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM.
 	 *                    Defaults to BasePeer::TYPE_PHPNAME.
 	 * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
+	 * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
 	 *
 	 * @return    array an associative array containing the field names (as keys) and field values
 	 */
-	public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true)
+	public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $includeForeignObjects = false)
 	{
 		$keys = EmailPeer::getFieldNames($keyType);
 		$result = array(
@@ -606,6 +670,14 @@ abstract class BaseEmail extends BaseObject  implements Persistent
 			$keys[3] => $this->getSubject(),
 			$keys[4] => $this->getText(),
 		);
+		if ($includeForeignObjects) {
+			if (null !== $this->aUserFrom) {
+				$result['UserFrom'] = $this->aUserFrom->toArray($keyType, $includeLazyLoadColumns, true);
+			}
+			if (null !== $this->aUserTo) {
+				$result['UserTo'] = $this->aUserTo->toArray($keyType, $includeLazyLoadColumns, true);
+			}
+		}
 		return $result;
 	}
 
@@ -805,6 +877,104 @@ abstract class BaseEmail extends BaseObject  implements Persistent
 	}
 
 	/**
+	 * Declares an association between this object and a User object.
+	 *
+	 * @param      User $v
+	 * @return     Email The current object (for fluent API support)
+	 * @throws     PropelException
+	 */
+	public function setUserFrom(User $v = null)
+	{
+		if ($v === null) {
+			$this->setUserFromId(NULL);
+		} else {
+			$this->setUserFromId($v->getId());
+		}
+
+		$this->aUserFrom = $v;
+
+		// Add binding for other direction of this n:n relationship.
+		// If this object has already been added to the User object, it will not be re-added.
+		if ($v !== null) {
+			$v->addEmailRelatedByUserFromId($this);
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * Get the associated User object
+	 *
+	 * @param      PropelPDO Optional Connection object.
+	 * @return     User The associated User object.
+	 * @throws     PropelException
+	 */
+	public function getUserFrom(PropelPDO $con = null)
+	{
+		if ($this->aUserFrom === null && ($this->user_from_id !== null)) {
+			$this->aUserFrom = UserQuery::create()->findPk($this->user_from_id, $con);
+			/* The following can be used additionally to
+				 guarantee the related object contains a reference
+				 to this object.  This level of coupling may, however, be
+				 undesirable since it could result in an only partially populated collection
+				 in the referenced object.
+				 $this->aUserFrom->addEmailsRelatedByUserFromId($this);
+			 */
+		}
+		return $this->aUserFrom;
+	}
+
+	/**
+	 * Declares an association between this object and a User object.
+	 *
+	 * @param      User $v
+	 * @return     Email The current object (for fluent API support)
+	 * @throws     PropelException
+	 */
+	public function setUserTo(User $v = null)
+	{
+		if ($v === null) {
+			$this->setUserToId(NULL);
+		} else {
+			$this->setUserToId($v->getId());
+		}
+
+		$this->aUserTo = $v;
+
+		// Add binding for other direction of this n:n relationship.
+		// If this object has already been added to the User object, it will not be re-added.
+		if ($v !== null) {
+			$v->addEmailRelatedByUserToId($this);
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * Get the associated User object
+	 *
+	 * @param      PropelPDO Optional Connection object.
+	 * @return     User The associated User object.
+	 * @throws     PropelException
+	 */
+	public function getUserTo(PropelPDO $con = null)
+	{
+		if ($this->aUserTo === null && ($this->user_to_id !== null)) {
+			$this->aUserTo = UserQuery::create()->findPk($this->user_to_id, $con);
+			/* The following can be used additionally to
+				 guarantee the related object contains a reference
+				 to this object.  This level of coupling may, however, be
+				 undesirable since it could result in an only partially populated collection
+				 in the referenced object.
+				 $this->aUserTo->addEmailsRelatedByUserToId($this);
+			 */
+		}
+		return $this->aUserTo;
+	}
+
+	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */
 	public function clear()
@@ -836,6 +1006,8 @@ abstract class BaseEmail extends BaseObject  implements Persistent
 		if ($deep) {
 		} // if ($deep)
 
+		$this->aUserFrom = null;
+		$this->aUserTo = null;
 	}
 
 	/**

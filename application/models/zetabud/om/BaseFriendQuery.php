@@ -24,6 +24,14 @@
  * @method     FriendQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     FriendQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
+ * @method     FriendQuery leftJoinUserRelatedByUser1Id($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserRelatedByUser1Id relation
+ * @method     FriendQuery rightJoinUserRelatedByUser1Id($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserRelatedByUser1Id relation
+ * @method     FriendQuery innerJoinUserRelatedByUser1Id($relationAlias = null) Adds a INNER JOIN clause to the query using the UserRelatedByUser1Id relation
+ *
+ * @method     FriendQuery leftJoinUserRelatedByUser2Id($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserRelatedByUser2Id relation
+ * @method     FriendQuery rightJoinUserRelatedByUser2Id($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserRelatedByUser2Id relation
+ * @method     FriendQuery innerJoinUserRelatedByUser2Id($relationAlias = null) Adds a INNER JOIN clause to the query using the UserRelatedByUser2Id relation
+ *
  * @method     Friend findOne(PropelPDO $con = null) Return the first Friend matching the query
  * @method     Friend findOneOrCreate(PropelPDO $con = null) Return the first Friend matching the query, or a new Friend object populated from the query conditions when no match is found
  *
@@ -319,6 +327,134 @@ abstract class BaseFriendQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(FriendPeer::CONFIRMED_DATE, $confirmedDate, $comparison);
+	}
+
+	/**
+	 * Filter the query by a related User object
+	 *
+	 * @param     User $user  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    FriendQuery The current query, for fluid interface
+	 */
+	public function filterByUserRelatedByUser1Id($user, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(FriendPeer::USER1_ID, $user->getId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the UserRelatedByUser1Id relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    FriendQuery The current query, for fluid interface
+	 */
+	public function joinUserRelatedByUser1Id($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('UserRelatedByUser1Id');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'UserRelatedByUser1Id');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the UserRelatedByUser1Id relation User object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    UserQuery A secondary query class using the current class as primary query
+	 */
+	public function useUserRelatedByUser1IdQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinUserRelatedByUser1Id($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'UserRelatedByUser1Id', 'UserQuery');
+	}
+
+	/**
+	 * Filter the query by a related User object
+	 *
+	 * @param     User $user  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    FriendQuery The current query, for fluid interface
+	 */
+	public function filterByUserRelatedByUser2Id($user, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(FriendPeer::USER2_ID, $user->getId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the UserRelatedByUser2Id relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    FriendQuery The current query, for fluid interface
+	 */
+	public function joinUserRelatedByUser2Id($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('UserRelatedByUser2Id');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'UserRelatedByUser2Id');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the UserRelatedByUser2Id relation User object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    UserQuery A secondary query class using the current class as primary query
+	 */
+	public function useUserRelatedByUser2IdQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinUserRelatedByUser2Id($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'UserRelatedByUser2Id', 'UserQuery');
 	}
 
 	/**

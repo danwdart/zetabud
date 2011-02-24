@@ -73,6 +73,66 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	protected $last_active;
 
 	/**
+	 * @var        array AudioFile[] Collection to store aggregation of AudioFile objects.
+	 */
+	protected $collAudioFiles;
+
+	/**
+	 * @var        array Blog[] Collection to store aggregation of Blog objects.
+	 */
+	protected $collBlogs;
+
+	/**
+	 * @var        array ChatLine[] Collection to store aggregation of ChatLine objects.
+	 */
+	protected $collChatLines;
+
+	/**
+	 * @var        array Email[] Collection to store aggregation of Email objects.
+	 */
+	protected $collEmailsRelatedByUserFromId;
+
+	/**
+	 * @var        array Email[] Collection to store aggregation of Email objects.
+	 */
+	protected $collEmailsRelatedByUserToId;
+
+	/**
+	 * @var        array Friend[] Collection to store aggregation of Friend objects.
+	 */
+	protected $collFriendsRelatedByUser1Id;
+
+	/**
+	 * @var        array Friend[] Collection to store aggregation of Friend objects.
+	 */
+	protected $collFriendsRelatedByUser2Id;
+
+	/**
+	 * @var        array Note[] Collection to store aggregation of Note objects.
+	 */
+	protected $collNotes;
+
+	/**
+	 * @var        array Picture[] Collection to store aggregation of Picture objects.
+	 */
+	protected $collPictures;
+
+	/**
+	 * @var        array VideoFile[] Collection to store aggregation of VideoFile objects.
+	 */
+	protected $collVideoFiles;
+
+	/**
+	 * @var        array User[] Collection to store aggregation of User objects.
+	 */
+	protected $collUsersRelatedByUser2Id;
+
+	/**
+	 * @var        array User[] Collection to store aggregation of User objects.
+	 */
+	protected $collUsersRelatedByUser1Id;
+
+	/**
 	 * Flag to prevent endless save loop, if this object is referenced
 	 * by another object which falls in this transaction.
 	 * @var        boolean
@@ -607,6 +667,28 @@ abstract class BaseUser extends BaseObject  implements Persistent
 
 		if ($deep) {  // also de-associate any related objects?
 
+			$this->collAudioFiles = null;
+
+			$this->collBlogs = null;
+
+			$this->collChatLines = null;
+
+			$this->collEmailsRelatedByUserFromId = null;
+
+			$this->collEmailsRelatedByUserToId = null;
+
+			$this->collFriendsRelatedByUser1Id = null;
+
+			$this->collFriendsRelatedByUser2Id = null;
+
+			$this->collNotes = null;
+
+			$this->collPictures = null;
+
+			$this->collVideoFiles = null;
+
+			$this->collUsersRelatedByUser2Id = null;
+			$this->collUsersRelatedByUser1Id = null;
 		} // if (deep)
 	}
 
@@ -740,6 +822,86 @@ abstract class BaseUser extends BaseObject  implements Persistent
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
 			}
 
+			if ($this->collAudioFiles !== null) {
+				foreach ($this->collAudioFiles as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
+			if ($this->collBlogs !== null) {
+				foreach ($this->collBlogs as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
+			if ($this->collChatLines !== null) {
+				foreach ($this->collChatLines as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
+			if ($this->collEmailsRelatedByUserFromId !== null) {
+				foreach ($this->collEmailsRelatedByUserFromId as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
+			if ($this->collEmailsRelatedByUserToId !== null) {
+				foreach ($this->collEmailsRelatedByUserToId as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
+			if ($this->collFriendsRelatedByUser1Id !== null) {
+				foreach ($this->collFriendsRelatedByUser1Id as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
+			if ($this->collFriendsRelatedByUser2Id !== null) {
+				foreach ($this->collFriendsRelatedByUser2Id as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
+			if ($this->collNotes !== null) {
+				foreach ($this->collNotes as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
+			if ($this->collPictures !== null) {
+				foreach ($this->collPictures as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
+			if ($this->collVideoFiles !== null) {
+				foreach ($this->collVideoFiles as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
 			$this->alreadyInSave = false;
 
 		}
@@ -810,6 +972,86 @@ abstract class BaseUser extends BaseObject  implements Persistent
 				$failureMap = array_merge($failureMap, $retval);
 			}
 
+
+				if ($this->collAudioFiles !== null) {
+					foreach ($this->collAudioFiles as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
+				if ($this->collBlogs !== null) {
+					foreach ($this->collBlogs as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
+				if ($this->collChatLines !== null) {
+					foreach ($this->collChatLines as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
+				if ($this->collEmailsRelatedByUserFromId !== null) {
+					foreach ($this->collEmailsRelatedByUserFromId as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
+				if ($this->collEmailsRelatedByUserToId !== null) {
+					foreach ($this->collEmailsRelatedByUserToId as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
+				if ($this->collFriendsRelatedByUser1Id !== null) {
+					foreach ($this->collFriendsRelatedByUser1Id as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
+				if ($this->collFriendsRelatedByUser2Id !== null) {
+					foreach ($this->collFriendsRelatedByUser2Id as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
+				if ($this->collNotes !== null) {
+					foreach ($this->collNotes as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
+				if ($this->collPictures !== null) {
+					foreach ($this->collPictures as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
+				if ($this->collVideoFiles !== null) {
+					foreach ($this->collVideoFiles as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
 
 
 			$this->alreadyInValidation = false;
@@ -1074,6 +1316,74 @@ abstract class BaseUser extends BaseObject  implements Persistent
 		$copyObj->setModifiedDate($this->modified_date);
 		$copyObj->setLastActive($this->last_active);
 
+		if ($deepCopy) {
+			// important: temporarily setNew(false) because this affects the behavior of
+			// the getter/setter methods for fkey referrer objects.
+			$copyObj->setNew(false);
+
+			foreach ($this->getAudioFiles() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addAudioFile($relObj->copy($deepCopy));
+				}
+			}
+
+			foreach ($this->getBlogs() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addBlog($relObj->copy($deepCopy));
+				}
+			}
+
+			foreach ($this->getChatLines() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addChatLine($relObj->copy($deepCopy));
+				}
+			}
+
+			foreach ($this->getEmailsRelatedByUserFromId() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addEmailRelatedByUserFromId($relObj->copy($deepCopy));
+				}
+			}
+
+			foreach ($this->getEmailsRelatedByUserToId() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addEmailRelatedByUserToId($relObj->copy($deepCopy));
+				}
+			}
+
+			foreach ($this->getFriendsRelatedByUser1Id() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addFriendRelatedByUser1Id($relObj->copy($deepCopy));
+				}
+			}
+
+			foreach ($this->getFriendsRelatedByUser2Id() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addFriendRelatedByUser2Id($relObj->copy($deepCopy));
+				}
+			}
+
+			foreach ($this->getNotes() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addNote($relObj->copy($deepCopy));
+				}
+			}
+
+			foreach ($this->getPictures() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addPicture($relObj->copy($deepCopy));
+				}
+			}
+
+			foreach ($this->getVideoFiles() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addVideoFile($relObj->copy($deepCopy));
+				}
+			}
+
+		} // if ($deepCopy)
+
+
 		$copyObj->setNew(true);
 		$copyObj->setId(NULL); // this is a auto-increment column, so set to default value
 	}
@@ -1117,6 +1427,1322 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	}
 
 	/**
+	 * Clears out the collAudioFiles collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addAudioFiles()
+	 */
+	public function clearAudioFiles()
+	{
+		$this->collAudioFiles = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collAudioFiles collection.
+	 *
+	 * By default this just sets the collAudioFiles collection to an empty array (like clearcollAudioFiles());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initAudioFiles()
+	{
+		$this->collAudioFiles = new PropelObjectCollection();
+		$this->collAudioFiles->setModel('AudioFile');
+	}
+
+	/**
+	 * Gets an array of AudioFile objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this User is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array AudioFile[] List of AudioFile objects
+	 * @throws     PropelException
+	 */
+	public function getAudioFiles($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collAudioFiles || null !== $criteria) {
+			if ($this->isNew() && null === $this->collAudioFiles) {
+				// return empty collection
+				$this->initAudioFiles();
+			} else {
+				$collAudioFiles = AudioFileQuery::create(null, $criteria)
+					->filterByUser($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collAudioFiles;
+				}
+				$this->collAudioFiles = $collAudioFiles;
+			}
+		}
+		return $this->collAudioFiles;
+	}
+
+	/**
+	 * Returns the number of related AudioFile objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related AudioFile objects.
+	 * @throws     PropelException
+	 */
+	public function countAudioFiles(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collAudioFiles || null !== $criteria) {
+			if ($this->isNew() && null === $this->collAudioFiles) {
+				return 0;
+			} else {
+				$query = AudioFileQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByUser($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collAudioFiles);
+		}
+	}
+
+	/**
+	 * Method called to associate a AudioFile object to this object
+	 * through the AudioFile foreign key attribute.
+	 *
+	 * @param      AudioFile $l AudioFile
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addAudioFile(AudioFile $l)
+	{
+		if ($this->collAudioFiles === null) {
+			$this->initAudioFiles();
+		}
+		if (!$this->collAudioFiles->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collAudioFiles[]= $l;
+			$l->setUser($this);
+		}
+	}
+
+	/**
+	 * Clears out the collBlogs collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addBlogs()
+	 */
+	public function clearBlogs()
+	{
+		$this->collBlogs = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collBlogs collection.
+	 *
+	 * By default this just sets the collBlogs collection to an empty array (like clearcollBlogs());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initBlogs()
+	{
+		$this->collBlogs = new PropelObjectCollection();
+		$this->collBlogs->setModel('Blog');
+	}
+
+	/**
+	 * Gets an array of Blog objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this User is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array Blog[] List of Blog objects
+	 * @throws     PropelException
+	 */
+	public function getBlogs($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collBlogs || null !== $criteria) {
+			if ($this->isNew() && null === $this->collBlogs) {
+				// return empty collection
+				$this->initBlogs();
+			} else {
+				$collBlogs = BlogQuery::create(null, $criteria)
+					->filterByUser($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collBlogs;
+				}
+				$this->collBlogs = $collBlogs;
+			}
+		}
+		return $this->collBlogs;
+	}
+
+	/**
+	 * Returns the number of related Blog objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related Blog objects.
+	 * @throws     PropelException
+	 */
+	public function countBlogs(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collBlogs || null !== $criteria) {
+			if ($this->isNew() && null === $this->collBlogs) {
+				return 0;
+			} else {
+				$query = BlogQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByUser($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collBlogs);
+		}
+	}
+
+	/**
+	 * Method called to associate a Blog object to this object
+	 * through the Blog foreign key attribute.
+	 *
+	 * @param      Blog $l Blog
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addBlog(Blog $l)
+	{
+		if ($this->collBlogs === null) {
+			$this->initBlogs();
+		}
+		if (!$this->collBlogs->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collBlogs[]= $l;
+			$l->setUser($this);
+		}
+	}
+
+	/**
+	 * Clears out the collChatLines collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addChatLines()
+	 */
+	public function clearChatLines()
+	{
+		$this->collChatLines = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collChatLines collection.
+	 *
+	 * By default this just sets the collChatLines collection to an empty array (like clearcollChatLines());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initChatLines()
+	{
+		$this->collChatLines = new PropelObjectCollection();
+		$this->collChatLines->setModel('ChatLine');
+	}
+
+	/**
+	 * Gets an array of ChatLine objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this User is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array ChatLine[] List of ChatLine objects
+	 * @throws     PropelException
+	 */
+	public function getChatLines($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collChatLines || null !== $criteria) {
+			if ($this->isNew() && null === $this->collChatLines) {
+				// return empty collection
+				$this->initChatLines();
+			} else {
+				$collChatLines = ChatLineQuery::create(null, $criteria)
+					->filterByUser($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collChatLines;
+				}
+				$this->collChatLines = $collChatLines;
+			}
+		}
+		return $this->collChatLines;
+	}
+
+	/**
+	 * Returns the number of related ChatLine objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related ChatLine objects.
+	 * @throws     PropelException
+	 */
+	public function countChatLines(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collChatLines || null !== $criteria) {
+			if ($this->isNew() && null === $this->collChatLines) {
+				return 0;
+			} else {
+				$query = ChatLineQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByUser($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collChatLines);
+		}
+	}
+
+	/**
+	 * Method called to associate a ChatLine object to this object
+	 * through the ChatLine foreign key attribute.
+	 *
+	 * @param      ChatLine $l ChatLine
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addChatLine(ChatLine $l)
+	{
+		if ($this->collChatLines === null) {
+			$this->initChatLines();
+		}
+		if (!$this->collChatLines->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collChatLines[]= $l;
+			$l->setUser($this);
+		}
+	}
+
+	/**
+	 * Clears out the collEmailsRelatedByUserFromId collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addEmailsRelatedByUserFromId()
+	 */
+	public function clearEmailsRelatedByUserFromId()
+	{
+		$this->collEmailsRelatedByUserFromId = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collEmailsRelatedByUserFromId collection.
+	 *
+	 * By default this just sets the collEmailsRelatedByUserFromId collection to an empty array (like clearcollEmailsRelatedByUserFromId());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initEmailsRelatedByUserFromId()
+	{
+		$this->collEmailsRelatedByUserFromId = new PropelObjectCollection();
+		$this->collEmailsRelatedByUserFromId->setModel('Email');
+	}
+
+	/**
+	 * Gets an array of Email objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this User is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array Email[] List of Email objects
+	 * @throws     PropelException
+	 */
+	public function getEmailsRelatedByUserFromId($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collEmailsRelatedByUserFromId || null !== $criteria) {
+			if ($this->isNew() && null === $this->collEmailsRelatedByUserFromId) {
+				// return empty collection
+				$this->initEmailsRelatedByUserFromId();
+			} else {
+				$collEmailsRelatedByUserFromId = EmailQuery::create(null, $criteria)
+					->filterByUserFrom($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collEmailsRelatedByUserFromId;
+				}
+				$this->collEmailsRelatedByUserFromId = $collEmailsRelatedByUserFromId;
+			}
+		}
+		return $this->collEmailsRelatedByUserFromId;
+	}
+
+	/**
+	 * Returns the number of related Email objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related Email objects.
+	 * @throws     PropelException
+	 */
+	public function countEmailsRelatedByUserFromId(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collEmailsRelatedByUserFromId || null !== $criteria) {
+			if ($this->isNew() && null === $this->collEmailsRelatedByUserFromId) {
+				return 0;
+			} else {
+				$query = EmailQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByUserFrom($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collEmailsRelatedByUserFromId);
+		}
+	}
+
+	/**
+	 * Method called to associate a Email object to this object
+	 * through the Email foreign key attribute.
+	 *
+	 * @param      Email $l Email
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addEmailRelatedByUserFromId(Email $l)
+	{
+		if ($this->collEmailsRelatedByUserFromId === null) {
+			$this->initEmailsRelatedByUserFromId();
+		}
+		if (!$this->collEmailsRelatedByUserFromId->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collEmailsRelatedByUserFromId[]= $l;
+			$l->setUserFrom($this);
+		}
+	}
+
+	/**
+	 * Clears out the collEmailsRelatedByUserToId collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addEmailsRelatedByUserToId()
+	 */
+	public function clearEmailsRelatedByUserToId()
+	{
+		$this->collEmailsRelatedByUserToId = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collEmailsRelatedByUserToId collection.
+	 *
+	 * By default this just sets the collEmailsRelatedByUserToId collection to an empty array (like clearcollEmailsRelatedByUserToId());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initEmailsRelatedByUserToId()
+	{
+		$this->collEmailsRelatedByUserToId = new PropelObjectCollection();
+		$this->collEmailsRelatedByUserToId->setModel('Email');
+	}
+
+	/**
+	 * Gets an array of Email objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this User is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array Email[] List of Email objects
+	 * @throws     PropelException
+	 */
+	public function getEmailsRelatedByUserToId($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collEmailsRelatedByUserToId || null !== $criteria) {
+			if ($this->isNew() && null === $this->collEmailsRelatedByUserToId) {
+				// return empty collection
+				$this->initEmailsRelatedByUserToId();
+			} else {
+				$collEmailsRelatedByUserToId = EmailQuery::create(null, $criteria)
+					->filterByUserTo($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collEmailsRelatedByUserToId;
+				}
+				$this->collEmailsRelatedByUserToId = $collEmailsRelatedByUserToId;
+			}
+		}
+		return $this->collEmailsRelatedByUserToId;
+	}
+
+	/**
+	 * Returns the number of related Email objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related Email objects.
+	 * @throws     PropelException
+	 */
+	public function countEmailsRelatedByUserToId(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collEmailsRelatedByUserToId || null !== $criteria) {
+			if ($this->isNew() && null === $this->collEmailsRelatedByUserToId) {
+				return 0;
+			} else {
+				$query = EmailQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByUserTo($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collEmailsRelatedByUserToId);
+		}
+	}
+
+	/**
+	 * Method called to associate a Email object to this object
+	 * through the Email foreign key attribute.
+	 *
+	 * @param      Email $l Email
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addEmailRelatedByUserToId(Email $l)
+	{
+		if ($this->collEmailsRelatedByUserToId === null) {
+			$this->initEmailsRelatedByUserToId();
+		}
+		if (!$this->collEmailsRelatedByUserToId->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collEmailsRelatedByUserToId[]= $l;
+			$l->setUserTo($this);
+		}
+	}
+
+	/**
+	 * Clears out the collFriendsRelatedByUser1Id collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addFriendsRelatedByUser1Id()
+	 */
+	public function clearFriendsRelatedByUser1Id()
+	{
+		$this->collFriendsRelatedByUser1Id = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collFriendsRelatedByUser1Id collection.
+	 *
+	 * By default this just sets the collFriendsRelatedByUser1Id collection to an empty array (like clearcollFriendsRelatedByUser1Id());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initFriendsRelatedByUser1Id()
+	{
+		$this->collFriendsRelatedByUser1Id = new PropelObjectCollection();
+		$this->collFriendsRelatedByUser1Id->setModel('Friend');
+	}
+
+	/**
+	 * Gets an array of Friend objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this User is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array Friend[] List of Friend objects
+	 * @throws     PropelException
+	 */
+	public function getFriendsRelatedByUser1Id($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collFriendsRelatedByUser1Id || null !== $criteria) {
+			if ($this->isNew() && null === $this->collFriendsRelatedByUser1Id) {
+				// return empty collection
+				$this->initFriendsRelatedByUser1Id();
+			} else {
+				$collFriendsRelatedByUser1Id = FriendQuery::create(null, $criteria)
+					->filterByUserRelatedByUser1Id($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collFriendsRelatedByUser1Id;
+				}
+				$this->collFriendsRelatedByUser1Id = $collFriendsRelatedByUser1Id;
+			}
+		}
+		return $this->collFriendsRelatedByUser1Id;
+	}
+
+	/**
+	 * Returns the number of related Friend objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related Friend objects.
+	 * @throws     PropelException
+	 */
+	public function countFriendsRelatedByUser1Id(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collFriendsRelatedByUser1Id || null !== $criteria) {
+			if ($this->isNew() && null === $this->collFriendsRelatedByUser1Id) {
+				return 0;
+			} else {
+				$query = FriendQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByUserRelatedByUser1Id($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collFriendsRelatedByUser1Id);
+		}
+	}
+
+	/**
+	 * Method called to associate a Friend object to this object
+	 * through the Friend foreign key attribute.
+	 *
+	 * @param      Friend $l Friend
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addFriendRelatedByUser1Id(Friend $l)
+	{
+		if ($this->collFriendsRelatedByUser1Id === null) {
+			$this->initFriendsRelatedByUser1Id();
+		}
+		if (!$this->collFriendsRelatedByUser1Id->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collFriendsRelatedByUser1Id[]= $l;
+			$l->setUserRelatedByUser1Id($this);
+		}
+	}
+
+	/**
+	 * Clears out the collFriendsRelatedByUser2Id collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addFriendsRelatedByUser2Id()
+	 */
+	public function clearFriendsRelatedByUser2Id()
+	{
+		$this->collFriendsRelatedByUser2Id = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collFriendsRelatedByUser2Id collection.
+	 *
+	 * By default this just sets the collFriendsRelatedByUser2Id collection to an empty array (like clearcollFriendsRelatedByUser2Id());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initFriendsRelatedByUser2Id()
+	{
+		$this->collFriendsRelatedByUser2Id = new PropelObjectCollection();
+		$this->collFriendsRelatedByUser2Id->setModel('Friend');
+	}
+
+	/**
+	 * Gets an array of Friend objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this User is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array Friend[] List of Friend objects
+	 * @throws     PropelException
+	 */
+	public function getFriendsRelatedByUser2Id($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collFriendsRelatedByUser2Id || null !== $criteria) {
+			if ($this->isNew() && null === $this->collFriendsRelatedByUser2Id) {
+				// return empty collection
+				$this->initFriendsRelatedByUser2Id();
+			} else {
+				$collFriendsRelatedByUser2Id = FriendQuery::create(null, $criteria)
+					->filterByUserRelatedByUser2Id($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collFriendsRelatedByUser2Id;
+				}
+				$this->collFriendsRelatedByUser2Id = $collFriendsRelatedByUser2Id;
+			}
+		}
+		return $this->collFriendsRelatedByUser2Id;
+	}
+
+	/**
+	 * Returns the number of related Friend objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related Friend objects.
+	 * @throws     PropelException
+	 */
+	public function countFriendsRelatedByUser2Id(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collFriendsRelatedByUser2Id || null !== $criteria) {
+			if ($this->isNew() && null === $this->collFriendsRelatedByUser2Id) {
+				return 0;
+			} else {
+				$query = FriendQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByUserRelatedByUser2Id($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collFriendsRelatedByUser2Id);
+		}
+	}
+
+	/**
+	 * Method called to associate a Friend object to this object
+	 * through the Friend foreign key attribute.
+	 *
+	 * @param      Friend $l Friend
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addFriendRelatedByUser2Id(Friend $l)
+	{
+		if ($this->collFriendsRelatedByUser2Id === null) {
+			$this->initFriendsRelatedByUser2Id();
+		}
+		if (!$this->collFriendsRelatedByUser2Id->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collFriendsRelatedByUser2Id[]= $l;
+			$l->setUserRelatedByUser2Id($this);
+		}
+	}
+
+	/**
+	 * Clears out the collNotes collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addNotes()
+	 */
+	public function clearNotes()
+	{
+		$this->collNotes = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collNotes collection.
+	 *
+	 * By default this just sets the collNotes collection to an empty array (like clearcollNotes());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initNotes()
+	{
+		$this->collNotes = new PropelObjectCollection();
+		$this->collNotes->setModel('Note');
+	}
+
+	/**
+	 * Gets an array of Note objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this User is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array Note[] List of Note objects
+	 * @throws     PropelException
+	 */
+	public function getNotes($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collNotes || null !== $criteria) {
+			if ($this->isNew() && null === $this->collNotes) {
+				// return empty collection
+				$this->initNotes();
+			} else {
+				$collNotes = NoteQuery::create(null, $criteria)
+					->filterByUser($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collNotes;
+				}
+				$this->collNotes = $collNotes;
+			}
+		}
+		return $this->collNotes;
+	}
+
+	/**
+	 * Returns the number of related Note objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related Note objects.
+	 * @throws     PropelException
+	 */
+	public function countNotes(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collNotes || null !== $criteria) {
+			if ($this->isNew() && null === $this->collNotes) {
+				return 0;
+			} else {
+				$query = NoteQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByUser($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collNotes);
+		}
+	}
+
+	/**
+	 * Method called to associate a Note object to this object
+	 * through the Note foreign key attribute.
+	 *
+	 * @param      Note $l Note
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addNote(Note $l)
+	{
+		if ($this->collNotes === null) {
+			$this->initNotes();
+		}
+		if (!$this->collNotes->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collNotes[]= $l;
+			$l->setUser($this);
+		}
+	}
+
+	/**
+	 * Clears out the collPictures collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addPictures()
+	 */
+	public function clearPictures()
+	{
+		$this->collPictures = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collPictures collection.
+	 *
+	 * By default this just sets the collPictures collection to an empty array (like clearcollPictures());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initPictures()
+	{
+		$this->collPictures = new PropelObjectCollection();
+		$this->collPictures->setModel('Picture');
+	}
+
+	/**
+	 * Gets an array of Picture objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this User is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array Picture[] List of Picture objects
+	 * @throws     PropelException
+	 */
+	public function getPictures($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collPictures || null !== $criteria) {
+			if ($this->isNew() && null === $this->collPictures) {
+				// return empty collection
+				$this->initPictures();
+			} else {
+				$collPictures = PictureQuery::create(null, $criteria)
+					->filterByUser($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collPictures;
+				}
+				$this->collPictures = $collPictures;
+			}
+		}
+		return $this->collPictures;
+	}
+
+	/**
+	 * Returns the number of related Picture objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related Picture objects.
+	 * @throws     PropelException
+	 */
+	public function countPictures(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collPictures || null !== $criteria) {
+			if ($this->isNew() && null === $this->collPictures) {
+				return 0;
+			} else {
+				$query = PictureQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByUser($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collPictures);
+		}
+	}
+
+	/**
+	 * Method called to associate a Picture object to this object
+	 * through the Picture foreign key attribute.
+	 *
+	 * @param      Picture $l Picture
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addPicture(Picture $l)
+	{
+		if ($this->collPictures === null) {
+			$this->initPictures();
+		}
+		if (!$this->collPictures->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collPictures[]= $l;
+			$l->setUser($this);
+		}
+	}
+
+	/**
+	 * Clears out the collVideoFiles collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addVideoFiles()
+	 */
+	public function clearVideoFiles()
+	{
+		$this->collVideoFiles = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collVideoFiles collection.
+	 *
+	 * By default this just sets the collVideoFiles collection to an empty array (like clearcollVideoFiles());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initVideoFiles()
+	{
+		$this->collVideoFiles = new PropelObjectCollection();
+		$this->collVideoFiles->setModel('VideoFile');
+	}
+
+	/**
+	 * Gets an array of VideoFile objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this User is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array VideoFile[] List of VideoFile objects
+	 * @throws     PropelException
+	 */
+	public function getVideoFiles($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collVideoFiles || null !== $criteria) {
+			if ($this->isNew() && null === $this->collVideoFiles) {
+				// return empty collection
+				$this->initVideoFiles();
+			} else {
+				$collVideoFiles = VideoFileQuery::create(null, $criteria)
+					->filterByUser($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collVideoFiles;
+				}
+				$this->collVideoFiles = $collVideoFiles;
+			}
+		}
+		return $this->collVideoFiles;
+	}
+
+	/**
+	 * Returns the number of related VideoFile objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related VideoFile objects.
+	 * @throws     PropelException
+	 */
+	public function countVideoFiles(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collVideoFiles || null !== $criteria) {
+			if ($this->isNew() && null === $this->collVideoFiles) {
+				return 0;
+			} else {
+				$query = VideoFileQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByUser($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collVideoFiles);
+		}
+	}
+
+	/**
+	 * Method called to associate a VideoFile object to this object
+	 * through the VideoFile foreign key attribute.
+	 *
+	 * @param      VideoFile $l VideoFile
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addVideoFile(VideoFile $l)
+	{
+		if ($this->collVideoFiles === null) {
+			$this->initVideoFiles();
+		}
+		if (!$this->collVideoFiles->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collVideoFiles[]= $l;
+			$l->setUser($this);
+		}
+	}
+
+	/**
+	 * Clears out the collUsersRelatedByUser2Id collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addUsersRelatedByUser2Id()
+	 */
+	public function clearUsersRelatedByUser2Id()
+	{
+		$this->collUsersRelatedByUser2Id = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collUsersRelatedByUser2Id collection.
+	 *
+	 * By default this just sets the collUsersRelatedByUser2Id collection to an empty collection (like clearUsersRelatedByUser2Id());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initUsersRelatedByUser2Id()
+	{
+		$this->collUsersRelatedByUser2Id = new PropelObjectCollection();
+		$this->collUsersRelatedByUser2Id->setModel('User');
+	}
+
+	/**
+	 * Gets a collection of User objects related by a many-to-many relationship
+	 * to the current object by way of the friend cross-reference table.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this User is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria Optional query object to filter the query
+	 * @param      PropelPDO $con Optional connection object
+	 *
+	 * @return     PropelCollection|array User[] List of User objects
+	 */
+	public function getUsersRelatedByUser2Id($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collUsersRelatedByUser2Id || null !== $criteria) {
+			if ($this->isNew() && null === $this->collUsersRelatedByUser2Id) {
+				// return empty collection
+				$this->initUsersRelatedByUser2Id();
+			} else {
+				$collUsersRelatedByUser2Id = UserQuery::create(null, $criteria)
+					->filterByUserRelatedByUser1Id($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collUsersRelatedByUser2Id;
+				}
+				$this->collUsersRelatedByUser2Id = $collUsersRelatedByUser2Id;
+			}
+		}
+		return $this->collUsersRelatedByUser2Id;
+	}
+
+	/**
+	 * Gets the number of User objects related by a many-to-many relationship
+	 * to the current object by way of the friend cross-reference table.
+	 *
+	 * @param      Criteria $criteria Optional query object to filter the query
+	 * @param      boolean $distinct Set to true to force count distinct
+	 * @param      PropelPDO $con Optional connection object
+	 *
+	 * @return     int the number of related User objects
+	 */
+	public function countUsersRelatedByUser2Id($criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collUsersRelatedByUser2Id || null !== $criteria) {
+			if ($this->isNew() && null === $this->collUsersRelatedByUser2Id) {
+				return 0;
+			} else {
+				$query = UserQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByUserRelatedByUser1Id($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collUsersRelatedByUser2Id);
+		}
+	}
+
+	/**
+	 * Associate a User object to this object
+	 * through the friend cross reference table.
+	 *
+	 * @param      User $user The Friend object to relate
+	 * @return     void
+	 */
+	public function addUserRelatedByUser2Id($user)
+	{
+		if ($this->collUsersRelatedByUser2Id === null) {
+			$this->initUsersRelatedByUser2Id();
+		}
+		if (!$this->collUsersRelatedByUser2Id->contains($user)) { // only add it if the **same** object is not already associated
+			$friend = new Friend();
+			$friend->setUserRelatedByUser2Id($user);
+			$this->addFriendRelatedByUser1Id($friend);
+
+			$this->collUsersRelatedByUser2Id[]= $user;
+		}
+	}
+
+	/**
+	 * Clears out the collUsersRelatedByUser1Id collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addUsersRelatedByUser1Id()
+	 */
+	public function clearUsersRelatedByUser1Id()
+	{
+		$this->collUsersRelatedByUser1Id = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collUsersRelatedByUser1Id collection.
+	 *
+	 * By default this just sets the collUsersRelatedByUser1Id collection to an empty collection (like clearUsersRelatedByUser1Id());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initUsersRelatedByUser1Id()
+	{
+		$this->collUsersRelatedByUser1Id = new PropelObjectCollection();
+		$this->collUsersRelatedByUser1Id->setModel('User');
+	}
+
+	/**
+	 * Gets a collection of User objects related by a many-to-many relationship
+	 * to the current object by way of the friend cross-reference table.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this User is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria Optional query object to filter the query
+	 * @param      PropelPDO $con Optional connection object
+	 *
+	 * @return     PropelCollection|array User[] List of User objects
+	 */
+	public function getUsersRelatedByUser1Id($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collUsersRelatedByUser1Id || null !== $criteria) {
+			if ($this->isNew() && null === $this->collUsersRelatedByUser1Id) {
+				// return empty collection
+				$this->initUsersRelatedByUser1Id();
+			} else {
+				$collUsersRelatedByUser1Id = UserQuery::create(null, $criteria)
+					->filterByUserRelatedByUser2Id($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collUsersRelatedByUser1Id;
+				}
+				$this->collUsersRelatedByUser1Id = $collUsersRelatedByUser1Id;
+			}
+		}
+		return $this->collUsersRelatedByUser1Id;
+	}
+
+	/**
+	 * Gets the number of User objects related by a many-to-many relationship
+	 * to the current object by way of the friend cross-reference table.
+	 *
+	 * @param      Criteria $criteria Optional query object to filter the query
+	 * @param      boolean $distinct Set to true to force count distinct
+	 * @param      PropelPDO $con Optional connection object
+	 *
+	 * @return     int the number of related User objects
+	 */
+	public function countUsersRelatedByUser1Id($criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collUsersRelatedByUser1Id || null !== $criteria) {
+			if ($this->isNew() && null === $this->collUsersRelatedByUser1Id) {
+				return 0;
+			} else {
+				$query = UserQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByUserRelatedByUser2Id($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collUsersRelatedByUser1Id);
+		}
+	}
+
+	/**
+	 * Associate a User object to this object
+	 * through the friend cross reference table.
+	 *
+	 * @param      User $user The Friend object to relate
+	 * @return     void
+	 */
+	public function addUserRelatedByUser1Id($user)
+	{
+		if ($this->collUsersRelatedByUser1Id === null) {
+			$this->initUsersRelatedByUser1Id();
+		}
+		if (!$this->collUsersRelatedByUser1Id->contains($user)) { // only add it if the **same** object is not already associated
+			$friend = new Friend();
+			$friend->setUserRelatedByUser1Id($user);
+			$this->addFriendRelatedByUser2Id($friend);
+
+			$this->collUsersRelatedByUser1Id[]= $user;
+		}
+	}
+
+	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */
 	public function clear()
@@ -1149,8 +2775,68 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	public function clearAllReferences($deep = false)
 	{
 		if ($deep) {
+			if ($this->collAudioFiles) {
+				foreach ((array) $this->collAudioFiles as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
+			if ($this->collBlogs) {
+				foreach ((array) $this->collBlogs as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
+			if ($this->collChatLines) {
+				foreach ((array) $this->collChatLines as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
+			if ($this->collEmailsRelatedByUserFromId) {
+				foreach ((array) $this->collEmailsRelatedByUserFromId as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
+			if ($this->collEmailsRelatedByUserToId) {
+				foreach ((array) $this->collEmailsRelatedByUserToId as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
+			if ($this->collFriendsRelatedByUser1Id) {
+				foreach ((array) $this->collFriendsRelatedByUser1Id as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
+			if ($this->collFriendsRelatedByUser2Id) {
+				foreach ((array) $this->collFriendsRelatedByUser2Id as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
+			if ($this->collNotes) {
+				foreach ((array) $this->collNotes as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
+			if ($this->collPictures) {
+				foreach ((array) $this->collPictures as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
+			if ($this->collVideoFiles) {
+				foreach ((array) $this->collVideoFiles as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
 		} // if ($deep)
 
+		$this->collAudioFiles = null;
+		$this->collBlogs = null;
+		$this->collChatLines = null;
+		$this->collEmailsRelatedByUserFromId = null;
+		$this->collEmailsRelatedByUserToId = null;
+		$this->collFriendsRelatedByUser1Id = null;
+		$this->collFriendsRelatedByUser2Id = null;
+		$this->collNotes = null;
+		$this->collPictures = null;
+		$this->collVideoFiles = null;
 	}
 
 	/**
