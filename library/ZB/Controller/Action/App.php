@@ -89,7 +89,7 @@ class ZB_Controller_Action_App extends ZB_Controller_Action
     protected function login()
     {
         // TODO: Make this drop down and not quit the page!
-        $this->_redirect('/login?redirect=' . $_SERVER['PHP_SELF']);
+        $this->_redirect('/login');
     }
 
     protected function requireLogin()
@@ -123,5 +123,30 @@ class ZB_Controller_Action_App extends ZB_Controller_Action
                 $this->messageRedirect();
             }
         }
+    }
+
+    public function getReferrer()
+    {
+        $server = $this->getRequest()->getServer();
+        if(isset($server['HTTP_REFERER']))
+        {
+            $referrer = $server['HTTP_REFERER'];
+            $host = $server['HTTP_HOST'];
+            $parsed = parse_url($referrer);
+            if($parsed['host'] != $host)
+            {
+                $referrer = '/';
+            }
+        }
+        if($this->getRequest()->getQuery('redirect'))
+        {
+            $referrer = $this->getRequest()->getQuery('redirect');
+        }
+
+        if(isset($referrer))
+        {
+            return $referrer;
+        }
+        return '/';
     }
 }

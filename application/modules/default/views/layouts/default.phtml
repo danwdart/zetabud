@@ -9,11 +9,13 @@
 </head>
 <body>
     <div id="contentwrapper">
-        <header>
-            <?php echo $this->render('_header.phtml'); ?>
-        </header>
         <div id="appspace">
-            <?php echo $this->layout()->content; ?>
+            <header>
+                <?php echo $this->render('_header.phtml'); ?>
+            </header>
+            <div id="appcontent">
+                <?php echo $this->layout()->content; ?>
+            </div>
         </div>
         <nav id="launcher">
             <?php echo $this->render('_launcher.phtml'); ?>

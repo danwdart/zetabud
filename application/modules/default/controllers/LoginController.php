@@ -3,16 +3,11 @@ class LoginController extends ZB_Controller_Action_App
 {
     public function indexAction()
     {
-        $redirect = $this->getRequest()->getQuery('redirect');
-        $redirect_query = '';
-        if(!empty($redirect))
-        {
-            $redirect_query = '?redirect=' . $redirect;
-        }
-
+        $redirect = $this->getReferrer();
+        
         $form = new ZB_Form();
         $form->setMethod('post');
-        $form->setAction('/login' . $redirect_query);
+        $form->setAction('/login?redirect=' . $redirect);
 
         $username = new ZB_Form_Element_Text('username');
         $username->setLabel('Username:');
@@ -39,31 +34,16 @@ class LoginController extends ZB_Controller_Action_App
             {
                 if(User::doLogin($username, $password))
                 {
-                    if(!empty($redirect_query))
-                    {
-                        $this->addMessage(array(
-                            'text' => 'Authorised',
-                            'class' => 'info',
-                            'redirect' => $redirect,
-                            'callback' => 'Page.refreshHeader();'
-
-                        ));
-                    }
-                    else
-                    {
-                        $this->addMessage(array(
-                            'text' => 'Authorised',
-                            'class' => 'info',
-                            'redirect' => '/',
-                            'callback' => 'Page.refreshHeader();'
-
-                        ));
-                    }
+                    $this->addMessage(array(
+                        'text' => 'Authorised',
+                        'class' => 'info',
+                        'redirect' => $redirect,
+                    ));
                 }
                 else
                 {
                     $this->addMessage(array(
-                        'text' => 'Unauthorised',
+                        'text' => 'Wrong username or password. Want to try again?',
                         'class' => 'warn'
                     ));
                 }
@@ -97,27 +77,24 @@ class LoginController extends ZB_Controller_Action_App
                     ));
                 }
 
-                if(!$this->hasMessages())
+                try
                 {
-                    try
-                    {
-                        $user = new User();
-                        $user->setUsername($username);
-                        $user->setPassword(User::encryptPassword($password));
-                        $user->save();
+                    $user = new User();
+                    $user->setUsername($username);
+                    $user->setPassword(User::encryptPassword($password));
+                    $user->save();
 
-                        $this->addMessage(array(
-                            'text' => 'Created Account',
-                            'class' => 'warn'
-                        ));
-                    }
-                    catch(Exception $e)
-                    {
-                        $this->addMessage(array(
-                            'text' => 'Could not create account.',
-                            'class' => 'error'
-                        ));
-                    }
+                    $this->addMessage(array(
+                        'text' => 'Created Account',
+                        'class' => 'warn'
+                    ));
+                }
+                catch(Exception $e)
+                {
+                    $this->addMessage(array(
+                        'text' => 'Could not create account.',
+                        'class' => 'error'
+                    ));
                 }
             }
             else
@@ -133,12 +110,13 @@ class LoginController extends ZB_Controller_Action_App
 
     public function logoutAction()
     {
+        $redirect = $this->getReferrer();
         $this->view->layout()->disableLayout();
         $renderer = $this->getHelper('ViewRenderer');
         $renderer->setNoRender(true);
 
         User::doLogout();
-        $this->_redirect('/');
+        $this->_redirect($redirect);
     }
 
 }

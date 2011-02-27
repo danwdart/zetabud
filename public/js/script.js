@@ -3,20 +3,22 @@ load: function(url) {
     $.ajax({
         url: url,
         success: function(data) {
-            $('#appspace').html(data);
-            window.history.pushState("string", "title", url);
-            Page.refreshLayout();
-        },
-    });
-},
-refreshLayout: function() {
-    $.ajax({
-        url: '/ajax/header',
-        success: function(data) {
-            $('header').html(data);
+            try {
+                var jsondata = $.parseJSON(data);
+                    for(i in jsondata) {
+                        var message = jsondata[i];
+                        if(message.redirect) {
+                                Page.load(message.redirect);
+                        }
+                    }
+            }
+            catch(e) {
+                $('#appspace').html(data);
+                window.history.pushState("string", "title", url); // I don't know what those two are for...
+            }
         }
     });
-}
+},
 };
 
 $(document).ready(function() {
@@ -48,11 +50,11 @@ $(document).ready(function() {
                     }
                     if(message.redirect)
                     {
-                        func = 'Page.load(' + message.redirect + ');';
+                        func = 'Page.load("' + message.redirect + '");';
                         console.log(func);
                         if(message.text)
                         {
-                            setTimeout('Page.load("' + message.redirect + '");', 500);
+                            setTimeout(func, 500);
                         }
                         else
                         {
