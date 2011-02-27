@@ -48,6 +48,10 @@ header .centre {
 
 #appspace {
     height: 600px;
+}
+
+#appcontent {
+    height: 570px;
     overflow: auto;
 }
 
