@@ -11,7 +11,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initPropel()
     {
-        set_include_path(get_include_path() . ':' . implode(':', array(
+        set_include_path(get_include_path() . ';' . implode(';', array(
             APPLICATION_PATH . '/../library/propel/',
             APPLICATION_PATH . '/models/'
         )));
