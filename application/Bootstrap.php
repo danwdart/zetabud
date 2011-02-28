@@ -11,7 +11,15 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initPropel()
     {
-        set_include_path(get_include_path() . ':' . implode(':', array(
+        $path_sep = ':';
+        
+        // This is sure to slow it down...
+        if (strpos(strtoupper(php_uname('s')), 'WIN'))
+        {
+            $path_sep = ';';
+        }
+
+        set_include_path(get_include_path() . $path_sep . implode($path_sep, array(
             APPLICATION_PATH . '/../library/propel/',
             APPLICATION_PATH . '/models/'
         )));
