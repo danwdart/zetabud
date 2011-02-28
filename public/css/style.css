@@ -11,7 +11,6 @@ body {
     margin: 0 auto;
     width: 1000px;
     background-color: #ffffff;
-    //border-style:none outset outset outset;
 }
 
 header {
@@ -52,6 +51,7 @@ header .centre {
 }
 
 #appcontent {
+    padding: 5px;
     height: 570px;
     overflow: auto;
 }
