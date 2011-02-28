@@ -1,6 +1,7 @@
 * {
     padding:0;
     margin:0;
+	font-family:Tahoma, Geneva, sans-serif;
 }
 
 body {
@@ -10,7 +11,7 @@ body {
     margin: 0 auto;
     width: 1000px;
     background-color: #ffffff;
-    border-style:none outset outset outset;
+    //border-style:none outset outset outset;
 }
 
 header {
