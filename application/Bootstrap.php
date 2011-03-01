@@ -13,8 +13,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         $path_sep = ':';
         
-        // This is sure to slow it down...
-        if (strpos(strtoupper(php_uname('s')), 'WIN'))
+        //This is sure to slow it down...
+        if (!strpos(strtoupper(php_uname('s')), 'WIN'))
         {
             $path_sep = ';';
         }
