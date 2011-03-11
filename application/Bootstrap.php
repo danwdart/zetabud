@@ -14,8 +14,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $path_sep = ':';
         
         //This is sure to slow it down...
-        if (!strpos(strtoupper(php_uname('s')), 'WIN'))
-        {
+        $windowsfix = new Zend_Config_Ini(APPLICATION_PATH.'/config/application.ini');
+        if($windowsfix)
+		{
             $path_sep = ';';
         }
 
