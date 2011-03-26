@@ -1,8 +1,10 @@
 var Page = {
 load: function(url) {
+    Page.addLoader();
     $.ajax({
         url: url,
         success: function(data) {
+            Page.removeLoader();
             try {
                 var jsondata = $.parseJSON(data);
                     for(i in jsondata) {
@@ -19,6 +21,17 @@ load: function(url) {
         }
     });
 },
+
+addLoader: function() {
+    $('#appspace').children().remove();
+    var loader = $('<img id="load" src="/img/load.gif"/>');
+    $('#appspace').append(loader);
+},
+
+removeLoader: function() {
+    $('#appspace #load').remove();
+}
+
 };
 
 $(document).ready(function() {

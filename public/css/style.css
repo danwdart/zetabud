@@ -50,6 +50,13 @@ header .centre {
     height: 600px;
 }
 
+#appspace #load {
+    height: 28px;
+    width: 28px;
+    margin: 253px 483px;
+    line-height: 100%;
+}
+
 #appcontent {
     padding: 5px;
     height: 570px;
