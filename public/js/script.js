@@ -1,10 +1,8 @@
 var Page = {
 load: function(url) {
-    Page.addLoader();
     $.ajax({
         url: url,
         success: function(data) {
-            Page.removeLoader();
             try {
                 var jsondata = $.parseJSON(data);
                     for(i in jsondata) {
@@ -15,6 +13,7 @@ load: function(url) {
                     }
             }
             catch(e) {
+                Page.removeLoader();
                 $('#appspace').html(data);
                 window.history.pushState("string", "title", url); // I don't know what those two are for...
             }
@@ -37,6 +36,7 @@ removeLoader: function() {
 $(document).ready(function() {
     $('a').click(function(event) {
         event.preventDefault();
+        Page.addLoader();
         Page.load($(this).attr('href'));
         return false;
     });
