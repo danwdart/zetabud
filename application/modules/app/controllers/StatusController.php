@@ -33,10 +33,10 @@ class App_StatusController extends ZB_Controller_Action_App
 
         if(isset($_SESSION['ACCESS_TOKEN']))
         {
-            $this->_forward('/app/status/post');
+            $this->_forward('post');
         }
 
-        $this->_forward('/app/status/request');
+        $this->_forward('request');
     }
 
     public function requestAction()
