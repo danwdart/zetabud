@@ -51,7 +51,7 @@ class App_StatusController extends ZB_Controller_Action_App
 
     public function postAction()
     {
-        $message = 'Pietunes is easy';
+        $message = 'I would post something meaningful, but I am testing OAuth';
         $token = unserialize($this->_session->access_token);
         $client = $token->getHttpClient($this->_config);
         $client->setUri($this->_update_url);
@@ -65,6 +65,11 @@ class App_StatusController extends ZB_Controller_Action_App
         {
             die('Success');
         }
+        else
+        {
+            die(var_dump($data));
+        }
+
         if(isset($data->error))
         {
             die($data->error);
