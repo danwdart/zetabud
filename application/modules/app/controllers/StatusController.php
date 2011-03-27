@@ -11,16 +11,25 @@ class App_StatusController extends ZB_Controller_Action_App
     private $_update_url = 'http://twitter.com/statuses/update.json';
     private $_callback = 'http://zetabud.dandart.co.uk/app/status/callback';
 
-    private $_config = array(
-        'callbackUrl' => $this->_callback,
-        'siteUrl' => $this->_site_url,
-        'consumerKey' => $this->_consumer_key,
-        'consumerSecret' => $this->_consumer_secret
-    );
+    private $_config;
+    
+
+    public function preDispatch()
+    {
+        $this->_config = array(
+            'callbackUrl' => $this->_callback,
+            'siteUrl' => $this->_site_url,
+            'consumerKey' => $this->_consumer_key,
+            'consumerSecret' => $this->_consumer_secret
+        );
+    }
 
     public function indexAction()
     {
-        if(!is_null($_SESSION['ACCESS_TOKEN'))
+        $this->requireLogin();
+        $this->view->assign('apptitle', 'Social Status');
+
+        if(isset($_SESSION['ACCESS_TOKEN']))
         {
             $this->_redirect('/app/status/post');
         }
@@ -74,9 +83,4 @@ class App_StatusController extends ZB_Controller_Action_App
         
     }
 
-    public function indexAction()
-    {
-        $this->requireLogin();
-        $this->view->assign('apptitle', 'Social Status');
-    }
 }
