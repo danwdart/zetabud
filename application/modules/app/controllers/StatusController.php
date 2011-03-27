@@ -44,7 +44,7 @@ class App_StatusController extends ZB_Controller_Action_App
         $consumer = new Zend_Oauth_Consumer($this->_config);
         $token = $consumer->getRequestToken();
         $_SESSION['REQUEST_TOKEN'] = serialize($token);
-        $consumer->redirect();
+        $this->_redirect($consumer->getRedirectUrl());
     }
 
     public function postAction()
