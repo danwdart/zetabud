@@ -53,7 +53,7 @@ class App_StatusController extends ZB_Controller_Action_App
     {
         $message = 'test test from zetabud';
         $token = unserialize($this->_session->access_token);
-        $client = $token->getHttpClient($configuration);
+        $client = $token->getHttpClient($this->_config);
         $client->setUri($this->_update_url);
         $client->setMethod(Zend_Http_Client::POST);
         $client->setParameterPost('status', $message);
