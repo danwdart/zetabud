@@ -16,6 +16,8 @@ class App_StatusController extends ZB_Controller_Action_App
 
     public function preDispatch()
     {
+        parent::preDispatch();
+
         $this->_config = array(
             'callbackUrl' => $this->_callback,
             'siteUrl' => $this->_site_url,
@@ -42,7 +44,7 @@ class App_StatusController extends ZB_Controller_Action_App
         $consumer = new Zend_Oauth_Consumer($this->_config);
         $token = $consumer->getRequestToken();
         $_SESSION['REQUEST_TOKEN'] = serialize($token);
-        $consumer->redirect();
+        $this->view->assign('popup', $consumer->getRedirectUrl());
     }
 
     public function postAction()
@@ -78,6 +80,7 @@ class App_StatusController extends ZB_Controller_Action_App
         }
         else
         {
+            die('Could not authenticate.');
             return null;
         }
         
