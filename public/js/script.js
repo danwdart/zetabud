@@ -1,5 +1,6 @@
 var Page = {
 load: function(url) {
+    console.log('Load method called');
     $.ajax({
         url: url,
         success: function(data) {
@@ -8,18 +9,23 @@ load: function(url) {
                     for(i in jsondata) {
                         var message = jsondata[i];
                         if(message.redirect) {
+                            console.log('I have a redirect page');
                             if(message.redirect.indexOf('http') == 0) {
+                                console.log('Redirecting to external site' + message.redirect);
                                 window.location = message.redirect;
                             }
                             else {
+                                console.log('Redirecting internally: ' + message.redirect);
                                 Page.load(message.redirect);
                             }
                         }
                     }
             }
             catch(e) {
+                console.log('The page did not contain JSON data');
                 Page.removeLoader();
                 $('#appspace').html(data);
+                console.log('finished loading non-JSON');
                 window.history.pushState("string", "title", url); // I don't know what those two are for...
             }
         }
