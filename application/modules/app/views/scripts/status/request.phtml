@@ -1,3 +1,5 @@
 <?php if($this->popup) : ?>
-<iframe src="<?php echo $this->popup; ?>" style="width: 970px; height: 520px;"></iframe>
+<script>
+popup = new Window('<?php echo $this->popup; ?>');
+</script>
 <?php endif; ?>
