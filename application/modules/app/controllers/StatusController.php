@@ -77,7 +77,7 @@ class App_StatusController extends ZB_Controller_Action_App
              $token = $consumer->getAccessToken( $_GET, unserialize($this->_session->request_token));
              $this->_session->access_token = serialize($token);
              $this->_session->request_token = null;
-             $this->_redirect('/app/status/index');
+             $this->_redirect('/app/status/post');
         }
         else
         {
