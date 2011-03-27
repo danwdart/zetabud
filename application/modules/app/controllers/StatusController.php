@@ -12,10 +12,12 @@ class App_StatusController extends ZB_Controller_Action_App
     private $_callback = 'http://zetabud.dandart.co.uk/app/status/callback';
 
     private $_config;
+    private $_session;
     
 
     public function preDispatch()
     {
+        $this->_session = new Zend_Session_Namespace('status');
         parent::preDispatch();
 
         $this->_config = array(
@@ -43,14 +45,14 @@ class App_StatusController extends ZB_Controller_Action_App
     {
         $consumer = new Zend_Oauth_Consumer($this->_config);
         $token = $consumer->getRequestToken();
-        $_SESSION['REQUEST_TOKEN'] = serialize($token);
+        $this->_session->request_token = serialize($token);
         $this->_redirect($consumer->getRedirectUrl());
     }
 
     public function postAction()
     {
         $message = 'test test from zetabud';
-        $token = unserialize($_SESSION['ACCESS_TOKEN']);
+        $token = unserialize($this->_session->access_token);
         $client = $token->getHttpClient($configuration);
         $client->setUri($this->_update_url);
         $client->setMethod(Zend_Http_Client::POST);
@@ -61,21 +63,26 @@ class App_StatusController extends ZB_Controller_Action_App
         $result = $response->getBody();
         if (isset($data->text))
         {
-            return true;
+            die('Success');
         }
-        return false;
+        die('Could not post.');
     }
 
 
     public function callbackAction()
     {
         $consumer = new Zend_Oauth_Consumer($this->_config);
-        if (!empty($_GET) && isset($_SESSION['REQUEST_TOKEN']))
+        if (!empty($_GET) && isset($this->_session->request_token))
         {
-             $token = $consumer->getAccessToken( $_GET, unserialize($_SESSION['REQUEST_TOKEN']));
-             $_SESSION['ACCESS_TOKEN'] = serialize($token);
-             $_SESSION['REQUEST_TOKEN'] = null;
-        }
+             $token = $consumer->getAccessToken( $_GET, unserialize($this->_session->request_token));
+             $this->_session->access_token = serialize($token);
+             $this->_session->request_token = null;
              $this->_redirect('/app/status/index');
+        }
+        else
+        {
+            die('Oops. Malformed request.');
+        }
+
     }
 }
