@@ -51,7 +51,7 @@ class App_StatusController extends ZB_Controller_Action_App
 
     public function postAction()
     {
-        $message = 'I would post something meaningful, but I am testing OAuth';
+        $message = 'Ok, you can stop. I think it is working...';
         $token = unserialize($this->_session->access_token);
         $client = $token->getHttpClient($this->_config);
         $client->setUri($this->_update_url);
@@ -61,7 +61,7 @@ class App_StatusController extends ZB_Controller_Action_App
 
         $data = Zend_Json::decode($response->getBody());
         $result = $response->getBody();
-        if (isset($data->text))
+        if (isset($data['text']))
         {
             die('Success');
         }
