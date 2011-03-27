@@ -33,7 +33,7 @@ class App_StatusController extends ZB_Controller_Action_App
         $this->requireLogin();
         $this->view->assign('apptitle', 'Social Status');
 
-        if(isset($_SESSION['ACCESS_TOKEN']))
+        if(isset($this->_session->access_token))
         {
             $this->_forward('post');
         }
