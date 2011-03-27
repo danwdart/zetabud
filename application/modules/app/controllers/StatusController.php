@@ -51,7 +51,7 @@ class App_StatusController extends ZB_Controller_Action_App
 
     public function postAction()
     {
-        $message = 'test test from zetabud';
+        $message = 'Pietunes is easy';
         $token = unserialize($this->_session->access_token);
         $client = $token->getHttpClient($this->_config);
         $client->setUri($this->_update_url);
@@ -64,6 +64,10 @@ class App_StatusController extends ZB_Controller_Action_App
         if (isset($data->text))
         {
             die('Success');
+        }
+        if(isset($data->error))
+        {
+            die($data->error);
         }
         die('Could not post.');
     }
