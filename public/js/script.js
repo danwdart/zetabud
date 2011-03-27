@@ -8,7 +8,7 @@ load: function(url) {
                     for(i in jsondata) {
                         var message = jsondata[i];
                         if(message.redirect) {
-                            if(message.redirect.indexOf('http://') == 0) {
+                            if(message.redirect.indexOf('http') == 0) {
                                 window.location = message.redirect;
                             }
                             else {
