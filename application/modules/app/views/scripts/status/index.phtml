@@ -1,1 +1,20 @@
-Status
+<p>Sites enabled:</p>
+<ul>
+    <?php foreach($this->sites as $site) : ?>
+    <li><?php echo $site->getFullName(); ?> - <a href="/app/status/redirect?site=<?php echo $site->getId(); ?>">Add User</a></li>
+    <?php endforeach; ?>
+</ul>
+
+<p>Users you have:</p>
+<ul>
+    <?php foreach($this->users as $user) : ?>
+    <li>A <?php echo $user->getSite()->getFullName(); ?> user</li>
+    <?php endforeach; ?>
+</ul>
+
+<?php if(count($this->users) > 0) : ?>
+
+<p>Submit a status:</p>
+<?php echo $this->status_form; ?>
+
+<?php endif; ?>

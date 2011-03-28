@@ -1,31 +1,30 @@
 <?php
 class App_StatusController extends ZB_Controller_Action_App
 {
-    // Twitter
-    private $_consumer_key = 'kKq8R04mOILLxZX0IW8m3w';
-    private $_consumer_secret = 'm0SZbdnHoExm8bUf1UZkiu9DmxeO0EMfpwDY9zIKdw';
-    private $_site_url = 'http://twitter.com/oauth';
-    private $_request_token = 'http://twitter.com/oauth/request_token';
-    private $_access_token = 'http://twitter.com/oauth/access_token';
-    private $_authorize = 'http://twitter.com/oauth/authorize';
-    private $_update_url = 'http://twitter.com/statuses/update.json';
-    private $_callback = 'http://zetabud.dandart.co.uk/app/status/callback';
-
+    private $_site;
     private $_config;
-    private $_session;
-    
 
     public function preDispatch()
     {
-        $this->_session = new Zend_Session_Namespace('status');
         parent::preDispatch();
 
-        $this->_config = array(
-            'callbackUrl' => $this->_callback,
-            'siteUrl' => $this->_site_url,
-            'consumerKey' => $this->_consumer_key,
-            'consumerSecret' => $this->_consumer_secret
-        );
+        $this->createDefaults();
+        $this->_session = new Zend_Session_Namespace('oauth');
+
+        $site_id = $this->getRequest()->getQuery('site');
+        if(is_int($site_id))
+        {
+            $this->_site = OStatus_Site::retrieveByPK($site_id);
+            $this->_config = array(
+                'callbackUrl' => $site->getCallbackUrl(),
+                'siteUrl' => $site->getSiteUrl(),
+                'consumerKey' => $site->getConsumerKey(),
+                'consumerSecret' => $site->getConsumerSecret()
+            );
+        }
+
+
+        
     }
 
     public function indexAction()
@@ -33,50 +32,65 @@ class App_StatusController extends ZB_Controller_Action_App
         $this->requireLogin();
         $this->view->assign('apptitle', 'Social Status');
 
-        if(isset($this->_session->access_token))
-        {
-            $this->_forward('post');
-        }
+        $sites = OStatus_SitePeer::retrieveAll();
+        $users = OStatus_UserPeer::retrieveMine();
 
-        $this->_forward('request');
+        $this->view->assign('sites', $sites);
+        $this->view->assign('users', $users);
+
+        $status_form = $this->_getStatusForm();
+        $this->view->assign('status_form', $status_form);
+
+        if($this->getRequest()->isPost())
+        {
+            $data = $this->getRequest()->getPost();
+            if($status_form->isValid($data))
+            {
+                $status = $data['status'];
+
+                foreach($users as $user)
+                {
+                    $token = unserialize($user->getAccessToken);
+                    $client = $token->getHttpClient($user->getSite()->getConfig());
+                    $client->setUri($user->getSite()->getUpdateUrl());
+                    $client->setMethod(Zend_Http_Client::POST);
+                    $client->setParameterPost('status', $status);
+                    $response = $client->request();
+
+                    $data = Zend_Json::decode($response->getBody());
+                    $result = $response->getBody();
+                    if (isset($data['text']))
+                    {
+                        die('Success');
+                    }
+                    else
+                    {
+                        die(var_dump($data));
+                    }
+
+                    if(isset($data->error))
+                    {
+                        die($data->error);
+                    }
+                        die('Could not post.');
+                }
+            }
+        }
     }
 
     public function requestAction()
     {
+        if(is_null($this->_site))
+        {
+            $this->_redirect('/app/status');
+        }
+
         $consumer = new Zend_Oauth_Consumer($this->_config);
         $token = $consumer->getRequestToken();
         $this->_session->request_token = serialize($token);
+        $this->_session->site_id = $this->_site;
         $this->_redirect($consumer->getRedirectUrl());
     }
-
-    public function postAction()
-    {
-        $message = 'Ok, you can stop. I think it is working...';
-        $token = unserialize($this->_session->access_token);
-        $client = $token->getHttpClient($this->_config);
-        $client->setUri($this->_update_url);
-        $client->setMethod(Zend_Http_Client::POST);
-        $client->setParameterPost('status', $message);
-        $response = $client->request();
-
-        $data = Zend_Json::decode($response->getBody());
-        $result = $response->getBody();
-        if (isset($data['text']))
-        {
-            die('Success');
-        }
-        else
-        {
-            die(var_dump($data));
-        }
-
-        if(isset($data->error))
-        {
-            die($data->error);
-        }
-        die('Could not post.');
-    }
-
 
     public function callbackAction()
     {
@@ -86,7 +100,12 @@ class App_StatusController extends ZB_Controller_Action_App
              $token = $consumer->getAccessToken( $_GET, unserialize($this->_session->request_token));
              $this->_session->access_token = serialize($token);
              $this->_session->request_token = null;
-             $this->_redirect('/app/status/post');
+             $user = new OStatus_User();
+             $user->setUser(User::getIdentity());
+             $user->setSiteId($this->_session->site_id);
+             $user->setAccessToken(serialize($token));
+             $user->save();
+             $this->_redirect('/app/status');
         }
         else
         {
@@ -94,4 +113,51 @@ class App_StatusController extends ZB_Controller_Action_App
         }
 
     }
+
+    private function createDefaults()
+    {
+        $sites = OStatus_SitePeer::retrieveAll();
+        if(count($sites) > 0)
+        {
+            return null; // No need to add some - we have some already.
+        }
+
+        $config = new Zend_Config_Ini(APPLICATION_PATH . '/config/ostatus_sites.ini', 'general');
+        foreach($config->site->toArray() as $config_site)
+        {
+            $site = new OStatus_Site();
+            $site->fromArray($config_site); // Doesn't work????
+
+            $site->setFullname($config_site['fullname']);
+            $site->setShortname($config_site['shortname']);
+            $site->setConsumerKey($config_site['consumer_key']);
+            $site->setConsumerSecret($config_site['consumer_secret']);
+            $site->setSiteUrl($config_site['site_url']);
+            $site->setRequestTokenUrl($config_site['request_token_url']);
+            $site->setAccessTokenUrl($config_site['access_token_url']);
+            $site->setAuthorizeUrl($config_site['authorize_url']);
+            $site->setUpdateUrl($config_site['update_url']);
+            $site->setUpdateParam($config_site['update_param']);
+            $site->save();
+        }
+    }
+
+    private function _getStatusForm()
+    {
+        $form = new Zend_Form();
+        
+        $form->setAction('');
+        $form->setMethod)'post');
+
+        $status = new Zend_Form_Element_Textarea('status');
+        $status->setOptions(array('style' => 'width: 300px; height: 150px;'));
+        $status->setLabel('Status');
+
+        $submit = new Zend_Form_Element_Submit('Submit');
+
+        $form->addElements(array($status, $submit));
+
+        return $form;
+    }
+
 }
