@@ -8,7 +8,7 @@
 <p>Users you have:</p>
 <ul>
     <?php foreach($this->users as $user) : ?>
-    <li>A <?php echo $user->getSite()->getFullName(); ?> user</li>
+    <li><strong><?php echo $user->getScreenName(); ?></strong> on <i><?php echo $user->getSite()->getFullName(); ?></i></li>
     <?php endforeach; ?>
 </ul>
 
