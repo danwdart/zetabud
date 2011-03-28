@@ -1,5 +1,14 @@
 Zetabud: Bibud in Zend - to integrate with Betabud and be a server!
 
 Requirements:
+
+PHP 5.2+
+A database engine (Propel is configured to use MySQL with these details by default):
+ Host: localhost
+ Username: zetabud
+ Password: zetabud
+ DB: zetabud
+`
+Requirements to configure Propel:
 PEAR
 Phing 1.3.3

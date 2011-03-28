@@ -64,6 +64,10 @@
  * @method     UserQuery rightJoinPicture($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Picture relation
  * @method     UserQuery innerJoinPicture($relationAlias = null) Adds a INNER JOIN clause to the query using the Picture relation
  *
+ * @method     UserQuery leftJoinOStatus_User($relationAlias = null) Adds a LEFT JOIN clause to the query using the OStatus_User relation
+ * @method     UserQuery rightJoinOStatus_User($relationAlias = null) Adds a RIGHT JOIN clause to the query using the OStatus_User relation
+ * @method     UserQuery innerJoinOStatus_User($relationAlias = null) Adds a INNER JOIN clause to the query using the OStatus_User relation
+ *
  * @method     UserQuery leftJoinVideoFile($relationAlias = null) Adds a LEFT JOIN clause to the query using the VideoFile relation
  * @method     UserQuery rightJoinVideoFile($relationAlias = null) Adds a RIGHT JOIN clause to the query using the VideoFile relation
  * @method     UserQuery innerJoinVideoFile($relationAlias = null) Adds a INNER JOIN clause to the query using the VideoFile relation
@@ -969,6 +973,70 @@ abstract class BaseUserQuery extends ModelCriteria
 		return $this
 			->joinPicture($relationAlias, $joinType)
 			->useQuery($relationAlias ? $relationAlias : 'Picture', 'PictureQuery');
+	}
+
+	/**
+	 * Filter the query by a related OStatus_User object
+	 *
+	 * @param     OStatus_User $oStatus_User  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function filterByOStatus_User($oStatus_User, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(UserPeer::ID, $oStatus_User->getUserId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the OStatus_User relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function joinOStatus_User($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('OStatus_User');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'OStatus_User');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the OStatus_User relation OStatus_User object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    OStatus_UserQuery A secondary query class using the current class as primary query
+	 */
+	public function useOStatus_UserQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinOStatus_User($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'OStatus_User', 'OStatus_UserQuery');
 	}
 
 	/**

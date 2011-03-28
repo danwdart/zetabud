@@ -167,6 +167,54 @@ CREATE TABLE `picture`
 ) ENGINE=MyISAM;
 
 #-----------------------------------------------------------------------------
+#-- ostatus_site
+#-----------------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `ostatus_site`;
+
+
+CREATE TABLE `ostatus_site`
+(
+	`id` INTEGER  NOT NULL AUTO_INCREMENT,
+	`fullname` VARCHAR(50)  NOT NULL,
+	`shortname` VARCHAR(30)  NOT NULL,
+	`consumer_key` VARCHAR(255)  NOT NULL,
+	`consumer_secret` VARCHAR(255)  NOT NULL,
+	`site_url` VARCHAR(255)  NOT NULL,
+	`request_token_url` VARCHAR(255)  NOT NULL,
+	`access_token_url` VARCHAR(255)  NOT NULL,
+	`authorize_url` VARCHAR(255)  NOT NULL,
+	`update_url` VARCHAR(255)  NOT NULL,
+	`update_param` VARCHAR(255)  NOT NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=MyISAM;
+
+#-----------------------------------------------------------------------------
+#-- ostatus_user
+#-----------------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `ostatus_user`;
+
+
+CREATE TABLE `ostatus_user`
+(
+	`id` INTEGER  NOT NULL AUTO_INCREMENT,
+	`user_id` INTEGER  NOT NULL,
+	`site_id` INTEGER  NOT NULL,
+	`request_token` VARCHAR(255)  NOT NULL,
+	`access_token` VARCHAR(255)  NOT NULL,
+	PRIMARY KEY (`id`),
+	INDEX `ostatus_user_FI_1` (`user_id`),
+	CONSTRAINT `ostatus_user_FK_1`
+		FOREIGN KEY (`user_id`)
+		REFERENCES `user` (`id`),
+	INDEX `ostatus_user_FI_2` (`site_id`),
+	CONSTRAINT `ostatus_user_FK_2`
+		FOREIGN KEY (`site_id`)
+		REFERENCES `ostatus_site` (`id`)
+) ENGINE=MyISAM;
+
+#-----------------------------------------------------------------------------
 #-- user
 #-----------------------------------------------------------------------------
 

@@ -93,6 +93,34 @@
         </foreign-key>
     </table>
 
+    <table name="ostatus_site" phpName="OStatus_Site">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="fullname" type="varchar" size="50" required="true"/>
+        <column name="shortname" type="varchar" size="30" required="true"/>
+        <column name="consumer_key" type="varchar" size="255" required="true"/>
+        <column name="consumer_secret" type="varchar" size="255" required="true"/>
+        <column name="site_url" type="varchar" size="255" required="true"/>
+        <column name="request_token_url" type="varchar" size="255" required="true"/>
+        <column name="access_token_url" type="varchar" size="255" required="true"/>
+        <column name="authorize_url" type="varchar" size="255" required="true"/>
+        <column name="update_url" type="varchar" size="255" required="true"/>
+        <column name="update_param" type="varchar" size="255" required="true"/>
+    </table>
+
+    <table name="ostatus_user" phpName="OStatus_User">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="user_id" type="integer" required="true"/>
+        <column name="site_id" type="integer" required="true"/>
+        <column name="request_token" type="varchar" size="255" required="true"/>
+        <column name="access_token" type="varchar" size="255" required="true"/>
+        <foreign-key foreignTable="user">
+            <reference local="user_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="ostatus_site">
+            <reference local="site_id" foreign="id"/>
+        </foreign-key>
+    </table>
+
     <table name="user">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="username" type="varchar" size="255" required="true"/>

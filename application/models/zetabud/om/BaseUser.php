@@ -118,6 +118,11 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	protected $collPictures;
 
 	/**
+	 * @var        array OStatus_User[] Collection to store aggregation of OStatus_User objects.
+	 */
+	protected $collOStatus_Users;
+
+	/**
 	 * @var        array VideoFile[] Collection to store aggregation of VideoFile objects.
 	 */
 	protected $collVideoFiles;
@@ -685,6 +690,8 @@ abstract class BaseUser extends BaseObject  implements Persistent
 
 			$this->collPictures = null;
 
+			$this->collOStatus_Users = null;
+
 			$this->collVideoFiles = null;
 
 			$this->collUsersRelatedByUser2Id = null;
@@ -894,6 +901,14 @@ abstract class BaseUser extends BaseObject  implements Persistent
 				}
 			}
 
+			if ($this->collOStatus_Users !== null) {
+				foreach ($this->collOStatus_Users as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
 			if ($this->collVideoFiles !== null) {
 				foreach ($this->collVideoFiles as $referrerFK) {
 					if (!$referrerFK->isDeleted()) {
@@ -1039,6 +1054,14 @@ abstract class BaseUser extends BaseObject  implements Persistent
 
 				if ($this->collPictures !== null) {
 					foreach ($this->collPictures as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
+				if ($this->collOStatus_Users !== null) {
+					foreach ($this->collOStatus_Users as $referrerFK) {
 						if (!$referrerFK->validate($columns)) {
 							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
 						}
@@ -1372,6 +1395,12 @@ abstract class BaseUser extends BaseObject  implements Persistent
 			foreach ($this->getPictures() as $relObj) {
 				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
 					$copyObj->addPicture($relObj->copy($deepCopy));
+				}
+			}
+
+			foreach ($this->getOStatus_Users() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addOStatus_User($relObj->copy($deepCopy));
 				}
 			}
 
@@ -2408,6 +2437,140 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	}
 
 	/**
+	 * Clears out the collOStatus_Users collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addOStatus_Users()
+	 */
+	public function clearOStatus_Users()
+	{
+		$this->collOStatus_Users = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collOStatus_Users collection.
+	 *
+	 * By default this just sets the collOStatus_Users collection to an empty array (like clearcollOStatus_Users());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initOStatus_Users()
+	{
+		$this->collOStatus_Users = new PropelObjectCollection();
+		$this->collOStatus_Users->setModel('OStatus_User');
+	}
+
+	/**
+	 * Gets an array of OStatus_User objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this User is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array OStatus_User[] List of OStatus_User objects
+	 * @throws     PropelException
+	 */
+	public function getOStatus_Users($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collOStatus_Users || null !== $criteria) {
+			if ($this->isNew() && null === $this->collOStatus_Users) {
+				// return empty collection
+				$this->initOStatus_Users();
+			} else {
+				$collOStatus_Users = OStatus_UserQuery::create(null, $criteria)
+					->filterByUser($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collOStatus_Users;
+				}
+				$this->collOStatus_Users = $collOStatus_Users;
+			}
+		}
+		return $this->collOStatus_Users;
+	}
+
+	/**
+	 * Returns the number of related OStatus_User objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related OStatus_User objects.
+	 * @throws     PropelException
+	 */
+	public function countOStatus_Users(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collOStatus_Users || null !== $criteria) {
+			if ($this->isNew() && null === $this->collOStatus_Users) {
+				return 0;
+			} else {
+				$query = OStatus_UserQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByUser($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collOStatus_Users);
+		}
+	}
+
+	/**
+	 * Method called to associate a OStatus_User object to this object
+	 * through the OStatus_User foreign key attribute.
+	 *
+	 * @param      OStatus_User $l OStatus_User
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addOStatus_User(OStatus_User $l)
+	{
+		if ($this->collOStatus_Users === null) {
+			$this->initOStatus_Users();
+		}
+		if (!$this->collOStatus_Users->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collOStatus_Users[]= $l;
+			$l->setUser($this);
+		}
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this User is new, it will return
+	 * an empty collection; or if this User has previously
+	 * been saved, it will retrieve related OStatus_Users from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in User.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array OStatus_User[] List of OStatus_User objects
+	 */
+	public function getOStatus_UsersJoinOStatus_Site($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = OStatus_UserQuery::create(null, $criteria);
+		$query->joinWith('OStatus_Site', $join_behavior);
+
+		return $this->getOStatus_Users($query, $con);
+	}
+
+	/**
 	 * Clears out the collVideoFiles collection
 	 *
 	 * This does not modify the database; however, it will remove any associated objects, causing
@@ -2820,6 +2983,11 @@ abstract class BaseUser extends BaseObject  implements Persistent
 					$o->clearAllReferences($deep);
 				}
 			}
+			if ($this->collOStatus_Users) {
+				foreach ((array) $this->collOStatus_Users as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
 			if ($this->collVideoFiles) {
 				foreach ((array) $this->collVideoFiles as $o) {
 					$o->clearAllReferences($deep);
@@ -2836,6 +3004,7 @@ abstract class BaseUser extends BaseObject  implements Persistent
 		$this->collFriendsRelatedByUser2Id = null;
 		$this->collNotes = null;
 		$this->collPictures = null;
+		$this->collOStatus_Users = null;
 		$this->collVideoFiles = null;
 	}
 

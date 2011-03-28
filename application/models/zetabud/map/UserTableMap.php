@@ -62,6 +62,7 @@ class UserTableMap extends TableMap {
     $this->addRelation('FriendRelatedByUser2Id', 'Friend', RelationMap::ONE_TO_MANY, array('id' => 'user2_id', ), null, null);
     $this->addRelation('Note', 'Note', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), null, null);
     $this->addRelation('Picture', 'Picture', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), null, null);
+    $this->addRelation('OStatus_User', 'OStatus_User', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), null, null);
     $this->addRelation('VideoFile', 'VideoFile', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), null, null);
     $this->addRelation('UserRelatedByUser2Id', 'User', RelationMap::MANY_TO_MANY, array(), null, null);
     $this->addRelation('UserRelatedByUser1Id', 'User', RelationMap::MANY_TO_MANY, array(), null, null);
