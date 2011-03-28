@@ -40,8 +40,8 @@ class OStatus_UserTableMap extends TableMap {
 		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
 		$this->addForeignKey('USER_ID', 'UserId', 'INTEGER', 'user', 'ID', true, null, null);
 		$this->addForeignKey('SITE_ID', 'SiteId', 'INTEGER', 'ostatus_site', 'ID', true, null, null);
-		$this->addColumn('REQUEST_TOKEN', 'RequestToken', 'VARCHAR', true, 255, null);
-		$this->addColumn('ACCESS_TOKEN', 'AccessToken', 'VARCHAR', true, 255, null);
+		$this->addColumn('REQUEST_TOKEN', 'RequestToken', 'LONGVARCHAR', true, null, null);
+		$this->addColumn('ACCESS_TOKEN', 'AccessToken', 'LONGVARCHAR', true, null, null);
 		// validators
 	} // initialize()
 
@@ -51,7 +51,7 @@ class OStatus_UserTableMap extends TableMap {
 	public function buildRelations()
 	{
     $this->addRelation('User', 'User', RelationMap::MANY_TO_ONE, array('user_id' => 'id', ), null, null);
-    $this->addRelation('OStatus_Site', 'OStatus_Site', RelationMap::MANY_TO_ONE, array('site_id' => 'id', ), null, null);
+    $this->addRelation('Site', 'OStatus_Site', RelationMap::MANY_TO_ONE, array('site_id' => 'id', ), null, null);
 	} // buildRelations()
 
 } // OStatus_UserTableMap

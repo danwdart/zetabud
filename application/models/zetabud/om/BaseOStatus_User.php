@@ -62,7 +62,7 @@ abstract class BaseOStatus_User extends BaseObject  implements Persistent
 	/**
 	 * @var        OStatus_Site
 	 */
-	protected $aOStatus_Site;
+	protected $aSite;
 
 	/**
 	 * Flag to prevent endless save loop, if this object is referenced
@@ -189,8 +189,8 @@ abstract class BaseOStatus_User extends BaseObject  implements Persistent
 			$this->modifiedColumns[] = OStatus_UserPeer::SITE_ID;
 		}
 
-		if ($this->aOStatus_Site !== null && $this->aOStatus_Site->getId() !== $v) {
-			$this->aOStatus_Site = null;
+		if ($this->aSite !== null && $this->aSite->getId() !== $v) {
+			$this->aSite = null;
 		}
 
 		return $this;
@@ -307,8 +307,8 @@ abstract class BaseOStatus_User extends BaseObject  implements Persistent
 		if ($this->aUser !== null && $this->user_id !== $this->aUser->getId()) {
 			$this->aUser = null;
 		}
-		if ($this->aOStatus_Site !== null && $this->site_id !== $this->aOStatus_Site->getId()) {
-			$this->aOStatus_Site = null;
+		if ($this->aSite !== null && $this->site_id !== $this->aSite->getId()) {
+			$this->aSite = null;
 		}
 	} // ensureConsistency
 
@@ -350,7 +350,7 @@ abstract class BaseOStatus_User extends BaseObject  implements Persistent
 		if ($deep) {  // also de-associate any related objects?
 
 			$this->aUser = null;
-			$this->aOStatus_Site = null;
+			$this->aSite = null;
 		} // if (deep)
 	}
 
@@ -473,11 +473,11 @@ abstract class BaseOStatus_User extends BaseObject  implements Persistent
 				$this->setUser($this->aUser);
 			}
 
-			if ($this->aOStatus_Site !== null) {
-				if ($this->aOStatus_Site->isModified() || $this->aOStatus_Site->isNew()) {
-					$affectedRows += $this->aOStatus_Site->save($con);
+			if ($this->aSite !== null) {
+				if ($this->aSite->isModified() || $this->aSite->isNew()) {
+					$affectedRows += $this->aSite->save($con);
 				}
-				$this->setOStatus_Site($this->aOStatus_Site);
+				$this->setSite($this->aSite);
 			}
 
 			if ($this->isNew() ) {
@@ -580,9 +580,9 @@ abstract class BaseOStatus_User extends BaseObject  implements Persistent
 				}
 			}
 
-			if ($this->aOStatus_Site !== null) {
-				if (!$this->aOStatus_Site->validate($columns)) {
-					$failureMap = array_merge($failureMap, $this->aOStatus_Site->getValidationFailures());
+			if ($this->aSite !== null) {
+				if (!$this->aSite->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aSite->getValidationFailures());
 				}
 			}
 
@@ -674,8 +674,8 @@ abstract class BaseOStatus_User extends BaseObject  implements Persistent
 			if (null !== $this->aUser) {
 				$result['User'] = $this->aUser->toArray($keyType, $includeLazyLoadColumns, true);
 			}
-			if (null !== $this->aOStatus_Site) {
-				$result['OStatus_Site'] = $this->aOStatus_Site->toArray($keyType, $includeLazyLoadColumns, true);
+			if (null !== $this->aSite) {
+				$result['Site'] = $this->aSite->toArray($keyType, $includeLazyLoadColumns, true);
 			}
 		}
 		return $result;
@@ -932,7 +932,7 @@ abstract class BaseOStatus_User extends BaseObject  implements Persistent
 	 * @return     OStatus_User The current object (for fluent API support)
 	 * @throws     PropelException
 	 */
-	public function setOStatus_Site(OStatus_Site $v = null)
+	public function setSite(OStatus_Site $v = null)
 	{
 		if ($v === null) {
 			$this->setSiteId(NULL);
@@ -940,7 +940,7 @@ abstract class BaseOStatus_User extends BaseObject  implements Persistent
 			$this->setSiteId($v->getId());
 		}
 
-		$this->aOStatus_Site = $v;
+		$this->aSite = $v;
 
 		// Add binding for other direction of this n:n relationship.
 		// If this object has already been added to the OStatus_Site object, it will not be re-added.
@@ -959,19 +959,19 @@ abstract class BaseOStatus_User extends BaseObject  implements Persistent
 	 * @return     OStatus_Site The associated OStatus_Site object.
 	 * @throws     PropelException
 	 */
-	public function getOStatus_Site(PropelPDO $con = null)
+	public function getSite(PropelPDO $con = null)
 	{
-		if ($this->aOStatus_Site === null && ($this->site_id !== null)) {
-			$this->aOStatus_Site = OStatus_SiteQuery::create()->findPk($this->site_id, $con);
+		if ($this->aSite === null && ($this->site_id !== null)) {
+			$this->aSite = OStatus_SiteQuery::create()->findPk($this->site_id, $con);
 			/* The following can be used additionally to
 				 guarantee the related object contains a reference
 				 to this object.  This level of coupling may, however, be
 				 undesirable since it could result in an only partially populated collection
 				 in the referenced object.
-				 $this->aOStatus_Site->addOStatus_Users($this);
+				 $this->aSite->addOStatus_Users($this);
 			 */
 		}
-		return $this->aOStatus_Site;
+		return $this->aSite;
 	}
 
 	/**
@@ -1007,7 +1007,7 @@ abstract class BaseOStatus_User extends BaseObject  implements Persistent
 		} // if ($deep)
 
 		$this->aUser = null;
-		$this->aOStatus_Site = null;
+		$this->aSite = null;
 	}
 
 	/**

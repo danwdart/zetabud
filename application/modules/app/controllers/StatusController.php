@@ -1,6 +1,7 @@
 <?php
 class App_StatusController extends ZB_Controller_Action_App
 {
+    private $_site_id;
     private $_site;
     private $_config;
 
@@ -12,6 +13,10 @@ class App_StatusController extends ZB_Controller_Action_App
         $this->_session = new Zend_Session_Namespace('oauth');
 
         $site_id = $this->getRequest()->getQuery('site');
+        if(is_null($site_id) && !is_null($this->_session->site_id))
+        {
+            $site_id = $this->_session->site_id;
+        }
         if(intval($site_id) > 0)
         {
             $this->_site = OStatus_SitePeer::retrieveByPK($site_id);
@@ -43,7 +48,7 @@ class App_StatusController extends ZB_Controller_Action_App
 
                 foreach($users as $user)
                 {
-                    $token = unserialize($user->getAccessToken);
+                    $token = unserialize($user->getAccessToken());
                     $client = $token->getHttpClient($user->getSite()->getConfig());
                     $client->setUri($user->getSite()->getUpdateUrl());
                     $client->setMethod(Zend_Http_Client::POST);
@@ -54,18 +59,25 @@ class App_StatusController extends ZB_Controller_Action_App
                     $result = $response->getBody();
                     if (isset($data['text']))
                     {
-                        die('Success');
+                        $this->setMessage(array(
+                            'text' => 'Status Posted',
+                            'class' => 'info'
+                        ));
+                    }
+                    elseif(isset($data->error))
+                    {
+                        $this->setMessage(array(
+                            'text' => $data->error,
+                            'class' => 'error'
+                        ));
                     }
                     else
                     {
-                        die(var_dump($data));
+                        $this->setMessage(array(
+                            'text' => $data,
+                            'class' => 'error'
+                        ));
                     }
-
-                    if(isset($data->error))
-                    {
-                        die($data->error);
-                    }
-                        die('Could not post.');
                 }
             }
         }
@@ -81,12 +93,13 @@ class App_StatusController extends ZB_Controller_Action_App
         $consumer = new Zend_Oauth_Consumer($this->_config);
         $token = $consumer->getRequestToken();
         $this->_session->request_token = serialize($token);
-        $this->_session->site_id = $this->_site;
+        $this->_session->site_id = $this->_site->getId();
         $this->_redirect($consumer->getRedirectUrl());
     }
 
     public function callbackAction()
     {
+
         $consumer = new Zend_Oauth_Consumer($this->_config);
         if (!empty($_GET) && isset($this->_session->request_token))
         {

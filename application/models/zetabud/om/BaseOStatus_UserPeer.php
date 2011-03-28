@@ -501,7 +501,7 @@ abstract class BaseOStatus_UserPeer {
 
 
 	/**
-	 * Returns the number of rows matching criteria, joining the related OStatus_Site table
+	 * Returns the number of rows matching criteria, joining the related Site table
 	 *
 	 * @param      Criteria $criteria
 	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
@@ -509,7 +509,7 @@ abstract class BaseOStatus_UserPeer {
 	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
 	 * @return     int Number of matching rows.
 	 */
-	public static function doCountJoinOStatus_Site(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public static function doCountJoinSite(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
 		// we're going to modify criteria, so copy it first
 		$criteria = clone $criteria;
@@ -625,7 +625,7 @@ abstract class BaseOStatus_UserPeer {
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doSelectJoinOStatus_Site(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public static function doSelectJoinSite(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
 		$criteria = clone $criteria;
 
@@ -876,7 +876,7 @@ abstract class BaseOStatus_UserPeer {
 
 
 	/**
-	 * Returns the number of rows matching criteria, joining the related OStatus_Site table
+	 * Returns the number of rows matching criteria, joining the related Site table
 	 *
 	 * @param      Criteria $criteria
 	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
@@ -884,7 +884,7 @@ abstract class BaseOStatus_UserPeer {
 	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
 	 * @return     int Number of matching rows.
 	 */
-	public static function doCountJoinAllExceptOStatus_Site(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public static function doCountJoinAllExceptSite(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
 		// we're going to modify criteria, so copy it first
 		$criteria = clone $criteria;
@@ -999,7 +999,7 @@ abstract class BaseOStatus_UserPeer {
 
 
 	/**
-	 * Selects a collection of OStatus_User objects pre-filled with all related objects except OStatus_Site.
+	 * Selects a collection of OStatus_User objects pre-filled with all related objects except Site.
 	 *
 	 * @param      Criteria  $criteria
 	 * @param      PropelPDO $con
@@ -1008,7 +1008,7 @@ abstract class BaseOStatus_UserPeer {
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doSelectJoinAllExceptOStatus_Site(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public static function doSelectJoinAllExceptSite(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
 		$criteria = clone $criteria;
 

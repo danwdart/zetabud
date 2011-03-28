@@ -2562,10 +2562,10 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
 	 * @return     PropelCollection|array OStatus_User[] List of OStatus_User objects
 	 */
-	public function getOStatus_UsersJoinOStatus_Site($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public function getOStatus_UsersJoinSite($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
 		$query = OStatus_UserQuery::create(null, $criteria);
-		$query->joinWith('OStatus_Site', $join_behavior);
+		$query->joinWith('Site', $join_behavior);
 
 		return $this->getOStatus_Users($query, $con);
 	}

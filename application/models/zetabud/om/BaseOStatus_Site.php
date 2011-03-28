@@ -1174,7 +1174,7 @@ abstract class BaseOStatus_Site extends BaseObject  implements Persistent
 				$this->initOStatus_Users();
 			} else {
 				$collOStatus_Users = OStatus_UserQuery::create(null, $criteria)
-					->filterByOStatus_Site($this)
+					->filterBySite($this)
 					->find($con);
 				if (null !== $criteria) {
 					return $collOStatus_Users;
@@ -1205,7 +1205,7 @@ abstract class BaseOStatus_Site extends BaseObject  implements Persistent
 					$query->distinct();
 				}
 				return $query
-					->filterByOStatus_Site($this)
+					->filterBySite($this)
 					->count($con);
 			}
 		} else {
@@ -1228,7 +1228,7 @@ abstract class BaseOStatus_Site extends BaseObject  implements Persistent
 		}
 		if (!$this->collOStatus_Users->contains($l)) { // only add it if the **same** object is not already associated
 			$this->collOStatus_Users[]= $l;
-			$l->setOStatus_Site($this);
+			$l->setSite($this);
 		}
 	}
 

@@ -111,12 +111,12 @@
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="user_id" type="integer" required="true"/>
         <column name="site_id" type="integer" required="true"/>
-        <column name="request_token" type="varchar" size="255" required="true"/>
-        <column name="access_token" type="varchar" size="255" required="true"/>
+        <column name="request_token" type="longvarchar" required="true"/>
+        <column name="access_token" type="longvarchar" required="true"/>
         <foreign-key foreignTable="user">
             <reference local="user_id" foreign="id"/>
         </foreign-key>
-        <foreign-key foreignTable="ostatus_site">
+        <foreign-key foreignTable="ostatus_site" phpName="Site">
             <reference local="site_id" foreign="id"/>
         </foreign-key>
     </table>

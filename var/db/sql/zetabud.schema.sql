@@ -201,8 +201,8 @@ CREATE TABLE `ostatus_user`
 	`id` INTEGER  NOT NULL AUTO_INCREMENT,
 	`user_id` INTEGER  NOT NULL,
 	`site_id` INTEGER  NOT NULL,
-	`request_token` VARCHAR(255)  NOT NULL,
-	`access_token` VARCHAR(255)  NOT NULL,
+	`request_token` TEXT  NOT NULL,
+	`access_token` TEXT  NOT NULL,
 	PRIMARY KEY (`id`),
 	INDEX `ostatus_user_FI_1` (`user_id`),
 	CONSTRAINT `ostatus_user_FK_1`

@@ -26,9 +26,9 @@
  * @method     OStatus_UserQuery rightJoinUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the User relation
  * @method     OStatus_UserQuery innerJoinUser($relationAlias = null) Adds a INNER JOIN clause to the query using the User relation
  *
- * @method     OStatus_UserQuery leftJoinOStatus_Site($relationAlias = null) Adds a LEFT JOIN clause to the query using the OStatus_Site relation
- * @method     OStatus_UserQuery rightJoinOStatus_Site($relationAlias = null) Adds a RIGHT JOIN clause to the query using the OStatus_Site relation
- * @method     OStatus_UserQuery innerJoinOStatus_Site($relationAlias = null) Adds a INNER JOIN clause to the query using the OStatus_Site relation
+ * @method     OStatus_UserQuery leftJoinSite($relationAlias = null) Adds a LEFT JOIN clause to the query using the Site relation
+ * @method     OStatus_UserQuery rightJoinSite($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Site relation
+ * @method     OStatus_UserQuery innerJoinSite($relationAlias = null) Adds a INNER JOIN clause to the query using the Site relation
  *
  * @method     OStatus_User findOne(PropelPDO $con = null) Return the first OStatus_User matching the query
  * @method     OStatus_User findOneOrCreate(PropelPDO $con = null) Return the first OStatus_User matching the query, or a new OStatus_User object populated from the query conditions when no match is found
@@ -348,24 +348,24 @@ abstract class BaseOStatus_UserQuery extends ModelCriteria
 	 *
 	 * @return    OStatus_UserQuery The current query, for fluid interface
 	 */
-	public function filterByOStatus_Site($oStatus_Site, $comparison = null)
+	public function filterBySite($oStatus_Site, $comparison = null)
 	{
 		return $this
 			->addUsingAlias(OStatus_UserPeer::SITE_ID, $oStatus_Site->getId(), $comparison);
 	}
 
 	/**
-	 * Adds a JOIN clause to the query using the OStatus_Site relation
+	 * Adds a JOIN clause to the query using the Site relation
 	 * 
 	 * @param     string $relationAlias optional alias for the relation
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
 	 * @return    OStatus_UserQuery The current query, for fluid interface
 	 */
-	public function joinOStatus_Site($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	public function joinSite($relationAlias = null, $joinType = Criteria::INNER_JOIN)
 	{
 		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('OStatus_Site');
+		$relationMap = $tableMap->getRelation('Site');
 		
 		// create a ModelJoin object for this join
 		$join = new ModelJoin();
@@ -380,14 +380,14 @@ abstract class BaseOStatus_UserQuery extends ModelCriteria
 			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
 			$this->addJoinObject($join, $relationAlias);
 		} else {
-			$this->addJoinObject($join, 'OStatus_Site');
+			$this->addJoinObject($join, 'Site');
 		}
 		
 		return $this;
 	}
 
 	/**
-	 * Use the OStatus_Site relation OStatus_Site object
+	 * Use the Site relation OStatus_Site object
 	 *
 	 * @see       useQuery()
 	 * 
@@ -397,11 +397,11 @@ abstract class BaseOStatus_UserQuery extends ModelCriteria
 	 *
 	 * @return    OStatus_SiteQuery A secondary query class using the current class as primary query
 	 */
-	public function useOStatus_SiteQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	public function useSiteQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
 	{
 		return $this
-			->joinOStatus_Site($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'OStatus_Site', 'OStatus_SiteQuery');
+			->joinSite($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'Site', 'OStatus_SiteQuery');
 	}
 
 	/**
