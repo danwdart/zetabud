@@ -12,19 +12,12 @@ class App_StatusController extends ZB_Controller_Action_App
         $this->_session = new Zend_Session_Namespace('oauth');
 
         $site_id = $this->getRequest()->getQuery('site');
-        if(is_int($site_id))
+        if(intval($site_id) > 0)
         {
-            $this->_site = OStatus_Site::retrieveByPK($site_id);
-            $this->_config = array(
-                'callbackUrl' => $site->getCallbackUrl(),
-                'siteUrl' => $site->getSiteUrl(),
-                'consumerKey' => $site->getConsumerKey(),
-                'consumerSecret' => $site->getConsumerSecret()
-            );
+            $this->_site = OStatus_SitePeer::retrieveByPK($site_id);
+            $this->_config = $this->_site->getConfig(); 
         }
-
-
-        
+       
     }
 
     public function indexAction()
@@ -80,7 +73,7 @@ class App_StatusController extends ZB_Controller_Action_App
 
     public function requestAction()
     {
-        if(is_null($this->_site))
+        if(!is_int($this->_site))
         {
             $this->_redirect('/app/status');
         }

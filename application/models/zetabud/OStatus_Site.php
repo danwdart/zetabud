@@ -13,4 +13,9 @@ class OStatus_Site extends BaseOStatus_Site
         return $config;
     }
 
+    public function getCallbackUrl()
+    {
+        return 'http://' . $_SERVER['HTTP_HOST'] . '/app/status/callback';
+    }
+
 } // OStatus_Site

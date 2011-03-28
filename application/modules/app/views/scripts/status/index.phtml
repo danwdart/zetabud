@@ -1,7 +1,7 @@
 <p>Sites enabled:</p>
 <ul>
     <?php foreach($this->sites as $site) : ?>
-    <li><?php echo $site->getFullName(); ?> - <a href="/app/status/redirect?site=<?php echo $site->getId(); ?>">Add User</a></li>
+    <li><?php echo $site->getFullName(); ?> - <a href="/app/status/request?site=<?php echo $site->getId(); ?>">Add User</a></li>
     <?php endforeach; ?>
 </ul>
 
