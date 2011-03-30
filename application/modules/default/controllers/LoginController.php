@@ -11,7 +11,7 @@ class LoginController extends ZB_Controller_Action_App
 
         $this->_redirect_url = $this->getReferrer();
 
-        if(strstr($this->_redirect_url, '/login/register') !== false)
+        if(strstr($this->_redirect_url, '/login') !== false)
         {
             $this->_redirect_url = '/';
         }

@@ -10,6 +10,7 @@ class App_StatusController extends ZB_Controller_Action_App
         parent::preDispatch();
 
         $this->createDefaults();
+        $this->requireLogin();
         $this->_session = new Zend_Session_Namespace('oauth');
 
         $site_id = $this->getRequest()->getQuery('site');
@@ -22,12 +23,16 @@ class App_StatusController extends ZB_Controller_Action_App
             $this->_site = OStatus_SitePeer::retrieveByPK($site_id);
             $this->_config = $this->_site->getConfig(); 
         }
-       
     }
 
     public function indexAction()
     {
         $this->requireLogin();
+        if(!$this->isLoggedIn())
+        {
+            return null; // How else to just jump over everything other than to indent everything?
+        }
+
         $this->view->assign('apptitle', 'Social Status');
 
         $sites = OStatus_SitePeer::retrieveAll();
