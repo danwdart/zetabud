@@ -13,8 +13,20 @@
 </ul>
 
 <?php if(count($this->users) > 0) : ?>
-
-<p>Submit a status:</p>
+<br />
 <?php echo $this->status_form; ?>
 
 <?php endif; ?>
+
+<script>
+$(document).ready(function() {
+    $('#status').focus();
+    $('#status').keyup(function(e) {
+        if(e.keyCode == 13) {
+            Page.submitForm($('#Submit'), e);
+            $(this).val('');
+            $(this).focus();
+        }
+    });
+});
+</script>

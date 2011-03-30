@@ -161,7 +161,7 @@ class App_StatusController extends ZB_Controller_Action_App
         $form->setMethod('post');
 
         $status = new Zend_Form_Element_Textarea('status');
-        $status->setOptions(array('style' => 'width: 300px; height: 150px;'));
+        $status->setOptions(array('style' => 'width: 200px; height: 50px;'));
         $status->setLabel('Status');
 
         $submit = new Zend_Form_Element_Submit('Submit');
