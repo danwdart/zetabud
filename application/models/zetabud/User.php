@@ -10,7 +10,7 @@ class User extends BaseUser
     {
         $username_validator = new Zend_Validate_Alnum();
 
-        if($username_validator->isValid($username))
+        if($username_validator->isValid($username) && strlen($username) > 0)
         {
             return true;
         }
@@ -21,7 +21,7 @@ class User extends BaseUser
     {
         $email_validator = new Zend_Validate_EmailAddress();
 
-        if($email_validator->isValid($email))
+        if($email_validator->isValid($email) && strlen($email) > 0)
         {
             return true;
         }
@@ -106,4 +106,10 @@ class User extends BaseUser
     {
         return self::hasIdentity();
     }
+
+    public function isPassword($password)
+    {
+        return (self::encryptPassword($password) == $this->getPassword());
+    }
+
 } // User

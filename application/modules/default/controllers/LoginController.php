@@ -74,7 +74,7 @@ class LoginController extends ZB_Controller_Action_App
     {
         $this->setAppTitle('Register a new user');
 
-        $form = $this->_getRegisterForm();
+        $form = $this->_getUserDataForm();
 
         if($this->isPost())
         {
@@ -167,6 +167,108 @@ class LoginController extends ZB_Controller_Action_App
         $this->view->assign('form', $form);
     }
 
+    public function userinfoAction()
+    {
+        $this->requireLogin();
+
+        $this->setAppTitle('Edit User Info');
+
+        $form = $this->_getUserDataForm(true);
+
+        $user = User::getIdentity();
+
+        $form->username->setValue($user->getUsername());
+        $form->fullname->setValue($user->getFullname());
+        $form->email->setValue($user->getEmail());
+
+        if($this->isPost())
+        {
+            $post = $this->getPost();
+
+            if(isset($post['Save']))
+            {
+                $username = $post['username'];
+                $oldpassword = $post['oldpassword'];
+                $password = $post['password'];
+                $password2 = $post['password2'];
+                $email = $post['email'];
+                $fullname = $post['fullname'];
+
+                if(!$user->isPassword($oldpassword))
+                {
+                    $this->addMessage(array(
+                        'text' => 'Old Password does not match. Want to try again?',
+                        'class' => 'error'
+                    ));
+                    return null; // Don't go any further
+                }
+
+                if($password != $password2)
+                {
+                    $this->addMessage(array(
+                        'text' => 'Passwords must match',
+                        'class' => 'warn'
+                    ));
+                }
+
+                if(!User::isValidEmail($email))
+                {
+                    $this->addMessage(array(
+                        'text' => 'Not a valid Email',
+                        'class' => 'warn'
+                    ));
+                }
+
+                if(!User::isValidUsername($username))
+                {
+                    $this->addMessage(array(
+                        'text' => 'Not a Valid Username',
+                        'class' => 'warn'
+                    ));
+
+                }
+
+                if(!User::isValidPassword($password))
+                {
+                    $this->addMessage(array(
+                        'text' => 'Not A Valid Password',
+                        'class' => 'warn'
+                    ));
+                }
+
+                if(is_null($this->getMessages()))
+                {
+                    try
+                    {
+                        $user->setUsername($username);
+                        $user->setPassword(User::encryptPassword($password));
+                        $user->setEmail($email);
+                        $user->setFullname($fullname);
+                        $user->save();
+
+                        $this->_redirect('/');
+                    }
+                    catch(Exception $e)
+                    {
+                        $this->addMessage(array(
+                            'text' => 'An error occurred whilst saving your details. Please try again.',
+                            'class' => 'error'
+                        ));
+                    }
+                }
+            }
+            else
+            {
+                $this->addMessage(array(
+                    'text' => 'Invalid Request',
+                    'class' => 'error'
+                ));
+            }
+        }
+
+        $this->view->assign('form', $form);
+    }
+
     private function _getLoginForm()
     {
         $form = new ZB_Form();
@@ -191,14 +293,24 @@ class LoginController extends ZB_Controller_Action_App
         return $form;
     }    
 
-    private function _getRegisterForm()
+    private function _getUserDataForm($edit = false)
     {
         $form = new ZB_Form();
         $form->setMethod('post');
         $form->setAction('/login/register');
+        if($edit)
+        {
+            $form->setAction('/userinfo');
+        }
 
         $username = new ZB_Form_Element_Text('username');
         $username->setLabel('Username:');
+
+        if($edit)
+        {
+            $oldpassword = new ZB_Form_Element_Password('oldpassword');
+            $oldpassword->setLabel('Old Password:');
+        }
 
         $password = new ZB_Form_Element_Password('password');
         $password->setLabel('Password:');
@@ -213,9 +325,23 @@ class LoginController extends ZB_Controller_Action_App
         $email->setLabel('Email Address:');
 
         $register = new ZB_Form_Element_Submit('Register');
+        if($edit)
+        {
+            $register = new ZB_Form_Element_Submit('Save');
+        }
 
-        $form->addElements(array($username, $password, $password2, $fullname, $email, $register));
+        $form->addElement($username);
+
+        if($edit)
+        {
+            $form->addElement($oldpassword);
+        }
+
+        $form->addElements(array($password, $password2, $fullname, $email, $register));
 
         return $form;
     } 
+
+
+
 }
