@@ -46,22 +46,24 @@ submitForm: function(element, evt) {
     evt.preventDefault();
     var form = element.parents('form');
     var serial_data = form.serialize() + '&' + element.attr('name') + '=' + element.attr('value');
+    form.children('.messages').remove();
+    form.append('<div class="messages"></div>');
+    var messages = form.children('.messages');
+    messages.append('<img src="/img/load.gif"/>');
+        
     $.ajax({
         url: form.attr('action'),
         type: form.attr('method'),
         dataType: 'json',
         data: serial_data,
         success: function(data) {
-
-            form.children('.messages').remove();
-            form.append('<div class="messages"></div>');
-
+            messages.children().remove();
             for(i in data)
             {
                 message = data[i];
                 if(message.text && !message.redirect)
                 {
-                    var messages = form.children('.messages');
+
                     messages.append('<li class="' + message.class + '">' + message.text + '</li>');
                 }
                 if(message.redirect)
