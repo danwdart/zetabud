@@ -51,5 +51,16 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         $router->addRoute('logout', $route);
     } 
+
+    protected function _initConstants()
+    {
+        $config = new Zend_Config_Ini(APPLICATION_PATH . '/config/zetabud.ini');
+
+        foreach($config->zb->toArray() as $key => $value)
+        {
+            define(strtoupper($key), $value);
+        }
+    }
+
 }
 
