@@ -1,7 +1,10 @@
+var request;
+
 var Page = {
 load: function(url) {
     console.log('Load method called');
-    $.ajax({
+    Page.killRequests();
+    request = $.ajax({
         url: url,
         success: function(data) {
             try {
@@ -50,8 +53,9 @@ submitForm: function(element, evt) {
     form.append('<div class="messages"></div>');
     var messages = form.children('.messages');
     messages.append('<img src="/img/load.gif"/>');
-        
-    $.ajax({
+    
+    Page.killRequests();
+    request = $.ajax({
         url: form.attr('action'),
         type: form.attr('method'),
         dataType: 'json',
@@ -84,7 +88,12 @@ submitForm: function(element, evt) {
         }
     }); 
     return false; 
+},
+
+killRequests: function() {
+    if(typeof request != 'undefined') { request.abort(); }
 }
+
 };
 
 $(document).ready(function() {

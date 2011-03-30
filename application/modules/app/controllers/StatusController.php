@@ -11,7 +11,6 @@ class App_StatusController extends ZB_Controller_Action_App
 
         $this->createDefaults();
         $this->requireLogin();
-        $this->_session = new Zend_Session_Namespace('oauth');
 
         $site_id = $this->getRequest()->getQuery('site');
         if(is_null($site_id) && !is_null($this->_session->site_id))

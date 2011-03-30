@@ -109,6 +109,7 @@ class ZB_Controller_Action_App extends ZB_Controller_Action
     protected function login()
     {
         // TODO: Make this drop down and not quit the page!
+        $this->_session->messages = '<li class="warn">You need to login to access this feature.</li>';
         $this->_redirect('/login?redirect=' . $_SERVER['REQUEST_URI']);
     }
 
