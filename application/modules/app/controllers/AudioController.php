@@ -32,6 +32,6 @@ class App_AudioController extends ZB_Controller_Action_App
     public function indexAction()
     {
         $this->requireLogin();
-        $this->view->assign('apptitle', 'Audio Player');
+        $this->setAppTitle('Audio Player');
     }
 }

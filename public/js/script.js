@@ -62,18 +62,21 @@ $(document).ready(function() {
             dataType: 'json',
             data: serial_data,
             success: function(data) {
+
                 form.children('.messages').remove();
                 form.append('<div class="messages"></div>');
-                var messages = form.children('.messages');
+
                 for(i in data)
                 {
                     message = data[i];
-                    if(message.text)
+                    if(message.text && !message.redirect)
                     {
+                        var messages = form.children('.messages');
                         messages.append('<li class="' + message.class + '">' + message.text + '</li>');
                     }
                     if(message.redirect)
                     {
+                        form.children('.messages').remove();
                         func = 'Page.load("' + message.redirect + '");';
                         console.log(func);
                         if(message.text)

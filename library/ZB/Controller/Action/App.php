@@ -33,12 +33,25 @@ class ZB_Controller_Action_App extends ZB_Controller_Action
 
     protected function hasMessages()
     {
-        return(count($this->getMessages()) > 0);
+        return (count($this->getMessages()) > 0);
+    }
+
+    protected function hasRedirectOnly()
+    {
+        foreach($this->getMessages() as $message)
+        {
+            if(count($message) == 1 && isset($message['redirect']))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     protected function drawMessages()
     {
-        if(!$this->hasMessages())
+        if(!$this->hasMessages() || $this->hasRedirectOnly())
         {
             return null;
         }
@@ -48,6 +61,13 @@ class ZB_Controller_Action_App extends ZB_Controller_Action
         foreach($this->getMessages() as $message)
         {
             $ret .= '<li class="' . $message['class'] . '">' . $message['text'] . '</li>';
+            
+            if(isset($message['redirect']))
+            {
+                $this->_session->messages = $ret;
+            }
+
+            return null;
         }
 
         return $ret;
@@ -111,6 +131,8 @@ class ZB_Controller_Action_App extends ZB_Controller_Action
 
         if($this->hasMessages())
         {
+            $this->view->assign('messages', $this->drawMessages());
+
             if($this->isAjax())
             {
                 $this->view->layout()->disableLayout();

@@ -3,12 +3,11 @@
 </div>
 
 <div class="centre">
+Zetabud 
 <?php
 if($this->apptitle) :
-    echo $this->apptitle;
+    echo ': ' . $this->apptitle;
     if($this->appsection) : echo ' - ' . $this->appsection; endif;
-else :
-    echo 'Zetabud';
 endif;
 ?>
 </div>

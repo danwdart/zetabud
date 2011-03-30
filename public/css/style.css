@@ -111,3 +111,21 @@ input[type=button], input[type=submit]
     text-decoration:none;
     vertical-align:middle;
 }
+
+.centre {
+    text-align: center !important;
+    margin: 0 auto !important;
+}
+
+.centre .messages {
+    text-align: center !important;
+    margin: 0 auto !important;
+}
+
+.space {
+    line-height: 1.3em;
+}
+
+.pad {
+    padding: 5px;
+}
