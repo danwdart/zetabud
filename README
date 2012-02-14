@@ -1,3 +1,10 @@
+THIS REPOSITORY IS NO LONGER MAINTAINED.
+PLEASE SEE:
+https://github.com/dandart/betabud
+FOR THE LATEST VERSION.
+
+THIS IS HERE JUST FOR SHOW - THIS USES PROPEL AS A DBA ENGINE.
+
 Zetabud: Bibud in Zend - to integrate with Betabud and be a server!
 
 Requirements:
